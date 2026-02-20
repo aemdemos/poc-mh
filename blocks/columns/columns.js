@@ -41,7 +41,7 @@ export default function decorate(block) {
       // auto-embed YouTube links
       col.querySelectorAll('a').forEach((a) => {
         const text = a.textContent.trim();
-        const href = a.href;
+        const { href } = a;
         if ((text.includes('youtube.com') || text.includes('youtu.be'))
           && text === href) {
           embedYouTube(a);
