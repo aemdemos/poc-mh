@@ -1,10 +1,15 @@
 export default function decorate(block) {
   // Check for a video link (mp4) in the block
   const allLinks = block.querySelectorAll('a');
-  const videoLink = Array.from(allLinks).find((a) => a.href.includes('.mp4'));
+  const videoLink = Array.from(allLinks).find(
+    (a) => a.href.includes('.mp4') || a.textContent.includes('.mp4'),
+  );
   if (!videoLink) return;
 
-  const videoSrc = videoLink.href;
+  // Use textContent as source — the AEM pipeline may rewrite the href
+  const videoSrc = videoLink.textContent.includes('.mp4')
+    ? videoLink.textContent.trim()
+    : videoLink.href;
 
   // Remove the link from the DOM
   const linkParent = videoLink.closest('p') || videoLink.parentElement;
