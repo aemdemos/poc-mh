@@ -11,9 +11,13 @@ export default function decorate(block) {
     ? videoLink.textContent.trim()
     : videoLink.href;
 
-  // Remove the link from the DOM
+  // Remove the link and its empty row wrapper from the DOM
   const linkParent = videoLink.closest('p') || videoLink.parentElement;
+  const row = linkParent.closest('.hero > div');
   linkParent.remove();
+  if (row && !row.textContent.trim() && !row.querySelector('picture, img')) {
+    row.remove();
+  }
 
   // Create a background video element
   const video = document.createElement('video');

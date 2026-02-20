@@ -1,0 +1,262 @@
+diff --git a/blocks/columns/columns.css b/blocks/columns/columns.css
+index f2b203e..37a7948 100644
+--- a/blocks/columns/columns.css
++++ b/blocks/columns/columns.css
+@@ -30,4 +30,8 @@
+     flex: 1;
+     order: unset;
+   }
++
++  .columns.columns-3-cols > div {
++    align-items: start;
++  }
+ }
+diff --git a/blocks/columns/columns.js b/blocks/columns/columns.js
+index 9b78c81..c804cca 100644
+--- a/blocks/columns/columns.js
++++ b/blocks/columns/columns.js
+@@ -1,3 +1,28 @@
++function embedYouTube(link) {
++  const url = new URL(link.href.includes('youtube') ? link.href : link.textContent.trim());
++  let videoId;
++  if (url.hostname.includes('youtu.be')) {
++    videoId = url.pathname.slice(1);
++  } else {
++    videoId = url.searchParams.get('v');
++  }
++  if (!videoId) return;
++
++  const wrapper = document.createElement('div');
++  wrapper.style.cssText = 'left:0;width:100%;height:0;position:relative;padding-bottom:56.25%';
++  const iframe = document.createElement('iframe');
++  iframe.src = `https://www.youtube.com/embed/${videoId}?rel=0`;
++  iframe.style.cssText = 'border:0;top:0;left:0;width:100%;height:100%;position:absolute';
++  iframe.allow = 'autoplay; fullscreen; picture-in-picture; encrypted-media; accelerometer; gyroscope';
++  iframe.allowFullscreen = true;
++  iframe.loading = 'lazy';
++  iframe.title = 'Content from Youtube';
++  wrapper.append(iframe);
++
++  const p = link.closest('p') || link.parentElement;
++  p.replaceWith(wrapper);
++}
++
+ export default function decorate(block) {
+   const cols = [...block.firstElementChild.children];
+   block.classList.add(`columns-${cols.length}-cols`);
+@@ -9,10 +34,19 @@ export default function decorate(block) {
+       if (pic) {
+         const picWrapper = pic.closest('div');
+         if (picWrapper && picWrapper.children.length === 1) {
+-          // picture is only content in column
+           picWrapper.classList.add('columns-img-col');
+         }
+       }
++
++      // auto-embed YouTube links
++      col.querySelectorAll('a').forEach((a) => {
++        const text = a.textContent.trim();
++        const { href } = a;
++        if ((text.includes('youtube.com') || text.includes('youtu.be'))
++          && text === href) {
++          embedYouTube(a);
++        }
++      });
+     });
+   });
+ }
+diff --git a/blocks/hero/hero.css b/blocks/hero/hero.css
+index 89b8a2a..fd071a6 100644
+--- a/blocks/hero/hero.css
++++ b/blocks/hero/hero.css
+@@ -7,13 +7,8 @@
+   position: relative;
+   padding: 40px 24px;
+   min-height: 300px;
+-}
+-
+-.hero h1 {
+-  max-width: 1200px;
+-  margin-left: auto;
+-  margin-right: auto;
+-  color: var(--background-color);
++  overflow: hidden;
++  isolation: isolate;
+ }
+ 
+ .hero picture {
+@@ -24,12 +19,68 @@
+   box-sizing: border-box;
+ }
+ 
++.hero picture::after {
++  content: '';
++  position: absolute;
++  inset: 0;
++  background: rgb(0 22 59 / 70%);
++  z-index: 1;
++}
++
++.hero > div:first-child::after {
++  content: '';
++  position: absolute;
++  inset: 0;
++  background: rgb(0 22 59 / 70%);
++  z-index: 0;
++  pointer-events: none;
++}
++
+ .hero img {
+   object-fit: cover;
+   width: 100%;
+   height: 100%;
+ }
+ 
++.hero .hero-video {
++  position: absolute;
++  inset: 0;
++  width: 100%;
++  height: 100%;
++  object-fit: cover;
++  z-index: -1;
++}
++
++.hero .hero-video + picture {
++  display: none;
++}
++
++.hero h1 {
++  position: relative;
++  z-index: 1;
++  max-width: 1200px;
++  margin-left: auto;
++  margin-right: auto;
++  color: white;
++  font-size: 3rem;
++  text-transform: uppercase;
++}
++
++.hero p {
++  position: relative;
++  z-index: 1;
++  color: white;
++  max-width: 1200px;
++  margin-left: auto;
++  margin-right: auto;
++}
++
++.hero .button-container a {
++  background-color: white;
++  color: rgb(0 22 59);
++  border-color: white;
++}
++
+ @media (width >= 900px) {
+   .hero {
+     padding: 40px 32px;
+diff --git a/blocks/hero/hero.js b/blocks/hero/hero.js
+index e69de29..77afb25 100644
+--- a/blocks/hero/hero.js
++++ b/blocks/hero/hero.js
+@@ -0,0 +1,43 @@
++export default function decorate(block) {
++  // Check for a video link (mp4) in the block
++  const allLinks = block.querySelectorAll('a');
++  const videoLink = Array.from(allLinks).find(
++    (a) => a.href.includes('.mp4') || a.textContent.includes('.mp4'),
++  );
++  if (!videoLink) return;
++
++  // Use textContent as source — the AEM pipeline may rewrite the href
++  const videoSrc = videoLink.textContent.includes('.mp4')
++    ? videoLink.textContent.trim()
++    : videoLink.href;
++
++  // Remove the link and its empty row wrapper from the DOM
++  const linkParent = videoLink.closest('p') || videoLink.parentElement;
++  const row = linkParent.closest('.hero > div');
++  linkParent.remove();
++  if (row && !row.textContent.trim() && !row.querySelector('picture, img')) {
++    row.remove();
++  }
++
++  // Create a background video element
++  const video = document.createElement('video');
++  video.className = 'hero-video';
++  video.autoplay = true;
++  video.muted = true;
++  video.loop = true;
++  video.playsInline = true;
++  video.setAttribute('playsinline', '');
++
++  const source = document.createElement('source');
++  source.src = videoSrc;
++  source.type = 'video/mp4';
++  video.append(source);
++
++  // Insert video before the picture element (or at the start of the block)
++  const picture = block.querySelector('picture');
++  if (picture) {
++    picture.parentElement.prepend(video);
++  } else {
++    block.prepend(video);
++  }
++}
+diff --git a/styles/styles.css b/styles/styles.css
+index 68db210..5c457be 100644
+--- a/styles/styles.css
++++ b/styles/styles.css
+@@ -12,13 +12,13 @@
+ 
+ :root {
+   /* colors */
+-  --background-color: white;
+-  --light-color: #f8f8f8;
+-  --dark-color: #505050;
+-  --text-color: #131313;
+-  --link-color: #3b63fb;
+-  --link-hover-color: #1d3ecf;
+-  --overlay-background-color:lightgrey;
++  --background-color: rgb(0 22 59);
++  --light-color: rgb(101 117 149);
++  --dark-color: rgb(0 22 59);
++  --text-color: white;
++  --link-color: white;
++  --link-hover-color: #ccd;
++  --overlay-background-color: rgb(101 117 149);
+ 
+   /* fonts */
+   --body-font-family: roboto, roboto-fallback, sans-serif;
+@@ -264,3 +264,32 @@ main .section.highlight {
+   margin: 0;
+   padding: 40px 0;
+ }
++
++main .section.muted-blue {
++  background-color: rgb(101 117 149);
++  margin: 0;
++  padding: 40px 0;
++}
++
++main .section.white-bg {
++  background-color: white;
++  color: rgb(0 22 59);
++  margin: 0;
++  padding: 40px 0;
++}
++
++main .section.white-bg h2,
++main .section.white-bg h3,
++main .section.white-bg p {
++  color: rgb(0 22 59);
++}
++
++main .section.white-bg a:any-link {
++  color: rgb(0 22 59);
++}
++
++main .section.white-bg a.button:any-link {
++  background-color: rgb(0 22 59);
++  color: white;
++  border-color: rgb(0 22 59);
++}
