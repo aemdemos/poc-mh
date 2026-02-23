@@ -12,13 +12,13 @@
 
 :root {
   /* colors */
-  --background-color: white;
-  --light-color: #f8f8f8;
-  --dark-color: #505050;
-  --text-color: #131313;
-  --link-color: #3b63fb;
-  --link-hover-color: #1d3ecf;
-  --overlay-background-color:lightgrey;
+  --background-color: rgb(0 22 59);
+  --light-color: rgb(101 117 149);
+  --dark-color: rgb(0 22 59);
+  --text-color: white;
+  --link-color: white;
+  --link-hover-color: #ccd;
+  --overlay-background-color: rgb(101 117 149);
 
   /* fonts */
   --body-font-family: roboto, roboto-fallback, sans-serif;
@@ -263,4 +263,33 @@ main .section.highlight {
   background-color: var(--light-color);
   margin: 0;
   padding: 40px 0;
+}
+
+main .section.muted-blue {
+  background-color: rgb(101 117 149);
+  margin: 0;
+  padding: 40px 0;
+}
+
+main .section.white-bg {
+  background-color: white;
+  color: rgb(0 22 59);
+  margin: 0;
+  padding: 40px 0;
+}
+
+main .section.white-bg h2,
+main .section.white-bg h3,
+main .section.white-bg p {
+  color: rgb(0 22 59);
+}
+
+main .section.white-bg a:any-link {
+  color: rgb(0 22 59);
+}
+
+main .section.white-bg a.button:any-link {
+  background-color: rgb(0 22 59);
+  color: white;
+  border-color: rgb(0 22 59);
 }

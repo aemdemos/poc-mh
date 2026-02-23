@@ -1,0 +1,23 @@
+{
+  "templates": [
+    {
+      "name": "careers-home",
+      "urls": ["https://www.royalnavy.mod.uk/careers"],
+      "description": "Royal Navy careers home page with hero, feature cards, testimonials, profession cards, benefits, and CTAs",
+      "blocks": [
+        {
+          "name": "hero",
+          "instances": ["section#hero"]
+        },
+        {
+          "name": "cards",
+          "instances": ["section#discover-potential", "section#choose-profession"]
+        },
+        {
+          "name": "columns",
+          "instances": ["section#testimonial", "section#pay-benefits", "section#other-ways", "section#cta"]
+        }
+      ]
+    }
+  ]
+}
