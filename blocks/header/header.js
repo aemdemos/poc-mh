@@ -72,7 +72,7 @@ function toggleAllNavSections(sections, expanded = false) {
 function toggleMenu(nav, navSections, forceExpanded = null) {
   const expanded = forceExpanded !== null ? !forceExpanded : nav.getAttribute('aria-expanded') === 'true';
   const button = nav.querySelector('.nav-hamburger button');
-  document.body.style.overflowY = (expanded || isDesktop.matches) ? '' : 'hidden';
+  document.body.style.overflowY = expanded ? '' : 'hidden';
   nav.setAttribute('aria-expanded', expanded ? 'false' : 'true');
   toggleAllNavSections(navSections, expanded || isDesktop.matches ? 'false' : 'true');
   button.setAttribute('aria-label', expanded ? 'Open navigation' : 'Close navigation');
@@ -233,9 +233,20 @@ export default async function decorate(block) {
   hamburger.addEventListener('click', () => toggleMenu(nav, navSections));
   nav.prepend(hamburger);
   nav.setAttribute('aria-expanded', 'false');
-  // prevent mobile nav behavior on window resize
-  toggleMenu(nav, navSections, isDesktop.matches);
-  isDesktop.addEventListener('change', () => toggleMenu(nav, navSections, isDesktop.matches));
+
+  // Add overlay for off-canvas nav
+  const overlay = document.createElement('div');
+  overlay.classList.add('nav-overlay');
+  overlay.addEventListener('click', () => toggleMenu(nav, navSections, false));
+  nav.append(overlay);
+
+  // Always start collapsed (off-canvas panel, no auto-expand on desktop)
+  toggleMenu(nav, navSections, false);
+  isDesktop.addEventListener('change', () => {
+    if (nav.getAttribute('aria-expanded') === 'true') {
+      toggleMenu(nav, navSections, false);
+    }
+  });
 
   const navWrapper = document.createElement('div');
   navWrapper.className = 'nav-wrapper';
