@@ -120,13 +120,15 @@ footer .columns > div > div:last-child a:hover {
   color: white;
 }
 
-/* Useful links section */
+/* Useful links section - break out of parent padding for full-width white */
 footer .section:nth-child(2) {
   background-color: white;
   color: rgb(0 22 59);
   border-top: none;
   border-bottom: 1px solid rgb(211 213 225);
-  padding: 40px 0;
+  padding: 40px 24px;
+  margin-left: -24px;
+  margin-right: -24px;
 }
 
 footer .section:nth-child(2) p:first-child {
@@ -151,10 +153,12 @@ footer .section:nth-child(2) p:last-child a {
   color: rgb(0 22 59);
 }
 
-/* Copyright / legal links section */
+/* Copyright / legal links section - break out of parent padding for full-width white */
 footer .section:last-child {
   background-color: white;
-  padding: 20px 0;
+  padding: 20px 24px;
+  margin-left: -24px;
+  margin-right: -24px;
   font-size: 13px;
   color: rgb(0 22 59);
 }
@@ -222,5 +226,20 @@ footer a.button:hover {
 
   footer .columns > div > div:last-child {
     flex: 1;
+  }
+
+  /* Match negative margins to desktop parent padding */
+  footer .section:nth-child(2) {
+    margin-left: -56px;
+    margin-right: -56px;
+    padding-left: 56px;
+    padding-right: 56px;
+  }
+
+  footer .section:last-child {
+    margin-left: -56px;
+    margin-right: -56px;
+    padding-left: 56px;
+    padding-right: 56px;
   }
 }

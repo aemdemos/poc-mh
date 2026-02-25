@@ -176,7 +176,7 @@ async function buildBreadcrumbs() {
 export default async function decorate(block) {
   // load nav as fragment
   const navMeta = getMetadata('nav');
-  const navPath = navMeta ? new URL(navMeta, window.location).pathname : '/nav';
+  const navPath = navMeta ? new URL(navMeta, window.location).pathname : '/content/nav';
   const fragment = await loadFragment(navPath);
 
   // decorate nav DOM
@@ -196,6 +196,28 @@ export default async function decorate(block) {
   if (brandLink) {
     brandLink.className = '';
     brandLink.closest('.button-container').className = '';
+  }
+
+  // Inline the SVG logo for scroll-state background rect control
+  const brandImg = navBrand.querySelector('img');
+  if (brandImg) {
+    const imgSrc = brandImg.src || brandImg.getAttribute('src');
+    if (imgSrc && imgSrc.endsWith('.svg')) {
+      try {
+        const resp = await fetch(imgSrc);
+        const svgText = await resp.text();
+        const parser = new DOMParser();
+        const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
+        const svg = svgDoc.querySelector('svg');
+        if (svg) {
+          svg.setAttribute('width', '60');
+          svg.setAttribute('height', '70');
+          const bgRect = svg.querySelector('rect');
+          if (bgRect) bgRect.classList.add('logo-bg');
+          brandImg.replaceWith(svg);
+        }
+      } catch (e) { /* keep img as fallback */ }
+    }
   }
 
   const navSections = nav.querySelector('.nav-sections');
@@ -252,6 +274,15 @@ export default async function decorate(block) {
   navWrapper.className = 'nav-wrapper';
   navWrapper.append(nav);
   block.append(navWrapper);
+
+  // Scroll listener for header transparency transition
+  function updateHeaderOnScroll() {
+    const scrolled = window.scrollY > 50;
+    navWrapper.classList.toggle('scrolled', scrolled);
+  }
+
+  window.addEventListener('scroll', updateHeaderOnScroll, { passive: true });
+  updateHeaderOnScroll();
 
   if (getMetadata('breadcrumbs').toLowerCase() === 'true') {
     navWrapper.append(await buildBreadcrumbs());
