@@ -248,7 +248,8 @@ main > .section > div {
 }
 
 main > .section:first-of-type {
-  margin-top: 0;
+  margin-top: calc(-1 * var(--header-height));
+  padding-top: 0;
 }
 
 @media (width >= 900px) {
@@ -292,4 +293,27 @@ main .section.white-bg a.button:any-link {
   background-color: rgb(0 22 59);
   color: white;
   border-color: rgb(0 22 59);
+}
+
+/* white frame lines - desktop only */
+@media (width >= 900px) {
+  body.appear::before,
+  body.appear::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: rgb(211 213 225);
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  body.appear::before {
+    left: 40px;
+  }
+
+  body.appear::after {
+    right: 40px;
+  }
 }
