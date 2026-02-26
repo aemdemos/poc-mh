@@ -308,11 +308,13 @@ header nav .nav-sections strong {
 }
 
 /* Hide nested sub-menus (level 3+) by default */
+/* stylelint-disable-next-line no-descending-specificity */
 header nav .nav-sections ul ul ul {
   display: none;
 }
 
 /* Show sub-menu when parent is expanded */
+/* stylelint-disable-next-line no-descending-specificity */
 header nav .nav-sections li.nav-submenu-parent[aria-expanded="true"] > ul {
   display: block;
   padding-left: 16px;
