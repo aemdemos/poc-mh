@@ -109,6 +109,16 @@ export function decorateMain(main) {
   decorateBlocks(main);
   // add aria-label to links
   a11yLinks(main);
+
+  // Strip button decoration on nav fragment page (viewed directly)
+  const { pathname } = window.location;
+  if (pathname.endsWith('/nav') || pathname.endsWith('/nav.html')) {
+    main.querySelectorAll('.button-container').forEach((bc) => {
+      bc.classList.remove('button-container');
+      const btn = bc.querySelector('.button');
+      if (btn) btn.classList.remove('button');
+    });
+  }
 }
 
 /**

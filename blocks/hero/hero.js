@@ -24,17 +24,16 @@ export default function decorate(block) {
   source.type = 'video/mp4';
   video.append(source);
 
-  // Insert video before the picture/image element (or at the start of the block)
-  const picture = block.querySelector('picture');
-  if (picture) {
-    picture.parentElement.prepend(video);
-  } else {
-    block.prepend(video);
-  }
+  // Insert video as a direct child of the block so it stays visible
+  // even when the fallback image row is hidden
+  block.prepend(video);
 
-  // Hide the fallback image row when video is present
+  // Only hide the fallback image once the video actually starts playing.
+  // This keeps the fallback visible if the video fails to load.
   const imgRow = Array.from(block.querySelectorAll(':scope > div')).find((div) => div.querySelector('img'));
   if (imgRow) {
-    imgRow.style.display = 'none';
+    video.addEventListener('playing', () => {
+      imgRow.style.display = 'none';
+    }, { once: true });
   }
 }

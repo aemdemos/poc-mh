@@ -24,7 +24,7 @@ function closeOnEscape(e) {
 
 function closeOnFocusLost(e) {
   const nav = e.currentTarget;
-  if (!nav.contains(e.relatedTarget)) {
+  if (e.relatedTarget && !nav.contains(e.relatedTarget)) {
     const navSections = nav.querySelector('.nav-sections');
     const navSectionExpanded = navSections.querySelector('[aria-expanded="true"]');
     if (navSectionExpanded && isDesktop.matches) {
@@ -74,7 +74,7 @@ function toggleMenu(nav, navSections, forceExpanded = null) {
   const button = nav.querySelector('.nav-hamburger button');
   document.body.style.overflowY = expanded ? '' : 'hidden';
   nav.setAttribute('aria-expanded', expanded ? 'false' : 'true');
-  toggleAllNavSections(navSections, expanded || isDesktop.matches ? 'false' : 'true');
+  toggleAllNavSections(navSections, 'false');
   button.setAttribute('aria-label', expanded ? 'Open navigation' : 'Close navigation');
   // enable nav dropdown keyboard accessibility
   const navDrops = navSections.querySelectorAll('.nav-drop');
@@ -224,17 +224,36 @@ export default async function decorate(block) {
   if (navSections) {
     navSections.querySelectorAll(':scope .default-content-wrapper > ul > li').forEach((navSection) => {
       if (navSection.querySelector('ul')) navSection.classList.add('nav-drop');
-      navSection.addEventListener('click', () => {
-        if (isDesktop.matches) {
+      const sectionHeader = navSection.querySelector(':scope > p');
+      if (sectionHeader) {
+        sectionHeader.addEventListener('click', (e) => {
+          e.stopPropagation();
           const expanded = navSection.getAttribute('aria-expanded') === 'true';
           toggleAllNavSections(navSections);
           navSection.setAttribute('aria-expanded', expanded ? 'false' : 'true');
-        }
-      });
+        });
+      }
     });
     navSections.querySelectorAll('.button-container').forEach((buttonContainer) => {
       buttonContainer.classList.remove('button-container');
       buttonContainer.querySelector('.button').classList.remove('button');
+    });
+
+    // Mark items with nested sub-menus as expandable
+    navSections.querySelectorAll('ul ul li').forEach((item) => {
+      if (item.querySelector(':scope > ul')) {
+        item.classList.add('nav-submenu-parent');
+        item.setAttribute('aria-expanded', 'false');
+        const link = item.querySelector(':scope > a');
+        if (link) {
+          link.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const expanded = item.getAttribute('aria-expanded') === 'true';
+            item.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+          });
+        }
+      }
     });
   }
 

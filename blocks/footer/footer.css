@@ -2,12 +2,13 @@ footer {
   background-color: rgb(101 117 149);
   color: #c8cdd6;
   font-size: var(--body-font-size-xs);
+  overflow-x: hidden;
 }
 
 footer .footer > div {
   margin: auto;
   max-width: 1400px;
-  padding: 40px 24px 24px;
+  padding: 40px 24px 0;
 }
 
 footer .footer p {
@@ -120,15 +121,16 @@ footer .columns > div > div:last-child a:hover {
   color: white;
 }
 
-/* Useful links section - break out of parent padding for full-width white */
+/* Useful links section - full-bleed white background */
 footer .section:nth-child(2) {
   background-color: white;
   color: rgb(0 22 59);
   border-top: none;
   border-bottom: 1px solid rgb(211 213 225);
   padding: 40px 24px;
-  margin-left: -24px;
-  margin-right: -24px;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  box-sizing: border-box;
 }
 
 footer .section:nth-child(2) p:first-child {
@@ -153,12 +155,13 @@ footer .section:nth-child(2) p:last-child a {
   color: rgb(0 22 59);
 }
 
-/* Copyright / legal links section - break out of parent padding for full-width white */
+/* Copyright / legal links section - full-bleed white background */
 footer .section:last-child {
   background-color: white;
   padding: 20px 24px;
-  margin-left: -24px;
-  margin-right: -24px;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  box-sizing: border-box;
   font-size: 13px;
   color: rgb(0 22 59);
 }
@@ -211,7 +214,7 @@ footer a.button:hover {
 
 @media (width >= 900px) {
   footer .footer > div {
-    padding: 74px 56px 24px;
+    padding: 74px 56px 0;
   }
 
   footer .columns > div {
@@ -228,17 +231,13 @@ footer a.button:hover {
     flex: 1;
   }
 
-  /* Match negative margins to desktop parent padding */
+  /* Desktop padding for full-bleed white sections */
   footer .section:nth-child(2) {
-    margin-left: -56px;
-    margin-right: -56px;
     padding-left: 56px;
     padding-right: 56px;
   }
 
   footer .section:last-child {
-    margin-left: -56px;
-    margin-right: -56px;
     padding-left: 56px;
     padding-right: 56px;
   }
