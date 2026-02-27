@@ -121,8 +121,15 @@
 }
 
 /* ── Hero Intro (Screen 2): two-column layout ── */
+
+/* Solid background so the video only shows through Screen 1.
+   Negative side margins compensate for .hero padding so the
+   background extends edge-to-edge. */
 .hero-intro {
-  padding: 30vh 0 40px;
+  background-color: var(--background-color);
+  margin-left: -24px;
+  margin-right: -24px;
+  padding: 60px 48px 40px;
   position: relative;
 }
 
@@ -171,6 +178,11 @@
 .hero-intro-cta .button-container {
   margin-top: 0;
   font-weight: 400;
+}
+
+.hero-intro-cta .button-container a {
+  max-width: none;
+  width: auto;
 }
 
 /* Down arrow */
@@ -250,7 +262,7 @@
     display: flex;
     align-items: flex-start;
     gap: 40px;
-    padding: 30vh 120px 60px;
+    padding: 120px 144px;
     flex-wrap: wrap;
   }
 
@@ -266,7 +278,7 @@
   }
 
   .hero-intro-cta {
-    flex: 0 0 340px;
+    flex: 0 0 300px;
     min-width: 0;
     padding: 40px;
     align-self: flex-start;
