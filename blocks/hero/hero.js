@@ -45,17 +45,5 @@ export default function decorate(block) {
     video.addEventListener('playing', () => {
       imgRow.style.display = 'none';
     }, { once: true });
-  // Hide the fallback image row when video is present
-  const imgRow = Array.from(block.querySelectorAll(':scope > div')).find((div) => div.querySelector('img'));
-  if (imgRow) {
-    imgRow.style.display = 'none';
-  }
-
-  // Insert video before the picture element (or at the start of the block)
-  const picture = block.querySelector('picture');
-  if (picture) {
-    picture.parentElement.prepend(video);
-  } else {
-    block.prepend(video);
   }
 }
