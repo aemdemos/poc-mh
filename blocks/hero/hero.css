@@ -6,11 +6,6 @@
 .hero {
   position: relative;
   isolation: isolate;
-  padding: 60px 24px 40px;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
 }
 
 .hero picture {
@@ -52,7 +47,7 @@
   z-index: 2;
 }
 
-/* Description paragraphs (general rule first for specificity order) */
+/* General paragraph styling (must come before more-specific selectors) */
 .hero p {
   position: relative;
   z-index: 2;
@@ -60,10 +55,20 @@
   font-size: 1.25rem;
   line-height: 1.3;
   margin: 0 0 12px;
+  padding: 0 24px;
 }
 
-/* "Royal Navy" label text (first p contains label + em tagline) */
+/*
+ * Screen 1 — "Royal Navy" label + "Made in the Royal Navy" tagline.
+ * Takes full viewport height; content pushed to bottom via flex.
+ */
 .hero p:first-child {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 64px 24px 60px;
+  box-sizing: border-box;
   font-size: 16px;
   font-weight: 700;
   text-transform: uppercase;
@@ -85,13 +90,23 @@
   margin-top: 8px;
 }
 
+/*
+ * Screen 2 — Heading, description, CTA.
+ * Large top padding creates visual separation from Screen 1.
+ */
 .hero h1 {
   color: white;
   font-size: 2.5rem;
   font-weight: 900;
   text-transform: uppercase;
   line-height: 1;
-  margin: 20px 0 16px;
+  margin: 0 0 16px;
+  padding: 30vh 24px 0;
+}
+
+/* Bottom spacing on the last element (CTA) */
+.hero > div:last-child > div > :last-child {
+  padding-bottom: 80px;
 }
 
 .hero .button-container a {
@@ -101,34 +116,37 @@
 }
 
 @media (width >= 900px) {
-  .hero {
-    padding: 64px 120px 120px;
-  }
-
-  /* Description text (general rule first) */
-  .hero p {
-    font-size: 2rem;
-    line-height: 1.1;
-  }
-
-  /* "Royal Navy" label at desktop */
-  /* stylelint-disable-next-line no-descending-specificity */
-  .hero p:first-child {
-    font-size: 20px;
-    letter-spacing: 2px;
-    line-height: 20px;
-  }
-
-  /* Tagline - matches original 120px */
+  /* Tagline — matches original 120px */
   .hero em {
     font-size: 7.5rem;
     line-height: 1;
     margin-top: 12px;
   }
 
+  /* Screen 2 heading */
   .hero h1 {
     font-size: 5rem;
     line-height: 1;
-    margin: 24px 0 20px;
+    padding: 30vh 120px 0;
+    margin: 0 0 20px;
+  }
+
+  /* Description text (general rule before specific) */
+  .hero p {
+    font-size: 2rem;
+    line-height: 1.1;
+    padding: 0 120px;
+  }
+
+  /* Screen 1 — label sizing at desktop (must follow general .hero p) */
+  /* stylelint-disable-next-line no-descending-specificity */
+  .hero p:first-child {
+    padding: 64px 120px 120px;
+    font-size: 20px;
+    line-height: 20px;
+  }
+
+  .hero > div:last-child > div > :last-child {
+    padding-bottom: 120px;
   }
 }
