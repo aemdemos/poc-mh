@@ -1,5 +1,6 @@
 export default function decorate(block) {
-  // Check for a video link (mp4) in the block
+  // Check for a video link (mp4) in the block.
+  // EDS rewrites external URLs so .mp4 may only appear in the link text, not the href.
   const allLinks = block.querySelectorAll('a');
   const videoLink = Array.from(allLinks).find(
     (a) => a.href.includes('.mp4') || a.textContent.includes('.mp4'),
@@ -33,6 +34,17 @@ export default function decorate(block) {
   source.type = 'video/mp4';
   video.append(source);
 
+  // Insert video as a direct child of the block so it stays visible
+  // even when the fallback image row is hidden
+  block.prepend(video);
+
+  // Only hide the fallback image once the video actually starts playing.
+  // This keeps the fallback visible if the video fails to load.
+  const imgRow = Array.from(block.querySelectorAll(':scope > div')).find((div) => div.querySelector('img'));
+  if (imgRow) {
+    video.addEventListener('playing', () => {
+      imgRow.style.display = 'none';
+    }, { once: true });
   // Hide the fallback image row when video is present
   const imgRow = Array.from(block.querySelectorAll(':scope > div')).find((div) => div.querySelector('img'));
   if (imgRow) {

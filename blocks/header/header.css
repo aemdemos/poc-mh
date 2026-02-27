@@ -104,9 +104,9 @@ header nav[aria-expanded='true'] .nav-hamburger button {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid rgb(0 22 59);
-  background-color: rgb(22 208 197);
-  border-radius: 0;
+  border: 2px solid white;
+  background-color: white;
+  border-radius: 50%;
   color: rgb(0 22 59);
 }
 
@@ -210,11 +210,7 @@ header .nav-wrapper.scrolled .nav-brand .logo-bg {
 /* sections - off-canvas right panel */
 header nav .nav-sections {
   position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 53%;
-  max-width: 420px;
+  inset: 0;
   background-color: rgb(22 208 197);
   color: rgb(0 22 59);
   z-index: 12;
@@ -253,6 +249,47 @@ header nav .nav-sections ul > li > ul > li {
   padding: 6px 0;
 }
 
+/* Top-level section items - match original site */
+header nav .nav-sections .default-content-wrapper > ul > li {
+  padding: 0;
+  border-bottom: 1px solid rgb(10 176 167);
+}
+
+/* Section header - clickable to expand/collapse */
+header nav .nav-sections .default-content-wrapper > ul > li > p {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  padding: 20px 0;
+  margin: 0;
+}
+
+/* Arrow on section headers that have sub-items */
+header nav .nav-sections .default-content-wrapper > ul > li.nav-drop > p::after {
+  content: '\2192';
+  font-size: 18px;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+/* Rotate arrow when expanded */
+/* stylelint-disable-next-line no-descending-specificity */
+header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded="true"] > p::after {
+  transform: rotate(90deg);
+}
+
+/* Hide section sub-items by default */
+header nav .nav-sections .default-content-wrapper > ul > li > ul {
+  display: none;
+}
+
+/* Show section sub-items when expanded */
+header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded="true"] > ul {
+  display: block;
+  padding-bottom: 8px;
+}
+
 header nav .nav-sections a:any-link {
   color: rgb(0 22 59);
   text-decoration: none;
@@ -263,11 +300,42 @@ header nav .nav-sections a:hover {
 }
 
 header nav .nav-sections strong {
-  font-size: 13px;
+  font-size: 18px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1.8px;
   display: block;
-  padding-bottom: 4px;
+}
+
+/* Hide nested sub-menus (level 3+) by default */
+/* stylelint-disable-next-line no-descending-specificity */
+header nav .nav-sections ul ul ul {
+  display: none;
+}
+
+/* Show sub-menu when parent is expanded */
+/* stylelint-disable-next-line no-descending-specificity */
+header nav .nav-sections li.nav-submenu-parent[aria-expanded="true"] > ul {
+  display: block;
+  padding-left: 16px;
+}
+
+/* Arrow indicator on expandable items */
+header nav .nav-sections .nav-submenu-parent > a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header nav .nav-sections .nav-submenu-parent > a::after {
+  content: '\2192';
+  margin-left: 8px;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+header nav .nav-sections .nav-submenu-parent[aria-expanded="true"] > a::after {
+  transform: rotate(90deg);
 }
 
 @media (width >= 900px) {
@@ -303,7 +371,7 @@ header nav .nav-sections strong {
   }
 
   header nav .nav-sections .default-content-wrapper > ul > li > ul {
-    display: block;
+    display: none;
     position: relative;
     left: auto;
     width: auto;
@@ -314,6 +382,7 @@ header nav .nav-sections strong {
   }
 
   header nav .nav-sections .default-content-wrapper > ul > li[aria-expanded='true'] > ul {
+    display: block;
     position: relative;
     left: auto;
     width: auto;
@@ -355,8 +424,7 @@ header nav .nav-tools {
   position: fixed;
   bottom: 0;
   right: 0;
-  width: 53%;
-  max-width: 420px;
+  left: 0;
   background-color: rgb(22 208 197);
   color: rgb(0 22 59);
   padding: 0 32px 32px;
@@ -387,19 +455,44 @@ header nav .nav-tools li {
 }
 
 header nav .nav-tools a:any-link {
-  display: block;
-  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 20px;
   border: 2px solid rgb(0 22 59);
+  border-radius: 100px;
   color: rgb(0 22 59);
   text-decoration: none;
   font-weight: 700;
-  font-size: var(--body-font-size-s);
+  font-size: var(--body-font-size-xs);
   text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
 }
 
+/* stylelint-disable-next-line no-descending-specificity */
+header nav .nav-tools a:any-link::after {
+  content: '\2192';
+  font-size: 1.2em;
+}
+
+header nav .nav-tools li:last-child a:any-link {
+  background-color: white;
+  border-color: white;
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
 header nav .nav-tools a:hover {
   background-color: rgb(0 22 59);
   color: rgb(22 208 197);
+  border-color: rgb(0 22 59);
+}
+
+header nav .nav-tools li:last-child a:hover {
+  background-color: rgb(0 22 59);
+  color: white;
 }
 
 header nav .nav-tools .button {
@@ -408,6 +501,19 @@ header nav .nav-tools .button {
   padding: 0.5em;
   background: none;
   line-height: 0;
+}
+
+/* Desktop: constrain off-canvas panel to fixed width matching original site */
+@media (width >= 900px) {
+  header nav .nav-sections {
+    left: auto;
+    width: 410px;
+  }
+
+  header nav .nav-tools {
+    left: auto;
+    width: 410px;
+  }
 }
 
 /* breadcrumbs */
