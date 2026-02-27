@@ -27,6 +27,12 @@ header .nav-wrapper::after {
   left: auto;
 }
 
+/* Hide keylines when nav panel is open */
+header .nav-wrapper:has(nav[aria-expanded='true'])::before,
+header .nav-wrapper:has(nav[aria-expanded='true'])::after {
+  display: none;
+}
+
 /* Scrolled state */
 header .nav-wrapper.scrolled {
   background-color: white;

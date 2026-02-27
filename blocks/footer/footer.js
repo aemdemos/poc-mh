@@ -1,4 +1,4 @@
-import { getMetadata } from '../../scripts/aem.js';
+import { getMetadata, decorateIcons } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
 
 const SOCIAL_LINKS = [
@@ -47,6 +47,7 @@ export default async function decorate(block) {
   while (fragment.firstElementChild) footer.append(fragment.firstElementChild);
 
   ensureSocialIcons(footer);
+  decorateIcons(footer);
 
   block.append(footer);
 }
