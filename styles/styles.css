@@ -258,6 +258,34 @@ main > .section:first-of-type {
   }
 }
 
+/* horizontal keylines between sections */
+main > .section + .section::before {
+  content: '';
+  display: block;
+  height: 1px;
+  background: rgb(211 213 225);
+  margin: 0 auto;
+  max-width: calc(100% - 80px);
+  position: relative;
+  top: -40px;
+}
+
+/* Remove keyline when following section has its own background */
+main > .section.muted-blue::before,
+main > .section.white-bg::before,
+main > .section.light::before,
+main > .section.highlight::before {
+  display: none;
+}
+
+/* Also remove keyline after a styled section */
+main > .section.muted-blue + .section::before,
+main > .section.white-bg + .section::before,
+main > .section.light + .section::before,
+main > .section.highlight + .section::before {
+  display: none;
+}
+
 /* section metadata */
 main .section.light,
 main .section.highlight {
