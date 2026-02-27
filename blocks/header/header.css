@@ -326,23 +326,29 @@ header nav .nav-sections li.nav-submenu-parent[aria-expanded="true"] > ul {
   padding-left: 16px;
 }
 
-/* Arrow indicator on expandable items */
-header nav .nav-sections .nav-submenu-parent > a {
+/* Arrow indicator on expandable items (direct <a> or <p><a> wrappers) */
+/* stylelint-disable no-descending-specificity */
+header nav .nav-sections .nav-submenu-parent > a,
+header nav .nav-sections .nav-submenu-parent > p {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  cursor: pointer;
 }
 
-header nav .nav-sections .nav-submenu-parent > a::after {
+header nav .nav-sections .nav-submenu-parent > a::after,
+header nav .nav-sections .nav-submenu-parent > p::after {
   content: '\2192';
   margin-left: 8px;
   flex-shrink: 0;
   transition: transform 0.2s;
 }
 
-header nav .nav-sections .nav-submenu-parent[aria-expanded="true"] > a::after {
+header nav .nav-sections .nav-submenu-parent[aria-expanded="true"] > a::after,
+header nav .nav-sections .nav-submenu-parent[aria-expanded="true"] > p::after {
   transform: rotate(90deg);
 }
+/* stylelint-enable no-descending-specificity */
 
 @media (width >= 900px) {
   header nav[aria-expanded='true'] {

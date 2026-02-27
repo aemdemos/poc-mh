@@ -244,9 +244,11 @@ export default async function decorate(block) {
       if (item.querySelector(':scope > ul')) {
         item.classList.add('nav-submenu-parent');
         item.setAttribute('aria-expanded', 'false');
-        const link = item.querySelector(':scope > a');
-        if (link) {
-          link.addEventListener('click', (e) => {
+        // Links may be direct children or wrapped in <p> tags
+        const link = item.querySelector(':scope > a') || item.querySelector(':scope > p > a');
+        const clickTarget = link?.closest('p') || link;
+        if (clickTarget) {
+          clickTarget.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
             const expanded = item.getAttribute('aria-expanded') === 'true';
