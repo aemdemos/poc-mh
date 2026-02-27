@@ -107,15 +107,111 @@
   padding: 30vh 24px 0;
 }
 
-/* Bottom spacing on the last element (CTA) */
-.hero > div:last-child > div > :last-child {
-  padding-bottom: 80px;
-}
-
+/* Button styling */
 .hero .button-container a {
   background-color: white;
   color: rgb(0 22 59);
   border-color: white;
+  font-size: 18px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.8px;
+  padding: 5px 24px;
+  border-radius: 24px;
+}
+
+/* ── Hero Intro (Screen 2): two-column layout ── */
+.hero-intro {
+  padding: 30vh 0 40px;
+  position: relative;
+}
+
+.hero-intro-text {
+  margin-bottom: 24px;
+}
+
+.hero-intro-text h1 {
+  padding-top: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+.hero-intro-text p {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* CTA box */
+.hero-intro-cta {
+  background-color: rgb(64 68 94);
+  padding: 32px;
+  box-sizing: border-box;
+}
+
+/* Reset p:first-child overrides leaking into CTA box */
+/* stylelint-disable-next-line no-descending-specificity */
+.hero-intro-cta p,
+.hero-intro-cta p:first-child {
+  min-height: unset;
+  display: block;
+  flex-direction: unset;
+  justify-content: unset;
+  padding: 0;
+  font-size: 1.25rem;
+  font-weight: 400;
+  font-family: var(--heading-font-family);
+  text-transform: none;
+  letter-spacing: normal;
+  line-height: 1;
+  margin: 0 0 20px;
+  box-sizing: border-box;
+}
+
+.hero-intro-cta .button-container {
+  margin-top: 0;
+  font-weight: 400;
+}
+
+/* Down arrow */
+.hero-intro-arrow {
+  display: flex;
+  justify-content: center;
+  padding: 32px 0 0;
+}
+
+.hero-intro-arrow button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgb(211 213 225);
+  background: transparent;
+  color: white;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  transition: background-color 0.2s;
+}
+
+.hero-intro-arrow button:hover {
+  background-color: rgb(255 255 255 / 15%);
+}
+
+.hero-intro-arrow svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Horizontal keyline after the hero section */
+.hero-container::after {
+  content: '';
+  display: block;
+  height: 1px;
+  background: rgb(211 213 225);
+  margin: 0 40px;
 }
 
 @media (width >= 900px) {
@@ -130,7 +226,7 @@
   .hero h1 {
     font-size: 5rem;
     line-height: 1;
-    padding: 30vh 120px 0;
+    padding: 30vh 0 0;
     margin: 0 0 20px;
   }
 
@@ -138,7 +234,7 @@
   .hero p {
     font-size: 2rem;
     line-height: 1.1;
-    padding: 0 120px;
+    padding: 0;
   }
 
   /* Screen 1 — label sizing at desktop (must follow general .hero p) */
@@ -149,7 +245,44 @@
     line-height: 20px;
   }
 
-  .hero > div:last-child > div > :last-child {
-    padding-bottom: 120px;
+  /* Two-column intro layout on desktop */
+  .hero-intro {
+    display: flex;
+    align-items: flex-start;
+    gap: 40px;
+    padding: 30vh 120px 60px;
+    flex-wrap: wrap;
+  }
+
+  .hero-intro-text {
+    flex: 1;
+    min-width: 0;
+    margin-bottom: 0;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  .hero-intro-text h1 {
+    padding-top: 0;
+  }
+
+  .hero-intro-cta {
+    flex: 0 0 340px;
+    min-width: 0;
+    padding: 40px;
+    align-self: flex-start;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  .hero-intro-cta p,
+  .hero-intro-cta p:first-child {
+    font-size: 36px;
+    line-height: 1;
+    padding: 0;
+  }
+
+  /* Arrow spans full width below the columns */
+  .hero-intro-arrow {
+    flex-basis: 100%;
+    padding-top: 40px;
   }
 }

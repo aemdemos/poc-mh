@@ -22,7 +22,7 @@
 
   /* fonts */
   --body-font-family: roboto, roboto-fallback, sans-serif;
-  --heading-font-family: roboto-condensed, roboto-condensed-fallback, sans-serif;
+  --heading-font-family: big-shoulders-display, roboto-condensed, roboto-condensed-fallback, sans-serif;
 
   /* body sizes */
   --body-font-size-m: 22px;
@@ -256,6 +256,34 @@ main > .section:first-of-type {
   main > .section > div {
     padding: 0 32px;
   }
+}
+
+/* horizontal keylines between sections */
+main > .section + .section::before {
+  content: '';
+  display: block;
+  height: 1px;
+  background: rgb(211 213 225);
+  margin: 0 auto;
+  max-width: calc(100% - 80px);
+  position: relative;
+  top: -40px;
+}
+
+/* Remove keyline when following section has its own background */
+main > .section.muted-blue::before,
+main > .section.white-bg::before,
+main > .section.light::before,
+main > .section.highlight::before {
+  display: none;
+}
+
+/* Also remove keyline after a styled section */
+main > .section.muted-blue + .section::before,
+main > .section.white-bg + .section::before,
+main > .section.light + .section::before,
+main > .section.highlight + .section::before {
+  display: none;
 }
 
 /* section metadata */
