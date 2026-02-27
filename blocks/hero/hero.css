@@ -164,12 +164,12 @@
   text-transform: none;
   letter-spacing: normal;
   line-height: 1;
-  margin: 0 0 8px;
+  margin: 0 0 20px;
   box-sizing: border-box;
 }
 
 .hero-intro-cta .button-container {
-  margin-top: 16px;
+  margin-top: 0;
   font-weight: 400;
 }
 
