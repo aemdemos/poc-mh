@@ -1,7 +1,8 @@
-/* ── Navigation buttons (above cards) ── */
+/* ── Navigation buttons (above cards, right-aligned) ── */
 .carousel .carousel-navigation-buttons {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 12px;
   margin-bottom: 24px;
 }
