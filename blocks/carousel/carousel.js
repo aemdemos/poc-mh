@@ -1,74 +1,35 @@
 import { moveInstrumentation } from '../../scripts/scripts.js';
-import { fetchPlaceholders } from '../../scripts/placeholders.js';
 
-function updateActiveSlide(slide) {
-  const block = slide.closest('.carousel');
-  const slideIndex = parseInt(slide.dataset.slideIndex, 10);
-  block.dataset.activeSlide = slideIndex;
+const ARROW_SVG = `<svg viewBox="0 0 24 24" fill="currentColor">
+  <path d="M12 19L11.29 18.29L17.08 12.5H5V11.5H17.08L11.29 5.71L12 5L18.29 11.29L19 12L18.29 12.71L12 19Z"/>
+</svg>`;
 
-  const slides = block.querySelectorAll('.carousel-slide');
+const PREV_SVG = `<svg viewBox="0 0 25 24" fill="currentColor">
+  <path d="M12.76 5L13.47 5.71L7.67 11.5H19.75V12.5H7.67L13.47 18.29L12.76 19L6.47 12.71L5.76 12L6.47 11.29L12.76 5Z"/>
+</svg>`;
 
-  slides.forEach((aSlide, idx) => {
-    aSlide.setAttribute('aria-hidden', idx !== slideIndex);
-    aSlide.querySelectorAll('a').forEach((link) => {
-      if (idx !== slideIndex) {
-        link.setAttribute('tabindex', '-1');
-      } else {
-        link.removeAttribute('tabindex');
-      }
-    });
-  });
+const NEXT_SVG = `<svg viewBox="0 0 24 24" fill="currentColor">
+  <path d="M12 19L11.29 18.29L17.08 12.5H5V11.5H17.08L11.29 5.71L12 5L18.29 11.29L19 12L18.29 12.71L12 19Z"/>
+</svg>`;
 
-  const indicators = block.querySelectorAll('.carousel-slide-indicator');
-  indicators.forEach((indicator, idx) => {
-    if (idx !== slideIndex) {
-      indicator.querySelector('button').removeAttribute('disabled');
-    } else {
-      indicator.querySelector('button').setAttribute('disabled', 'true');
-    }
-  });
+function scrollByCard(block, direction) {
+  const slides = block.querySelector('.carousel-slides');
+  const card = slides.querySelector('.carousel-slide');
+  if (!card) return;
+  const gap = parseInt(window.getComputedStyle(slides).columnGap, 10) || 40;
+  const cardWidth = card.offsetWidth + gap;
+  slides.scrollBy({ left: direction * cardWidth, behavior: 'smooth' });
 }
 
-export function showSlide(block, slideIndex = 0, behavior = 'smooth') {
-  const slides = block.querySelectorAll('.carousel-slide');
-  let realSlideIndex = slideIndex < 0 ? slides.length - 1 : slideIndex;
-  if (slideIndex >= slides.length) realSlideIndex = 0;
-  const activeSlide = slides[realSlideIndex];
+function updateNavState(block) {
+  const slides = block.querySelector('.carousel-slides');
+  const prevBtn = block.querySelector('.slide-prev');
+  const nextBtn = block.querySelector('.slide-next');
+  if (!slides || !prevBtn || !nextBtn) return;
 
-  activeSlide.querySelectorAll('a').forEach((link) => link.removeAttribute('tabindex'));
-  block.querySelector('.carousel-slides').scrollTo({
-    top: 0,
-    left: activeSlide.offsetLeft,
-    behavior,
-  });
-}
-
-function bindEvents(block) {
-  const slideIndicators = block.querySelector('.carousel-slide-indicators');
-  if (!slideIndicators) return;
-
-  slideIndicators.querySelectorAll('button').forEach((button) => {
-    button.addEventListener('click', (e) => {
-      const slideIndicator = e.currentTarget.parentElement;
-      showSlide(block, parseInt(slideIndicator.dataset.targetSlide, 10));
-    });
-  });
-
-  block.querySelector('.slide-prev').addEventListener('click', () => {
-    showSlide(block, parseInt(block.dataset.activeSlide, 10) - 1);
-  });
-  block.querySelector('.slide-next').addEventListener('click', () => {
-    showSlide(block, parseInt(block.dataset.activeSlide, 10) + 1);
-  });
-
-  const slideObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) updateActiveSlide(entry.target);
-    });
-  }, { threshold: 0.5 });
-  block.querySelectorAll('.carousel-slide').forEach((slide) => {
-    slideObserver.observe(slide);
-  });
+  const { scrollLeft, scrollWidth, clientWidth } = slides;
+  prevBtn.disabled = scrollLeft <= 1;
+  nextBtn.disabled = scrollLeft + clientWidth >= scrollWidth - 1;
 }
 
 function createSlide(row, slideIndex, carouselId) {
@@ -77,14 +38,73 @@ function createSlide(row, slideIndex, carouselId) {
   slide.setAttribute('id', `carousel-${carouselId}-slide-${slideIndex}`);
   slide.classList.add('carousel-slide');
 
-  row.querySelectorAll(':scope > div').forEach((column, colIdx) => {
-    column.classList.add(`carousel-slide-${colIdx === 0 ? 'image' : 'content'}`);
-    slide.append(column);
-  });
+  const columns = row.querySelectorAll(':scope > div');
+  const imageCol = columns[0];
+  const contentCol = columns[1];
 
-  const labeledBy = slide.querySelector('h1, h2, h3, h4, h5, h6');
-  if (labeledBy) {
-    slide.setAttribute('aria-labelledby', labeledBy.getAttribute('id'));
+  // Image section
+  const imageDiv = document.createElement('div');
+  imageDiv.className = 'carousel-slide-image';
+  const picture = imageCol?.querySelector('picture');
+  if (picture) imageDiv.append(picture);
+  slide.append(imageDiv);
+
+  // Content section — extract heading link and description
+  const contentDiv = document.createElement('div');
+  contentDiv.className = 'carousel-slide-content';
+
+  let href = '';
+  let title = '';
+  let description = '';
+
+  if (contentCol) {
+    const link = contentCol.querySelector('a');
+    if (link) {
+      href = link.href;
+      title = link.textContent.trim();
+    }
+
+    // Get description: text after the link's container
+    const paragraph = contentCol.querySelector('p');
+    if (paragraph) {
+      const clone = paragraph.cloneNode(true);
+      const strong = clone.querySelector('strong');
+      if (strong) strong.remove();
+      const br = clone.querySelector('br');
+      if (br) br.remove();
+      description = clone.textContent.trim();
+    }
+  }
+
+  const heading = document.createElement('strong');
+  if (href) {
+    const headingLink = document.createElement('a');
+    headingLink.href = href;
+    headingLink.textContent = title;
+    heading.append(headingLink);
+  } else {
+    heading.textContent = title;
+  }
+  contentDiv.append(heading);
+
+  if (description) {
+    const desc = document.createElement('p');
+    desc.textContent = description;
+    contentDiv.append(desc);
+  }
+
+  slide.append(contentDiv);
+
+  // CTA arrow
+  if (href) {
+    const ctaDiv = document.createElement('div');
+    ctaDiv.className = 'carousel-slide-cta';
+    const ctaLink = document.createElement('a');
+    ctaLink.href = href;
+    ctaLink.setAttribute('aria-label', `Read more about ${title}`);
+    ctaLink.innerHTML = `<span class="carousel-cta-icon">${ARROW_SVG}</span>`;
+    ctaDiv.append(ctaLink);
+    slide.append(ctaDiv);
   }
 
   return slide;
@@ -94,59 +114,50 @@ let carouselId = 0;
 export default async function decorate(block) {
   carouselId += 1;
   block.setAttribute('id', `carousel-${carouselId}`);
-  const rows = block.querySelectorAll(':scope > div');
+  const rows = [...block.querySelectorAll(':scope > div')];
   const isSingleSlide = rows.length < 2;
 
-  const placeholders = await fetchPlaceholders();
-
   block.setAttribute('role', 'region');
-  block.setAttribute('aria-roledescription', placeholders.carousel || 'Carousel');
+  block.setAttribute('aria-roledescription', 'Carousel');
 
+  // Navigation buttons — positioned above the cards
+  if (!isSingleSlide) {
+    const slideNavButtons = document.createElement('div');
+    slideNavButtons.classList.add('carousel-navigation-buttons');
+    slideNavButtons.innerHTML = `
+      <button type="button" class="slide-prev" aria-label="Previous Slide" disabled>
+        <span class="carousel-nav-icon">${PREV_SVG}</span>
+      </button>
+      <button type="button" class="slide-next" aria-label="Next Slide">
+        <span class="carousel-nav-icon">${NEXT_SVG}</span>
+      </button>
+    `;
+    block.prepend(slideNavButtons);
+  }
+
+  // Slides container
   const container = document.createElement('div');
   container.classList.add('carousel-slides-container');
 
   const slidesWrapper = document.createElement('ul');
   slidesWrapper.classList.add('carousel-slides');
-  block.prepend(slidesWrapper);
-
-  let slideIndicators;
-  if (!isSingleSlide) {
-    const slideIndicatorsNav = document.createElement('nav');
-    slideIndicatorsNav.setAttribute('aria-label', placeholders.carouselSlideControls || 'Carousel Slide Controls');
-    slideIndicators = document.createElement('ol');
-    slideIndicators.classList.add('carousel-slide-indicators');
-    slideIndicatorsNav.append(slideIndicators);
-    block.append(slideIndicatorsNav);
-
-    const slideNavButtons = document.createElement('div');
-    slideNavButtons.classList.add('carousel-navigation-buttons');
-    slideNavButtons.innerHTML = `
-      <button type="button" class= "slide-prev" aria-label="${placeholders.previousSlide || 'Previous Slide'}"></button>
-      <button type="button" class="slide-next" aria-label="${placeholders.nextSlide || 'Next Slide'}"></button>
-    `;
-
-    container.append(slideNavButtons);
-  }
 
   rows.forEach((row, idx) => {
     const slide = createSlide(row, idx, carouselId);
     moveInstrumentation(row, slide);
     slidesWrapper.append(slide);
-
-    if (slideIndicators) {
-      const indicator = document.createElement('li');
-      indicator.classList.add('carousel-slide-indicator');
-      indicator.dataset.targetSlide = idx;
-      indicator.innerHTML = `<button type="button" aria-label="${placeholders.showSlide || 'Show Slide'} ${idx + 1} ${placeholders.of || 'of'} ${rows.length}"></button>`;
-      slideIndicators.append(indicator);
-    }
     row.remove();
   });
 
   container.append(slidesWrapper);
-  block.prepend(container);
+  block.append(container);
 
+  // Bind scroll events
   if (!isSingleSlide) {
-    bindEvents(block);
+    block.querySelector('.slide-prev').addEventListener('click', () => scrollByCard(block, -1));
+    block.querySelector('.slide-next').addEventListener('click', () => scrollByCard(block, 1));
+    slidesWrapper.addEventListener('scroll', () => updateNavState(block), { passive: true });
+    // Delay initial state check until after layout
+    requestAnimationFrame(() => updateNavState(block));
   }
 }
