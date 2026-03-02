@@ -65,11 +65,11 @@
     --body-font-size-s: 16px;
     --body-font-size-xs: 14px;
 
-    /* heading sizes */
+    /* heading sizes - matched to original royalnavy.mod.uk */
     --heading-font-size-xxl: 64px;
-    --heading-font-size-xl: 48px;
-    --heading-font-size-l: 28px;
-    --heading-font-size-m: 22px;
+    --heading-font-size-xl: 64px;
+    --heading-font-size-l: 36px;
+    --heading-font-size-m: 24px;
     --heading-font-size-s: 20px;
     --heading-font-size-xs: 18px;
   }
@@ -129,8 +129,15 @@ h1 {
   text-transform: uppercase;
 }
 
-h2 { font-size: var(--heading-font-size-xl); }
-h3 { font-size: var(--heading-font-size-l); }
+h2 {
+  font-size: var(--heading-font-size-xl);
+  margin: 0 0 20px;
+}
+
+h3 {
+  font-size: var(--heading-font-size-l);
+  margin: 0 0 20px;
+}
 h4 { font-size: var(--heading-font-size-m); }
 h5 { font-size: var(--heading-font-size-s); }
 h6 { font-size: var(--heading-font-size-xs); }
@@ -245,6 +252,13 @@ main img {
   width: 100%;
 }
 
+/* Section description text */
+main .section > div > h2 + p {
+  font-size: 18px;
+  line-height: 1.4;
+  margin: 0 0 20px;
+}
+
 /* sections */
 main > .section {
   margin: 40px 0;
@@ -306,14 +320,14 @@ main .section.highlight {
 main .section.muted-blue {
   background-color: rgb(101 117 149);
   margin: 0;
-  padding: 40px 0;
+  padding: 60px 0;
 }
 
 main .section.white-bg {
   background-color: white;
   color: rgb(0 22 59);
   margin: 0;
-  padding: 40px 0;
+  padding: 60px 0;
 }
 
 main .section.white-bg h2,
@@ -330,6 +344,36 @@ main .section.white-bg a.button:any-link {
   background-color: rgb(0 22 59);
   color: white;
   border-color: rgb(0 22 59);
+}
+
+/* section eyebrow/label text (e.g. "Pay and Benefits" above a heading) */
+main .section > div > p:first-child:has(+ h2) {
+  font-size: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  line-height: 20px;
+  margin: 0 0 20px;
+}
+
+/* Large section headings like "Earn More. See More. Do More." */
+main .section > div > p:first-child:has(+ h2) + h2 {
+  font-size: 80px;
+  line-height: 80px;
+}
+
+@media (width < 900px) {
+  main .section > div > p:first-child:has(+ h2) + h2 {
+    font-size: 48px;
+    line-height: 48px;
+  }
+}
+
+/* CTA buttons with arrow (matching original site style) */
+a.button:any-link::after {
+  content: '\2192';
+  margin-left: 8px;
+  font-size: 1.1em;
 }
 
 /* white frame lines - desktop only */

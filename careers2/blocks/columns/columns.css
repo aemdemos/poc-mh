@@ -22,17 +22,62 @@
 /* Video caption text preserved below YouTube embeds */
 .columns .video-caption {
   margin-top: 16px;
+  font-size: 16px;
+  line-height: 1.4;
+  color: white;
 }
 
 .columns .video-caption strong {
   display: block;
-  font-size: 22px;
-  font-weight: 700;
-  margin-bottom: 8px;
+  font-family: var(--heading-font-family);
+  font-size: 36px;
+  font-weight: 400;
+  line-height: 36px;
+  margin-bottom: 20px;
 }
 
 .columns .video-caption br {
   display: none;
+}
+
+/* Video thumbnail with play button overlay */
+.columns .video-embed {
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 0;
+  aspect-ratio: 16 / 9;
+}
+
+.columns .video-embed .video-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.columns .video-play-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 68px;
+  height: 48px;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.columns .video-play-btn svg {
+  width: 68px;
+  height: 48px;
+}
+
+.columns .video-embed:hover .video-play-btn svg path:first-child {
+  fill: rgb(255 0 0 / 80%);
 }
 
 /* 3-col video columns: stack nicely on mobile */
@@ -40,7 +85,29 @@
   margin-bottom: 32px;
 }
 
-/* White-bg section: card-like columns with images on top */
+/* ── Pay & Benefits (image + text columns) ── */
+.columns.columns-2-cols > div > .columns-img-col + div ul {
+  padding-left: 0;
+  list-style: none;
+}
+
+.columns.columns-2-cols > div > .columns-img-col + div li {
+  padding: 4px 0;
+  font-size: 16px;
+  line-height: 1.5;
+  position: relative;
+  padding-left: 8px;
+}
+
+.columns.columns-2-cols > div > .columns-img-col + div li::before {
+  content: '-';
+  position: absolute;
+  left: 0;
+}
+
+/* ── White-bg section: card-like columns with images on top ── */
+
+/* (placed before muted-blue to maintain ascending specificity) */
 .section.white-bg .columns > div > div picture {
   display: block;
   margin-bottom: 16px;
@@ -54,15 +121,128 @@
 
 .section.white-bg .columns > div > div h2 {
   color: rgb(0 22 59);
-  font-size: 28px;
+  font-size: 48px;
+  line-height: 48px;
   margin-top: 16px;
   margin-bottom: 12px;
 }
 
+.section.white-bg .columns > div > div p {
+  font-size: 18px;
+  line-height: 1.4;
+  color: rgb(64 68 94);
+}
+
 .section.white-bg .columns > div > div a.button:any-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   background-color: rgb(0 22 59);
   color: white;
   border-color: rgb(0 22 59);
+}
+
+/* Teal arrow CTA for "Other ways to join" cards */
+.section.white-bg .columns .cta-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: var(--teal);
+  border: 2px solid var(--teal);
+  color: white;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.section.white-bg .columns .cta-arrow:hover {
+  background-color: rgb(18 180 170);
+}
+
+/* ── Muted-blue columns: shared base ── */
+.section.muted-blue .columns > div {
+  gap: 0;
+  align-items: stretch;
+}
+
+.section.muted-blue .columns > div > .columns-img-col {
+  overflow: hidden;
+}
+
+.section.muted-blue .columns > div > .columns-img-col img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ── Start your application / Got a question (muted-blue non-image columns) ── */
+.section.muted-blue .columns:not(:has(.columns-img-col)) > div {
+  gap: 0;
+}
+
+.section.muted-blue .columns:not(:has(.columns-img-col)) > div > div {
+  padding: 60px 40px;
+}
+
+.section.muted-blue .columns:not(:has(.columns-img-col)) h2 {
+  font-size: 48px;
+  line-height: 48px;
+  margin: 0 0 20px;
+}
+
+.section.muted-blue .columns:not(:has(.columns-img-col)) p {
+  font-size: 18px;
+  line-height: 1.4;
+}
+
+.section.muted-blue .columns:not(:has(.columns-img-col)) a.button:any-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: white;
+  color: rgb(0 22 59);
+  border-color: white;
+}
+
+.section.muted-blue .columns:not(:has(.columns-img-col)) a.button::after {
+  content: '\2192';
+  font-size: 1.2em;
+}
+
+/* ── Quote section (muted-blue columns with image + quote) ── */
+.section.muted-blue .columns:has(.columns-img-col) > div > div:not(.columns-img-col) {
+  padding: 40px 24px;
+  position: relative;
+}
+
+/* Teal quote icon */
+.section.muted-blue .columns:has(.columns-img-col) > div > div:not(.columns-img-col)::before {
+  content: '\201C';
+  display: block;
+  font-family: var(--heading-font-family);
+  font-size: 80px;
+  font-weight: 900;
+  color: var(--teal);
+  line-height: 0.8;
+  margin-bottom: 16px;
+}
+
+/* Quote text */
+.section.muted-blue .columns:has(.columns-img-col) > div > div:not(.columns-img-col) > p:first-of-type {
+  font-size: 24px;
+  line-height: 1.2;
+  font-style: normal;
+  margin: 0 0 24px;
+}
+
+/* Attribution name */
+.section.muted-blue .columns:has(.columns-img-col) > div > div:not(.columns-img-col) strong {
+  display: block;
+  font-size: 18px;
+  margin-top: 20px;
 }
 
 @media (width >= 900px) {
@@ -90,8 +270,38 @@
     line-height: 1.4;
   }
 
+  .columns .video-caption strong {
+    font-size: 36px;
+    line-height: 36px;
+  }
+
+  /* White-bg desktop */
   .section.white-bg .columns > div {
     align-items: start;
     gap: 40px;
+  }
+
+  .section.white-bg .columns > div > div h2 {
+    font-size: 48px;
+    line-height: 48px;
+  }
+
+  /* Start/Got a question desktop - side by side with divider */
+  .section.muted-blue .columns:not(:has(.columns-img-col)) > div > div {
+    border-right: 1px solid rgb(211 213 225 / 30%);
+  }
+
+  .section.muted-blue .columns:not(:has(.columns-img-col)) > div > div:last-child {
+    border-right: none;
+  }
+
+  .section.muted-blue .columns:not(:has(.columns-img-col)) h2 {
+    font-size: 64px;
+    line-height: 64px;
+  }
+
+  /* Quote section desktop */
+  .section.muted-blue .columns:has(.columns-img-col) > div > div:not(.columns-img-col) {
+    padding: 60px 40px;
   }
 }
