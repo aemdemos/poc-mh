@@ -134,6 +134,17 @@
   position: relative;
 }
 
+/* Horizontal separator between Screen 1 and Screen 2 */
+.hero-intro::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 40px;
+  right: 40px;
+  height: 1px;
+  background: rgb(211 213 225);
+}
+
 .hero-intro-text {
   margin-bottom: 24px;
 }
@@ -191,6 +202,19 @@
   display: flex;
   justify-content: center;
   padding: 32px 0 0;
+  position: relative;
+}
+
+/* Vertical keyline extending from arrow downward */
+.hero-intro-arrow::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 76px;
+  bottom: -80px;
+  width: 1px;
+  background: rgb(211 213 225);
+  pointer-events: none;
 }
 
 .hero-intro-arrow button {
