@@ -1,0 +1,97 @@
+.columns > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.columns img {
+  width: 100%;
+}
+
+.columns > div > div {
+  order: 1;
+}
+
+.columns > div > .columns-img-col {
+  order: 0;
+}
+
+.columns > div > .columns-img-col img {
+  display: block;
+}
+
+/* Video caption text preserved below YouTube embeds */
+.columns .video-caption {
+  margin-top: 16px;
+}
+
+.columns .video-caption strong {
+  display: block;
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.columns .video-caption br {
+  display: none;
+}
+
+/* 3-col video columns: stack nicely on mobile */
+.columns.columns-3-cols > div > div {
+  margin-bottom: 32px;
+}
+
+/* White-bg section: card-like columns with images on top */
+.section.white-bg .columns > div > div picture {
+  display: block;
+  margin-bottom: 16px;
+}
+
+.section.white-bg .columns > div > div picture img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.section.white-bg .columns > div > div h2 {
+  color: rgb(0 22 59);
+  font-size: 28px;
+  margin-top: 16px;
+  margin-bottom: 12px;
+}
+
+.section.white-bg .columns > div > div a.button:any-link {
+  background-color: rgb(0 22 59);
+  color: white;
+  border-color: rgb(0 22 59);
+}
+
+@media (width >= 900px) {
+  .columns > div {
+    align-items: center;
+    flex-direction: unset;
+    gap: 24px;
+  }
+
+  .columns > div > div {
+    flex: 1;
+    order: unset;
+  }
+
+  .columns.columns-3-cols > div {
+    align-items: start;
+  }
+
+  .columns.columns-3-cols > div > div {
+    margin-bottom: 0;
+  }
+
+  .columns .video-caption {
+    font-size: 16px;
+    line-height: 1.4;
+  }
+
+  .section.white-bg .columns > div {
+    align-items: start;
+    gap: 40px;
+  }
+}
