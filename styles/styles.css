@@ -278,6 +278,16 @@ main > .section.highlight::before {
   display: none;
 }
 
+/* Remove duplicate keyline after hero (hero-container has its own ::after keyline) */
+main > .section.hero-container + .section::before {
+  display: none;
+}
+
+/* Hide metadata block (content is read by JS, not displayed) */
+main > .section.metadata-container {
+  display: none;
+}
+
 /* Also remove keyline after a styled section */
 main > .section.muted-blue + .section::before,
 main > .section.white-bg + .section::before,
@@ -343,5 +353,11 @@ main .section.white-bg a.button:any-link {
 
   body.appear::after {
     right: 40px;
+  }
+
+  /* Hide frame lines when navigation panel is open */
+  body.appear:has(nav[aria-expanded='true'])::before,
+  body.appear:has(nav[aria-expanded='true'])::after {
+    display: none;
   }
 }

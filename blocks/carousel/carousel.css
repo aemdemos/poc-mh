@@ -1,3 +1,22 @@
+/* ── Section heading & description (above the carousel) ── */
+.carousel-container h2 {
+  font-size: 40px;
+  font-weight: 400;
+  line-height: 1;
+  margin-bottom: 20px;
+}
+
+.carousel-container .default-content-wrapper p {
+  font-size: 18px;
+  line-height: 1.4;
+}
+
+@media (width >= 900px) {
+  .carousel-container h2 {
+    font-size: 64px;
+  }
+}
+
 /* ── Navigation buttons (above cards, right-aligned) ── */
 .carousel .carousel-navigation-buttons {
   display: flex;
