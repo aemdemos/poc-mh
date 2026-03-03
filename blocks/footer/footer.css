@@ -35,6 +35,24 @@ footer .columns-container::before {
   margin: 0 auto 0 50%;
 }
 
+/* Center vertical keyline through footer columns (desktop) */
+@media (width >= 900px) {
+  footer .columns-container {
+    position: relative;
+  }
+
+  footer .columns-container::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 40px;
+    bottom: 0;
+    width: 1px;
+    background: rgb(211 213 225);
+    pointer-events: none;
+  }
+}
+
 /* Top section: social + contact columns */
 footer .columns-wrapper {
   padding-bottom: 32px;
@@ -219,12 +237,13 @@ footer a.button:hover {
 
   footer .columns > div {
     flex-direction: row;
-    gap: 80px;
+    gap: 40px;
     align-items: flex-start;
   }
 
+  /* 50/50 split to align with center vertical keyline */
   footer .columns > div > div:first-child {
-    flex: 0 0 280px;
+    flex: 1;
   }
 
   footer .columns > div > div:last-child {

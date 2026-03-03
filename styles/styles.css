@@ -278,6 +278,16 @@ main > .section.highlight::before {
   display: none;
 }
 
+/* Remove duplicate keyline after hero (hero-container has its own ::after keyline) */
+main > .section.hero-container + .section::before {
+  display: none;
+}
+
+/* Hide metadata block (content is read by JS, not displayed) */
+main > .section.metadata-container {
+  display: none;
+}
+
 /* Also remove keyline after a styled section */
 main > .section.muted-blue + .section::before,
 main > .section.white-bg + .section::before,
@@ -298,6 +308,13 @@ main .section.muted-blue {
   background-color: rgb(101 117 149);
   margin: 0;
   padding: 40px 0;
+}
+
+/* White keylines around images in the quote/muted-blue columns section */
+main .section.muted-blue .columns > div > .columns-img-col {
+  position: relative;
+  padding: 1px;
+  border: 1px solid rgb(211 213 225);
 }
 
 main .section.white-bg {
@@ -323,25 +340,83 @@ main .section.white-bg a.button:any-link {
   border-color: rgb(0 22 59);
 }
 
-/* white frame lines - desktop only */
+/* Section-specific center vertical keylines (desktop only) */
 @media (width >= 900px) {
-  body.appear::before,
-  body.appear::after {
+  /* All dark-background content sections get a center vertical keyline */
+  main > .section:not(.hero-container, .muted-blue, .white-bg, .metadata-container) {
+    position: relative;
+  }
+
+  main > .section:not(.hero-container, .muted-blue, .white-bg, .metadata-container)::after {
     content: '';
-    position: fixed;
+    position: absolute;
+    left: 50%;
     top: 0;
     bottom: 0;
     width: 1px;
     background: rgb(211 213 225);
-    z-index: 10;
     pointer-events: none;
+    z-index: 0;
   }
+}
 
-  body.appear::before {
-    left: 40px;
-  }
+/* ── Teal circular arrow buttons ── */
 
-  body.appear::after {
-    right: 40px;
-  }
+/* Target any link in white-bg/muted-blue columns that acts as a CTA */
+.section.white-bg .columns > div > div a:any-link:last-of-type,
+.section.muted-blue .columns > div > div a:any-link:last-of-type {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: rgb(0 191 179);
+  color: white;
+  padding: 0;
+  margin: 16px 0 0;
+  border: none;
+  font-size: 0;
+  line-height: 0;
+  text-decoration: none;
+}
+
+.section.white-bg .columns > div > div a:last-of-type::after,
+.section.muted-blue .columns > div > div a:last-of-type::after {
+  content: '';
+  display: block;
+  width: 14px;
+  height: 14px;
+  border-right: 2px solid white;
+  border-bottom: 2px solid white;
+  transform: rotate(-45deg);
+  margin-left: -4px;
+}
+
+.section.white-bg .columns > div > div a:last-of-type:hover,
+.section.muted-blue .columns > div > div a:last-of-type:hover {
+  background-color: rgb(0 160 150);
+}
+
+/* ── Heading-like strong text in white-bg and muted-blue CTA sections ── */
+
+/* Use :not(:has(.columns-img-col)) on muted-blue to avoid styling the quote attribution */
+.section.white-bg .columns > div > div strong:first-of-type,
+.section.muted-blue .columns:not(:has(.columns-img-col)) > div > div strong:first-of-type {
+  display: block;
+  font-family: var(--heading-font-family);
+  font-size: var(--heading-font-size-xl);
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 1.1;
+  margin-bottom: 16px;
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+.section.white-bg .columns > div > div strong:first-of-type {
+  color: rgb(0 22 59);
+}
+
+.section.muted-blue .columns:not(:has(.columns-img-col)) > div > div strong:first-of-type {
+  color: white;
 }

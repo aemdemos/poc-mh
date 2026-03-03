@@ -1,47 +1,118 @@
 function buildIntroSection(block) {
+  // Find the content row — the div containing text with a '#' heading marker
   const contentDiv = Array.from(block.querySelectorAll(':scope > div'))
-    .find((div) => div.querySelector('h1'));
+    .find((div) => {
+      const p = div.querySelector('p');
+      return p && p.textContent.includes('#');
+    });
   if (!contentDiv) return;
 
   const inner = contentDiv.querySelector(':scope > div');
   if (!inner) return;
 
-  const h1 = inner.querySelector('h1');
-  if (!h1) return;
+  const p = inner.querySelector('p');
+  if (!p) return;
 
-  // Collect "Screen 2" elements: everything from h1 onward
-  const screen2Els = [];
-  let el = h1;
-  while (el) {
-    const next = el.nextElementSibling;
-    screen2Els.push(el);
-    el = next;
-  }
+  // Split paragraph childNodes at <br> elements into segments
+  const nodes = Array.from(p.childNodes);
+  const groups = [[]];
+  nodes.forEach((node) => {
+    if (node.nodeName === 'BR') {
+      groups.push([]);
+    } else {
+      groups[groups.length - 1].push(node);
+    }
+  });
 
-  // Split into text elements and CTA elements.
-  // CTA starts at the paragraph right before the button-container.
-  const ctaIdx = screen2Els.findIndex(
-    (e) => e.classList.contains('button-container'),
-  );
-  const ctaStart = ctaIdx > 0 ? ctaIdx - 1 : ctaIdx;
-  const textEls = ctaStart > 0 ? screen2Els.slice(0, ctaStart) : [screen2Els[0]];
-  const ctaEls = ctaStart >= 0 ? screen2Els.slice(ctaStart) : [];
+  // Keep only non-empty segments
+  const segments = groups.filter((g) => g.some((n) => n.textContent.trim()));
 
-  // Build the two-column intro wrapper
+  // Find the heading segment (contains "# ")
+  let headingIdx = -1;
+  let headingText = '';
+  segments.forEach((seg, i) => {
+    seg.forEach((n) => {
+      if (n.nodeType === 3 && n.textContent.includes('#')) {
+        headingIdx = i;
+        headingText = n.textContent.replace(/^[^#]*#\s*/, '').trim();
+      }
+    });
+  });
+
+  if (headingIdx < 0) return;
+
+  // Find the segment containing the CTA link
+  let linkIdx = -1;
+  segments.forEach((seg, i) => {
+    if (i > headingIdx && seg.some((n) => n.nodeName === 'A')) {
+      if (linkIdx < 0) linkIdx = i;
+    }
+  });
+
+  // ── Screen 1: everything before the heading (label + tagline) ──
+  const screen1P = document.createElement('p');
+  segments.slice(0, headingIdx).forEach((seg, i) => {
+    if (i > 0) screen1P.append(document.createElement('br'));
+    seg.forEach((n) => screen1P.append(n));
+  });
+  p.replaceWith(screen1P);
+
+  // ── Screen 2: build the hero-intro section ──
   const intro = document.createElement('div');
   intro.className = 'hero-intro';
 
+  // Text column: label + heading + description
   const textCol = document.createElement('div');
   textCol.className = 'hero-intro-text';
-  textEls.forEach((e) => textCol.append(e));
 
+  const label = document.createElement('p');
+  label.className = 'hero-intro-label';
+  label.textContent = 'Royal Navy';
+  textCol.append(label);
+
+  const h1 = document.createElement('h1');
+  h1.textContent = headingText;
+  textCol.append(h1);
+
+  // Description: segments between heading and CTA question
+  const descEnd = linkIdx >= 0 ? linkIdx - 1 : segments.length;
+  const descSegs = segments.slice(headingIdx + 1, descEnd);
+  if (descSegs.length) {
+    const descP = document.createElement('p');
+    descSegs.forEach((seg, i) => {
+      if (i > 0) descP.append(document.createElement('br'));
+      seg.forEach((n) => descP.append(n));
+    });
+    textCol.append(descP);
+  }
+
+  // CTA column
   const ctaCol = document.createElement('div');
   ctaCol.className = 'hero-intro-cta';
-  ctaEls.forEach((e) => ctaCol.append(e));
+
+  // CTA question text (segment before the link)
+  if (linkIdx > 0) {
+    const questionSeg = segments[linkIdx - 1];
+    const ctaP = document.createElement('p');
+    questionSeg.forEach((n) => ctaP.append(n));
+    ctaCol.append(ctaP);
+  }
+
+  // CTA button
+  if (linkIdx >= 0) {
+    const linkSeg = segments[linkIdx];
+    const btnContainer = document.createElement('p');
+    btnContainer.className = 'button-container';
+    linkSeg.forEach((n) => {
+      if (n.nodeName === 'A') n.className = 'button';
+      btnContainer.append(n);
+    });
+    ctaCol.append(btnContainer);
+  }
 
   intro.append(textCol, ctaCol);
 
-  // Add the down-arrow button
+  // Down-arrow button
   const arrow = document.createElement('div');
   arrow.className = 'hero-intro-arrow';
   arrow.innerHTML = `<button aria-label="Next section" type="button">
