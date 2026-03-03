@@ -112,7 +112,7 @@ function buildIntroSection(block) {
 
   intro.append(textCol, ctaCol);
 
-  // Down-arrow button
+  // Down-arrow button inside hero-intro (final resting position)
   const arrow = document.createElement('div');
   arrow.className = 'hero-intro-arrow';
   arrow.innerHTML = `<button aria-label="Next section" type="button">
@@ -123,6 +123,37 @@ function buildIntroSection(block) {
   intro.append(arrow);
 
   inner.append(intro);
+
+  // Floating arrow overlay at bottom of the video viewport (Screen 1)
+  const videoArrow = document.createElement('div');
+  videoArrow.className = 'hero-video-arrow';
+  videoArrow.innerHTML = `<button aria-label="Next section" type="button">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+      <path d="M7.5 12.0821L13.2936 6.28856L14.0007 6.99567L7.70747 13.2889L7.70805 13.2894L7.00094 13.9965L7.00037 13.996L6.99609 14.0002L6.28899 13.2931L6.29326 13.2889L0 6.99561L0.707107 6.2885L6.5 12.0814V0.000244141H7.5V12.0821Z"/>
+    </svg>
+  </button>`;
+
+  // Click scrolls to the intro section
+  videoArrow.querySelector('button').addEventListener('click', () => {
+    intro.scrollIntoView({ behavior: 'smooth' });
+  });
+
+  // Insert the floating arrow as a direct child of the block
+  block.append(videoArrow);
+
+  // Fade out the floating arrow as user scrolls away from Screen 1
+  const screen1 = inner.closest('.hero').querySelector('p:first-child');
+  if (screen1) {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        // Fade out when Screen 1 leaves viewport
+        videoArrow.style.opacity = entry.intersectionRatio > 0.1 ? '1' : '0';
+        videoArrow.style.pointerEvents = entry.intersectionRatio > 0.1 ? 'auto' : 'none';
+      },
+      { threshold: [0, 0.1, 0.5, 1] },
+    );
+    observer.observe(screen1);
+  }
 }
 
 export default function decorate(block) {
