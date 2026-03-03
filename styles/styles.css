@@ -265,7 +265,7 @@ main > .section + .section::before {
   height: 1px;
   background: rgb(211 213 225);
   margin: 0 auto;
-  max-width: calc(100% - 80px);
+  max-width: calc(100% - 60px);
   position: relative;
   top: -40px;
 }

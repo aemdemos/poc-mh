@@ -328,7 +328,7 @@
   display: block;
   height: 1px;
   background: rgb(211 213 225);
-  margin: 0 40px;
+  margin: 0 30px;
 }
 
 @media (width >= 900px) {
