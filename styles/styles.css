@@ -348,10 +348,17 @@ main .section.white-bg a.button:any-link {
     display: none;
   }
 
+  /* Hide center line on Discover section (3-col video cards) */
+  main > .section:has(.columns-3-cols)::after {
+    display: none;
+  }
+
   /* Constrain section headings to left half where carousel/3-col cards follow */
   main > .section:has(.columns-3-cols) > .default-content-wrapper,
   main > .section:has(.carousel) > .default-content-wrapper {
     max-width: 50%;
+    margin-left: 0;
+    margin-right: auto;
   }
 }
 
