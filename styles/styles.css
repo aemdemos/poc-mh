@@ -360,6 +360,14 @@ main .section.white-bg a.button:any-link {
     margin-left: 0;
     margin-right: auto;
   }
+
+  /* Discover & Choose section heading: match source sizing */
+  main > .section:has(.columns-3-cols) > .default-content-wrapper h2,
+  main > .section:has(.carousel) > .default-content-wrapper h2 {
+    font-size: 64px;
+    font-weight: 400;
+    line-height: 1;
+  }
 }
 
 /* ── Teal circular arrow buttons ── */
