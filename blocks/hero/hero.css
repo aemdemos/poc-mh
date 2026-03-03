@@ -29,6 +29,20 @@
   pointer-events: none;
 }
 
+/* Side piping (vertical white lines) on the video area */
+.hero::after {
+  content: '';
+  position: absolute;
+  top: 64px;
+  left: 40px;
+  right: 40px;
+  height: calc(100vh - 64px);
+  border-left: 1px solid rgb(211 213 225);
+  border-right: 1px solid rgb(211 213 225);
+  pointer-events: none;
+  z-index: 3;
+}
+
 .hero img {
   object-fit: cover;
   width: 100%;
@@ -70,7 +84,7 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 64px 24px 60px;
+  padding: 64px 24px 80px;
   box-sizing: border-box;
   font-size: 16px;
   font-weight: 700;
@@ -229,12 +243,13 @@
 /* Higher specificity needed to override .hero > div { position: relative } */
 .hero .hero-video-arrow {
   position: absolute;
-  top: calc(100vh - 80px);
+  top: calc(100vh - 60px);
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   pointer-events: auto;
   transition: opacity 0.4s ease;
 }
@@ -280,7 +295,7 @@
 .hero-intro-arrow {
   display: flex;
   justify-content: center;
-  padding: 32px 0 0;
+  padding: 48px 0 0;
   position: relative;
 }
 
@@ -289,8 +304,8 @@
   content: '';
   position: absolute;
   left: 50%;
-  top: 76px;
-  bottom: -80px;
+  top: 92px;
+  bottom: -120px;
   width: 1px;
   background: rgb(211 213 225);
   pointer-events: none;
@@ -419,6 +434,6 @@
   /* Arrow spans full width below the columns */
   .hero-intro-arrow {
     flex-basis: 100%;
-    padding-top: 40px;
+    padding-top: 48px;
   }
 }

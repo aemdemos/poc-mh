@@ -9,6 +9,8 @@
 
 .columns > div > div {
   order: 1;
+  position: relative;
+  z-index: 1;
 }
 
 .columns > div > .columns-img-col {
@@ -17,6 +19,118 @@
 
 .columns > div > .columns-img-col img {
   display: block;
+}
+
+/* ── YouTube thumbnail cards ── */
+.youtube-thumbnail {
+  position: relative;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.youtube-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.youtube-play-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: rgb(0 191 179);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.youtube-play-btn:hover {
+  background-color: rgb(0 160 150);
+}
+
+.youtube-play-btn svg {
+  width: 24px;
+  height: 24px;
+  fill: white;
+  margin-left: 4px;
+}
+
+/* ── 3-col video card layout (Discover section) ── */
+.columns.columns-3-cols > div {
+  flex-direction: row;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  gap: 24px;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.columns.columns-3-cols > div::-webkit-scrollbar {
+  display: none;
+}
+
+.columns.columns-3-cols > div > div {
+  flex: 0 0 300px;
+  scroll-snap-align: start;
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+.columns.columns-3-cols > div > div strong {
+  display: block;
+  font-family: var(--heading-font-family);
+  font-size: var(--heading-font-size-l);
+  font-weight: 700;
+  margin: 12px 0 4px;
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+.columns.columns-3-cols > div > div p {
+  font-size: 14px;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* ── Quote section (muted-blue with image column) ── */
+.section.muted-blue .columns:has(.columns-img-col) > div > div:not(.columns-img-col) {
+  padding: 32px 0;
+}
+
+/* Decorative opening quote mark */
+.section.muted-blue .columns:has(.columns-img-col) > div > div:not(.columns-img-col)::before {
+  content: '\201C';
+  display: block;
+  font-size: 80px;
+  font-family: var(--heading-font-family);
+  color: white;
+  line-height: 0.6;
+  margin-bottom: 16px;
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+.section.muted-blue .columns:has(.columns-img-col) > div > div:not(.columns-img-col) p {
+  font-size: 1.25rem;
+  line-height: 1.4;
+  font-style: italic;
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+.section.muted-blue .columns:has(.columns-img-col) > div > div:not(.columns-img-col) strong {
+  font-style: normal;
+  display: block;
+  margin-top: 16px;
+  font-size: 1rem;
 }
 
 @media (width >= 900px) {
@@ -33,5 +147,26 @@
 
   .columns.columns-3-cols > div {
     align-items: start;
+  }
+
+  .columns.columns-3-cols > div > div {
+    flex: 0 0 320px;
+  }
+
+  /* Quote section: image takes more space */
+  .section.muted-blue .columns:has(.columns-img-col) > div {
+    align-items: stretch;
+  }
+
+  .section.muted-blue .columns:has(.columns-img-col) > div > .columns-img-col {
+    flex: 1.2;
+  }
+
+  .section.muted-blue .columns:has(.columns-img-col) > div > div:not(.columns-img-col) {
+    flex: 0.8;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 }
