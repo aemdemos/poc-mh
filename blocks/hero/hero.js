@@ -183,18 +183,15 @@ function buildIntroSection(block) {
   // Insert the floating arrow as a direct child of the block
   block.append(videoArrow);
 
-  // Fade out the floating arrow as user scrolls away from Screen 1
-  const screen1 = inner.querySelector('p:first-child');
-  if (screen1) {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        videoArrow.style.opacity = entry.intersectionRatio > 0.1 ? '1' : '0';
-        videoArrow.style.pointerEvents = entry.intersectionRatio > 0.1 ? 'auto' : 'none';
-      },
-      { threshold: [0, 0.1, 0.5, 1] },
-    );
-    observer.observe(screen1);
-  }
+  // Fade out the floating arrow as soon as the user starts scrolling.
+  // Fully transparent by 200px of scroll.
+  const fadeDistance = 200;
+  const handleScroll = () => {
+    const ratio = Math.min(window.scrollY / fadeDistance, 1);
+    videoArrow.style.opacity = String(1 - ratio);
+    videoArrow.style.pointerEvents = ratio >= 1 ? 'none' : 'auto';
+  };
+  window.addEventListener('scroll', handleScroll, { passive: true });
 }
 
 export default function decorate(block) {
