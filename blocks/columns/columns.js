@@ -11,16 +11,23 @@ function embedYouTube(link) {
   const wrapper = document.createElement('div');
   wrapper.className = 'youtube-thumbnail';
 
-  const img = document.createElement('img');
-  img.src = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
-  img.alt = 'Video thumbnail';
-  img.loading = 'lazy';
-  wrapper.append(img);
+  // Use an existing <picture> from the same column as thumbnail if available
+  const col = link.closest('div');
+  const existingPic = col ? col.querySelector('picture') : null;
+  if (existingPic) {
+    wrapper.append(existingPic);
+  } else {
+    const img = document.createElement('img');
+    img.src = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+    img.alt = 'Video thumbnail';
+    img.loading = 'lazy';
+    wrapper.append(img);
+  }
 
   const playBtn = document.createElement('button');
   playBtn.className = 'youtube-play-btn';
   playBtn.setAttribute('aria-label', 'Play video');
-  playBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>`;
+  playBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>';
   wrapper.append(playBtn);
 
   playBtn.addEventListener('click', () => {
@@ -56,6 +63,17 @@ function embedYouTube(link) {
     link.replaceWith(wrapper);
     while (wrapper.nextSibling && wrapper.nextSibling.nodeName === 'BR') {
       wrapper.nextSibling.remove();
+    }
+    while (wrapper.nextSibling && wrapper.nextSibling.nodeType === 3
+      && !wrapper.nextSibling.textContent.trim()) {
+      wrapper.nextSibling.remove();
+    }
+    while (wrapper.previousSibling && wrapper.previousSibling.nodeName === 'BR') {
+      wrapper.previousSibling.remove();
+    }
+    while (wrapper.previousSibling && wrapper.previousSibling.nodeType === 3
+      && !wrapper.previousSibling.textContent.trim()) {
+      wrapper.previousSibling.remove();
     }
   }
 }
