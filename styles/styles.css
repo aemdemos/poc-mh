@@ -270,14 +270,6 @@ main > .section + .section::before {
   top: -40px;
 }
 
-/* Remove keyline when following section has its own background */
-main > .section.muted-blue::before,
-main > .section.white-bg::before,
-main > .section.light::before,
-main > .section.highlight::before {
-  display: none;
-}
-
 /* Remove duplicate keyline after hero (hero-container has its own ::after keyline) */
 main > .section.hero-container + .section::before {
   display: none;
@@ -285,14 +277,6 @@ main > .section.hero-container + .section::before {
 
 /* Hide metadata block (content is read by JS, not displayed) */
 main > .section.metadata-container {
-  display: none;
-}
-
-/* Also remove keyline after a styled section */
-main > .section.muted-blue + .section::before,
-main > .section.white-bg + .section::before,
-main > .section.light + .section::before,
-main > .section.highlight + .section::before {
   display: none;
 }
 
@@ -342,12 +326,12 @@ main .section.white-bg a.button:any-link {
 
 /* Section-specific center vertical keylines (desktop only) */
 @media (width >= 900px) {
-  /* All dark-background content sections get a center vertical keyline */
-  main > .section:not(.hero-container, .muted-blue, .white-bg, .metadata-container) {
+  /* All content sections get a center vertical keyline */
+  main > .section:not(.hero-container, .metadata-container) {
     position: relative;
   }
 
-  main > .section:not(.hero-container, .muted-blue, .white-bg, .metadata-container)::after {
+  main > .section:not(.hero-container, .metadata-container)::after {
     content: '';
     position: absolute;
     left: 50%;
@@ -357,6 +341,11 @@ main .section.white-bg a.button:any-link {
     background: rgb(211 213 225);
     pointer-events: none;
     z-index: 0;
+  }
+
+  /* Hide center line on quote section (muted-blue with image column) */
+  main > .section.muted-blue:has(.columns-img-col)::after {
+    display: none;
   }
 }
 
