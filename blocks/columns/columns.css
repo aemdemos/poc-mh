@@ -160,14 +160,17 @@
     margin-bottom: 24px;
   }
 
-  /* Discover variant: text left 50%, nav arrows right — matching source layout */
-  .section:has(.columns.discover) > .default-content-wrapper {
-    max-width: 50%;
+  /* Discover variant: position nav arrows alongside the section heading text */
+  .columns.discover.columns-3-cols {
+    position: relative;
   }
 
   .columns.discover.columns-3-cols > .columns-3-cols-nav {
-    margin-top: -68px;
-    margin-bottom: 24px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transform: translateY(calc(-100% - 24px));
+    margin-bottom: 0;
   }
 
   /* stylelint-disable-next-line no-descending-specificity */
