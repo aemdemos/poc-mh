@@ -347,6 +347,18 @@
 }
 
 @media (width >= 900px) {
+  /* Desktop: widen hero padding to match source piping inset */
+  .hero {
+    padding-left: 60px;
+    padding-right: 60px;
+  }
+
+  /* Side piping shifts inward on desktop to match source (60px from edge) */
+  .hero::after {
+    left: 60px;
+    right: 60px;
+  }
+
   /* Tagline — matches original 120px */
   .hero em {
     font-size: 7.5rem;
@@ -372,9 +384,14 @@
   /* Screen 1 — label sizing at desktop (must follow general .hero p) */
   /* stylelint-disable-next-line no-descending-specificity */
   .hero p:first-child {
-    padding: 64px 120px 120px;
+    padding: 64px 120px 160px;
     font-size: 20px;
     line-height: 20px;
+  }
+
+  /* Intro piping border matches desktop 60px inset */
+  .hero-intro::before {
+    inset: 0 60px;
   }
 
   /* Two-column intro layout on desktop */
@@ -382,6 +399,8 @@
     display: flex;
     align-items: flex-start;
     gap: 40px;
+    margin-left: -60px;
+    margin-right: -60px;
     padding: 120px 144px;
     flex-wrap: wrap;
   }
