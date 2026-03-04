@@ -347,16 +347,17 @@
 }
 
 @media (width >= 900px) {
-  /* Desktop: widen hero padding to match source piping inset */
+  /* Desktop: center content within a 1320px max-width piping box.
+     At 1920px → 300px inset; at 1440px → 60px inset; never less than 60px. */
   .hero {
-    padding-left: 60px;
-    padding-right: 60px;
+    padding-left: max(60px, calc(50vw - 660px));
+    padding-right: max(60px, calc(50vw - 660px));
   }
 
-  /* Side piping shifts inward on desktop to match source (60px from edge) */
+  /* Side piping — centered 1320px box matching source layout */
   .hero::after {
-    left: 60px;
-    right: 60px;
+    left: max(60px, calc(50vw - 660px));
+    right: max(60px, calc(50vw - 660px));
   }
 
   /* Tagline — matches original 120px */
@@ -389,9 +390,12 @@
     line-height: 20px;
   }
 
-  /* Intro piping border matches desktop 60px inset */
+  /* Intro piping border — centered 1320px box */
   .hero-intro::before {
-    inset: 0 60px;
+    top: 0;
+    bottom: 0;
+    left: max(60px, calc(50vw - 660px));
+    right: max(60px, calc(50vw - 660px));
   }
 
   /* Two-column intro layout on desktop */
@@ -399,8 +403,8 @@
     display: flex;
     align-items: flex-start;
     gap: 40px;
-    margin-left: -60px;
-    margin-right: -60px;
+    margin-left: calc(-1 * max(60px, calc(50vw - 660px)));
+    margin-right: calc(-1 * max(60px, calc(50vw - 660px)));
     padding: 120px 144px;
     flex-wrap: wrap;
   }
