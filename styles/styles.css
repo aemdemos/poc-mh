@@ -275,6 +275,11 @@ main > .section.hero-container + .section::before {
   display: none;
 }
 
+/* Hide center vertical keyline on the section immediately after hero */
+main > .section.hero-container + .section::after {
+  display: none;
+}
+
 /* Hide metadata block (content is read by JS, not displayed) */
 main > .section.metadata-container {
   display: none;

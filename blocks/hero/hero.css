@@ -300,13 +300,13 @@
   position: relative;
 }
 
-/* Vertical keyline extending from arrow downward */
+/* Vertical keyline extending from arrow down to the horizontal separator */
 .hero-intro-arrow::after {
   content: '';
   position: absolute;
   left: 50%;
   top: 92px;
-  height: 16px;
+  bottom: -120px;
   width: 1px;
   background: rgb(211 213 225);
   pointer-events: none;
