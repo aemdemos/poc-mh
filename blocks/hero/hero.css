@@ -401,10 +401,11 @@
   .hero-intro {
     display: flex;
     align-items: flex-start;
-    gap: 40px;
+    column-gap: 40px;
+    row-gap: 24px;
     margin-left: calc(-1 * max(60px, calc(50vw - 660px)));
     margin-right: calc(-1 * max(60px, calc(50vw - 660px)));
-    padding: 120px 144px;
+    padding: 120px 144px 24px;
     flex-wrap: wrap;
   }
 
@@ -456,6 +457,12 @@
   /* Arrow spans full width below the columns */
   .hero-intro-arrow {
     flex-basis: 100%;
-    padding-top: 48px;
+    padding-top: 0;
+  }
+
+  /* Desktop override for intro arrow keyline */
+  .hero-intro-arrow::after {
+    top: 44px;
+    bottom: -24px;
   }
 }
