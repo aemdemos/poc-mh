@@ -82,6 +82,22 @@ export default function decorate(block) {
   const cols = [...block.firstElementChild.children];
   block.classList.add(`columns-${cols.length}-cols`);
 
+  // Add navigation arrows for 3-col layouts (Discover section)
+  if (cols.length === 3) {
+    const nav = document.createElement('div');
+    nav.className = 'columns-3-cols-nav';
+    const prevBtn = document.createElement('button');
+    prevBtn.setAttribute('aria-label', 'Previous');
+    prevBtn.disabled = true;
+    prevBtn.innerHTML = '<svg viewBox="0 0 14 14"><polyline points="9,2 4,7 9,12" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    const nextBtn = document.createElement('button');
+    nextBtn.setAttribute('aria-label', 'Next');
+    nextBtn.disabled = true;
+    nextBtn.innerHTML = '<svg viewBox="0 0 14 14"><polyline points="5,2 10,7 5,12" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    nav.append(prevBtn, nextBtn);
+    block.prepend(nav);
+  }
+
   // setup image columns
   [...block.children].forEach((row) => {
     [...row.children].forEach((col) => {
