@@ -194,20 +194,6 @@
     flex: 1;
   }
 
-  /* ── Discover variant: scrollable carousel at desktop ── */
-  .columns.discover.columns-3-cols > .columns-3-cols-nav {
-    justify-content: flex-start;
-  }
-
-  .columns.discover.columns-3-cols > div {
-    overflow: hidden;
-    gap: 40px;
-  }
-
-  .columns.discover.columns-3-cols > div > div {
-    flex: 0 0 calc(50% - 20px);
-  }
-
   /* Quote section: image takes more space */
   .section.muted-blue .columns:has(.columns-img-col) > div {
     align-items: stretch;
