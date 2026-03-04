@@ -29,7 +29,7 @@
   pointer-events: none;
 }
 
-/* Side piping (vertical white lines) on the video area */
+/* Side piping (vertical white lines) — hidden on mobile, shown on desktop */
 .hero::after {
   content: '';
   position: absolute;
@@ -41,6 +41,7 @@
   border-right: 1px solid rgb(211 213 225);
   pointer-events: none;
   z-index: 3;
+  display: none;
 }
 
 .hero img {
@@ -356,6 +357,7 @@
 
   /* Side piping — centered 1320px box matching source layout */
   .hero::after {
+    display: block;
     left: max(60px, calc(50vw - 660px));
     right: max(60px, calc(50vw - 660px));
   }
@@ -392,10 +394,7 @@
 
   /* Intro piping border — centered 1320px box */
   .hero-intro::before {
-    top: 0;
-    bottom: 0;
-    left: max(60px, calc(50vw - 660px));
-    right: max(60px, calc(50vw - 660px));
+    inset: 0 max(60px, calc(50vw - 660px));
   }
 
   /* Two-column intro layout on desktop */
