@@ -306,7 +306,7 @@
   position: absolute;
   left: 50%;
   top: 92px;
-  bottom: -120px;
+  height: 16px;
   width: 1px;
   background: rgb(211 213 225);
   pointer-events: none;
