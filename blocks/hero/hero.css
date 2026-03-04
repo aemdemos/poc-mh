@@ -400,11 +400,11 @@
   /* Two-column intro layout on desktop */
   .hero-intro {
     display: flex;
-    align-items: flex-start;
+    align-items: stretch;
     gap: 24px 40px;
     margin-left: calc(-1 * max(60px, calc(50vw - 660px)));
     margin-right: calc(-1 * max(60px, calc(50vw - 660px)));
-    padding: 120px 144px 24px;
+    padding: 120px calc(max(60px, calc(50vw - 660px)) + 120px) 24px;
     flex-wrap: wrap;
   }
 
@@ -439,10 +439,10 @@
   }
 
   .hero-intro-cta {
-    flex: 0 0 300px;
+    flex: 0 0 400px;
     min-width: 0;
     padding: 40px;
-    align-self: flex-start;
+    align-self: stretch;
   }
 
   /* stylelint-disable-next-line no-descending-specificity */
