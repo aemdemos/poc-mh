@@ -24,6 +24,8 @@
   justify-content: flex-end;
   gap: 12px;
   margin-bottom: 24px;
+  position: relative;
+  z-index: 1;
 }
 
 /* stylelint-disable-next-line no-descending-specificity */
@@ -72,6 +74,8 @@
 /* ── Slides container ── */
 .carousel .carousel-slides-container {
   position: relative;
+  z-index: 1;
+  padding-bottom: 24px;
 }
 
 .carousel .carousel-slides {
