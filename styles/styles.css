@@ -357,21 +357,19 @@ main .section.white-bg a.button:any-link {
     display: none;
   }
 
-  /* Constrain section headings to left half where carousel/3-col cards follow */
-  main > .section:has(.columns-3-cols) > .default-content-wrapper,
-  main > .section:has(.carousel) > .default-content-wrapper {
-    max-width: 50%;
-    margin-left: 0;
-    margin-right: auto;
-  }
-
-  /* Discover & Choose section heading: match source sizing */
+  /* Discover & Choose section heading: constrain text width, keep wrapper aligned with columns */
   main > .section:has(.columns-3-cols) > .default-content-wrapper h2,
   main > .section:has(.carousel) > .default-content-wrapper h2 {
+    max-width: 580px;
     font-size: 64px;
     font-weight: 400;
     line-height: 1;
     margin: 0 0 20px;
+  }
+
+  main > .section:has(.columns-3-cols) > .default-content-wrapper p,
+  main > .section:has(.carousel) > .default-content-wrapper p {
+    max-width: 580px;
   }
 }
 
