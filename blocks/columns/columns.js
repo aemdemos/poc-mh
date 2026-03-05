@@ -78,6 +78,47 @@ function embedYouTube(link) {
   }
 }
 
+function restructureQuoteAttribution(block) {
+  // In the quote/testimonial section (muted-blue), the quote text and attribution
+  // are in a single <p> with <br> separators. Restructure into separate elements
+  // so CSS can target them independently.
+  const section = block.closest('.section.muted-blue');
+  if (!section) return;
+
+  const textCol = block.querySelector(':scope > div > div:not(.columns-img-col)');
+  if (!textCol) return;
+
+  const p = textCol.querySelector('p');
+  if (!p || !p.querySelector('strong')) return;
+
+  const strong = p.querySelector('strong');
+  // Split: everything before the <br><br><strong> is the quote,
+  // <strong> and remaining text is the attribution
+  const quoteP = document.createElement('p');
+  quoteP.className = 'quote-text';
+  const attrDiv = document.createElement('div');
+  attrDiv.className = 'quote-attribution';
+
+  // Walk through child nodes and split at the strong element
+  const nodes = [...p.childNodes];
+  let reachedAttribution = false;
+  nodes.forEach((node) => {
+    if (node === strong) {
+      reachedAttribution = true;
+    }
+    // Skip <br> tags right before the attribution
+    if (!reachedAttribution) {
+      if (node.nodeName !== 'BR') {
+        quoteP.appendChild(node.cloneNode(true));
+      }
+    } else if (node.nodeName !== 'BR') {
+      attrDiv.appendChild(node.cloneNode(true));
+    }
+  });
+
+  p.replaceWith(quoteP, attrDiv);
+}
+
 export default function decorate(block) {
   const cols = [...block.firstElementChild.children];
   block.classList.add(`columns-${cols.length}-cols`);
@@ -120,4 +161,7 @@ export default function decorate(block) {
       });
     });
   });
+
+  // Restructure quote attribution in testimonial sections
+  restructureQuoteAttribution(block);
 }

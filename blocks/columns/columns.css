@@ -130,19 +130,48 @@
   margin-bottom: 16px;
 }
 
+/* Quote text */
+/* stylelint-disable-next-line no-descending-specificity */
+.section.muted-blue .columns:has(.columns-img-col) > div > div:not(.columns-img-col) .quote-text {
+  font-size: 24px;
+  line-height: 1.2;
+  font-style: normal;
+  font-family: var(--body-font-family);
+  font-weight: 400;
+}
+
+/* Quote attribution (name + role) */
+.section.muted-blue .columns:has(.columns-img-col) > div > div:not(.columns-img-col) .quote-attribution {
+  margin-top: 24px;
+  padding-left: 40px;
+  font-size: 18px;
+  font-family: var(--body-font-family);
+  font-weight: 400;
+  color: white;
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+.section.muted-blue .columns:has(.columns-img-col) > div > div:not(.columns-img-col) .quote-attribution strong {
+  font-weight: 400;
+  display: block;
+  font-size: 18px;
+}
+
+/* Fallback: if <p> is used directly (no restructuring) */
 /* stylelint-disable-next-line no-descending-specificity */
 .section.muted-blue .columns:has(.columns-img-col) > div > div:not(.columns-img-col) p {
-  font-size: 1.25rem;
-  line-height: 1.4;
-  font-style: italic;
+  font-size: 24px;
+  line-height: 1.2;
+  font-style: normal;
 }
 
 /* stylelint-disable-next-line no-descending-specificity */
 .section.muted-blue .columns:has(.columns-img-col) > div > div:not(.columns-img-col) strong {
   font-style: normal;
+  font-weight: 400;
   display: block;
-  margin-top: 16px;
-  font-size: 1rem;
+  margin-top: 24px;
+  font-size: 18px;
 }
 
 @media (width >= 900px) {
@@ -213,9 +242,9 @@
     flex: 1;
   }
 
-  /* Quote section: image takes more space */
+  /* Quote section: image takes more space, aligned to top */
   .section.muted-blue .columns:has(.columns-img-col) > div {
-    align-items: stretch;
+    align-items: flex-start;
   }
 
   .section.muted-blue .columns:has(.columns-img-col) > div > .columns-img-col {
@@ -227,6 +256,6 @@
     padding: 40px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
   }
 }
