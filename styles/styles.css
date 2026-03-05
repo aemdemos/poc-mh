@@ -338,7 +338,7 @@ main .section.white-bg a.button:any-link {
     content: '';
     position: absolute;
     left: 50%;
-    top: 0;
+    top: -40px;
     bottom: 0;
     width: 1px;
     background: rgb(211 213 225);
