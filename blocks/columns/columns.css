@@ -82,7 +82,7 @@
 }
 
 .columns.columns-3-cols > div > div {
-  flex: 0 0 280px;
+  flex: 0 0 calc(55% - 12px);
   scroll-snap-align: start;
 }
 
@@ -90,10 +90,10 @@
 .columns.columns-3-cols > div > div strong {
   display: block;
   font-family: var(--heading-font-family);
-  font-size: var(--heading-font-size-xl);
+  font-size: 36px;
   font-weight: 400;
   line-height: 1;
-  margin: 0 0 20px;
+  margin: 16px 0 20px;
 }
 
 /* stylelint-disable-next-line no-descending-specificity */
@@ -158,6 +158,20 @@
     justify-content: flex-end;
     gap: 20px;
     margin-bottom: 24px;
+  }
+
+  /* Discover variant: position nav arrows alongside the section heading text */
+  .columns.discover.columns-3-cols {
+    position: relative;
+    margin-top: 40px;
+  }
+
+  .columns.discover.columns-3-cols > .columns-3-cols-nav {
+    position: absolute;
+    right: 0;
+    top: 0;
+    transform: translateY(calc(-100% - 24px));
+    margin-bottom: 0;
   }
 
   /* stylelint-disable-next-line no-descending-specificity */

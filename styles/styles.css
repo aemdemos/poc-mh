@@ -275,6 +275,9 @@ main > .section.hero-container + .section::before {
   display: none;
 }
 
+/* Center keyline on section after hero — re-enabled on desktop with limited height
+   (see media query below for desktop override) */
+
 /* Hide metadata block (content is read by JS, not displayed) */
 main > .section.metadata-container {
   display: none;
@@ -341,6 +344,12 @@ main .section.white-bg a.button:any-link {
     background: rgb(211 213 225);
     pointer-events: none;
     z-index: 0;
+  }
+
+  /* Center keyline after hero: extends from top, stops just above video cards */
+  main > .section.hero-container + .section::after {
+    bottom: auto;
+    height: 200px;
   }
 
   /* Hide center line on quote section (muted-blue with image column) */

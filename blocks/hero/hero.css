@@ -29,7 +29,7 @@
   pointer-events: none;
 }
 
-/* Side piping (vertical white lines) on the video area */
+/* Side piping (vertical white lines) — hidden on mobile, shown on desktop */
 .hero::after {
   content: '';
   position: absolute;
@@ -41,6 +41,7 @@
   border-right: 1px solid rgb(211 213 225);
   pointer-events: none;
   z-index: 3;
+  display: none;
 }
 
 .hero img {
@@ -146,7 +147,7 @@
   position: relative;
 }
 
-/* White piping border (top, left, right) around the intro section */
+/* White piping border (top, left, right) around the intro section — desktop only */
 .hero-intro::before {
   content: '';
   position: absolute;
@@ -155,6 +156,7 @@
   border-bottom: none;
   pointer-events: none;
   z-index: 1;
+  display: none;
 }
 
 .hero-intro-text {
@@ -286,7 +288,7 @@
   left: 50%;
   top: 44px;
   width: 1px;
-  height: 36px;
+  height: 16px;
   background: rgb(211 213 225);
   pointer-events: none;
 }
@@ -299,7 +301,7 @@
   position: relative;
 }
 
-/* Vertical keyline extending from arrow downward */
+/* Vertical keyline extending from arrow down to the horizontal separator */
 .hero-intro-arrow::after {
   content: '';
   position: absolute;
@@ -347,6 +349,20 @@
 }
 
 @media (width >= 900px) {
+  /* Desktop: center content within a 1320px max-width piping box.
+     At 1920px → 300px inset; at 1440px → 60px inset; never less than 60px. */
+  .hero {
+    padding-left: max(60px, calc(50vw - 660px));
+    padding-right: max(60px, calc(50vw - 660px));
+  }
+
+  /* Side piping — centered 1320px box matching source layout */
+  .hero::after {
+    display: block;
+    left: max(60px, calc(50vw - 660px));
+    right: max(60px, calc(50vw - 660px));
+  }
+
   /* Tagline — matches original 120px */
   .hero em {
     font-size: 7.5rem;
@@ -372,17 +388,25 @@
   /* Screen 1 — label sizing at desktop (must follow general .hero p) */
   /* stylelint-disable-next-line no-descending-specificity */
   .hero p:first-child {
-    padding: 64px 120px 120px;
+    padding: 64px 120px 160px;
     font-size: 20px;
     line-height: 20px;
+  }
+
+  /* Intro piping border — centered 1320px box */
+  .hero-intro::before {
+    display: block;
+    inset: 0 max(60px, calc(50vw - 660px));
   }
 
   /* Two-column intro layout on desktop */
   .hero-intro {
     display: flex;
-    align-items: flex-start;
-    gap: 40px;
-    padding: 120px 144px;
+    align-items: stretch;
+    gap: 24px 40px;
+    margin-left: calc(-1 * max(60px, calc(50vw - 660px)));
+    margin-right: calc(-1 * max(60px, calc(50vw - 660px)));
+    padding: 120px calc(max(60px, calc(50vw - 660px)) + 120px) 24px;
     flex-wrap: wrap;
   }
 
@@ -417,10 +441,10 @@
   }
 
   .hero-intro-cta {
-    flex: 0 0 300px;
+    flex: 0 0 400px;
     min-width: 0;
     padding: 40px;
-    align-self: flex-start;
+    align-self: stretch;
   }
 
   /* stylelint-disable-next-line no-descending-specificity */
@@ -434,6 +458,12 @@
   /* Arrow spans full width below the columns */
   .hero-intro-arrow {
     flex-basis: 100%;
-    padding-top: 48px;
+    padding-top: 0;
+  }
+
+  /* Desktop override for intro arrow keyline */
+  .hero-intro-arrow::after {
+    top: 44px;
+    bottom: -24px;
   }
 }

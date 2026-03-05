@@ -202,7 +202,7 @@ export default async function decorate(block) {
   const brandImg = navBrand.querySelector('img');
   if (brandImg) {
     const imgSrc = brandImg.src || brandImg.getAttribute('src');
-    if (imgSrc && imgSrc.endsWith('.svg')) {
+    if (imgSrc && new URL(imgSrc, window.location).pathname.endsWith('.svg')) {
       try {
         const resp = await fetch(imgSrc);
         const svgText = await resp.text();
