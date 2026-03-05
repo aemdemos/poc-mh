@@ -104,6 +104,11 @@
   margin: 0;
 }
 
+/* Hide br between block-level strong heading and description text */
+.columns.columns-3-cols > div > div p > strong + br {
+  display: none;
+}
+
 /* ── 3-col navigation arrows (Discover section) ── */
 .columns-3-cols-nav {
   display: none;
