@@ -163,6 +163,7 @@
   /* Discover variant: position nav arrows alongside the section heading text */
   .columns.discover.columns-3-cols {
     position: relative;
+    margin-top: 40px;
   }
 
   .columns.discover.columns-3-cols > .columns-3-cols-nav {
