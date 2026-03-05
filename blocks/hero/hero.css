@@ -147,7 +147,7 @@
   position: relative;
 }
 
-/* White piping border (top, left, right) around the intro section */
+/* White piping border (top, left, right) around the intro section — desktop only */
 .hero-intro::before {
   content: '';
   position: absolute;
@@ -156,6 +156,7 @@
   border-bottom: none;
   pointer-events: none;
   z-index: 1;
+  display: none;
 }
 
 .hero-intro-text {
@@ -394,6 +395,7 @@
 
   /* Intro piping border — centered 1320px box */
   .hero-intro::before {
+    display: block;
     inset: 0 max(60px, calc(50vw - 660px));
   }
 
