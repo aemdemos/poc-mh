@@ -346,10 +346,11 @@ main .section.white-bg a.button:any-link {
     z-index: 0;
   }
 
-  /* Center keyline after hero: extends from top, stops just above video cards */
+  /* Center keyline after hero: extends up through margin to meet horizontal keyline */
   main > .section.hero-container + .section::after {
+    top: -40px;
     bottom: auto;
-    height: 200px;
+    height: 240px;
   }
 
   /* Hide center line on quote section (muted-blue with image column) */
