@@ -297,9 +297,9 @@ main .section.muted-blue {
   padding: 0;
 }
 
-/* Muted-blue quote section: full-width layout (image edge-to-edge) */
+/* Muted-blue quote section: contained layout matching source (1320px centered) */
 main .section.muted-blue > div {
-  max-width: none;
+  max-width: 1320px;
   padding: 0;
 }
 
