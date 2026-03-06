@@ -229,9 +229,17 @@
 
 /* Desktop: section heading area + typography */
 @media (width >= 900px) {
-  /* Constrain heading area to left 50% (matches image column width) */
+  /* Constrain heading area to left 50% and left-align (keep text clear of piping) */
   .section:has(.columns.benefits) > .default-content-wrapper {
     max-width: 50%;
+    margin-left: 0;
+    margin-right: auto;
+    padding-left: 40px;
+  }
+
+  /* Hide the vertical piping keyline in the benefits section */
+  .section:has(.columns.benefits)::after {
+    display: none;
   }
 
   /* "Pay and Benefits" label */
