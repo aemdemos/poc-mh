@@ -239,11 +239,6 @@
     z-index: 1;
   }
 
-  /* Inset the image column to match heading indentation */
-  .columns.benefits > div > .columns-img-col {
-    padding-left: 8%;
-  }
-
   /* "Pay and Benefits" label */
   .section:has(.columns.benefits) > .default-content-wrapper > p:first-child {
     text-transform: uppercase;
