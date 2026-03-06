@@ -229,17 +229,19 @@
 
 /* Desktop: section heading area + typography */
 @media (width >= 900px) {
-  /* Constrain heading area to left 50% and left-align (keep text clear of piping) */
+  /* Heading area: inset from left, wider than 50% so text flows naturally above piping */
   .section:has(.columns.benefits) > .default-content-wrapper {
-    max-width: 50%;
+    max-width: 65%;
     margin-left: 0;
     margin-right: auto;
-    padding-left: 40px;
+    padding-left: 15%;
+    position: relative;
+    z-index: 1;
   }
 
-  /* Hide the vertical piping keyline in the benefits section */
-  .section:has(.columns.benefits)::after {
-    display: none;
+  /* Inset the image column to match heading indentation */
+  .columns.benefits > div > .columns-img-col {
+    padding-left: 8%;
   }
 
   /* "Pay and Benefits" label */
