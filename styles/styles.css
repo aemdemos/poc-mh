@@ -313,7 +313,9 @@ main > .section:has(+ .section.muted-blue:has(.columns-img-col)) {
   margin-bottom: 0;
 }
 
-main > .section.muted-blue:has(.columns-img-col)::before {
+/* Hide horizontal keylines before styled background sections */
+main > .section.muted-blue::before,
+main > .section.white-bg::before {
   display: none;
 }
 
@@ -367,8 +369,10 @@ main .section.white-bg a.button:any-link {
     height: 160px;
   }
 
-  /* Hide center line on quote section (muted-blue with image column) */
-  main > .section.muted-blue:has(.columns-img-col)::after {
+  /* Hide center line on styled background sections and benefits */
+  main > .section.muted-blue::after,
+  main > .section.white-bg::after,
+  main > .section:has(.columns.benefits)::after {
     display: none;
   }
 

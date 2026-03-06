@@ -82,6 +82,106 @@ function stripQuotationMarks(text) {
   return text.replace(/^[\s\u201C\u201D\u201E\u201F"]+|[\s\u201C\u201D\u201E\u201F"]+$/g, '');
 }
 
+function detectAndApplyBenefitsVariant(block) {
+  // The "benefits" variant class is lost during html-to-plain conversion.
+  // Detect the benefits section by checking for "Pay and Benefits" eyebrow text
+  // in the section's default-content-wrapper, then re-apply the variant class.
+  const section = block.closest('.section');
+  if (!section) return;
+  const dcw = section.querySelector('.default-content-wrapper');
+  if (!dcw) return;
+  const firstP = dcw.querySelector('p:first-child');
+  if (!firstP || !firstP.textContent.trim().toLowerCase().includes('pay and benefits')) return;
+
+  block.classList.add('benefits');
+
+  // Restructure the dash-prefixed list in the text column into proper <ul><li>
+  const textCol = block.querySelector(':scope > div > div:not(.columns-img-col)');
+  if (!textCol) return;
+  const p = textCol.querySelector('p');
+  if (!p) return;
+
+  const html = p.innerHTML;
+  // Split on <br> tags to get individual lines
+  const lines = html.split(/<br\s*\/?>/gi).map((l) => l.trim()).filter(Boolean);
+
+  const introLines = [];
+  const listItems = [];
+  const afterLines = [];
+  let phase = 'intro'; // intro -> list -> after
+
+  lines.forEach((line) => {
+    if (phase === 'intro' && line.startsWith('-')) {
+      phase = 'list';
+    }
+    if (phase === 'list' && !line.startsWith('-')) {
+      phase = 'after';
+    }
+
+    if (phase === 'intro') {
+      introLines.push(line);
+    } else if (phase === 'list') {
+      // Remove leading "- " from the list item
+      listItems.push(line.replace(/^-\s*/, ''));
+    } else {
+      afterLines.push(line);
+    }
+  });
+
+  // Build the new structured content
+  const fragment = document.createDocumentFragment();
+
+  if (introLines.length) {
+    const introP = document.createElement('p');
+    introP.innerHTML = introLines.join('<br>');
+    fragment.appendChild(introP);
+  }
+
+  if (listItems.length) {
+    const ul = document.createElement('ul');
+    listItems.forEach((item) => {
+      const li = document.createElement('li');
+      li.innerHTML = item;
+      ul.appendChild(li);
+    });
+    fragment.appendChild(ul);
+  }
+
+  if (afterLines.length) {
+    // Separate the CTA link from the "Want to earn even more?" paragraph
+    const afterHTML = afterLines.join('<br>');
+    const temp = document.createElement('div');
+    temp.innerHTML = afterHTML;
+
+    // Find the last <a> which is the CTA link
+    const allLinks = temp.querySelectorAll('a');
+    const ctaLink = allLinks.length > 0 ? allLinks[allLinks.length - 1] : null;
+
+    if (ctaLink && ctaLink.textContent.trim().toLowerCase().includes('explore pay')) {
+      // Remove the CTA link from the temp div
+      ctaLink.remove();
+      // Clean up trailing <br> before the CTA
+      const tempHTML = temp.innerHTML.replace(/(<br\s*\/?>)+\s*$/gi, '').trim();
+      if (tempHTML) {
+        const afterP = document.createElement('p');
+        afterP.innerHTML = tempHTML;
+        fragment.appendChild(afterP);
+      }
+      // Create the CTA as a standalone paragraph
+      const ctaP = document.createElement('p');
+      ctaP.className = 'benefits-cta';
+      ctaP.appendChild(ctaLink);
+      fragment.appendChild(ctaP);
+    } else {
+      const afterP = document.createElement('p');
+      afterP.innerHTML = afterHTML;
+      fragment.appendChild(afterP);
+    }
+  }
+
+  p.replaceWith(fragment);
+}
+
 function restructureQuoteAttribution(block) {
   // In the quote/testimonial section (muted-blue), the quote text and attribution
   // are in a single <p> with <br> separators. Restructure into separate elements
@@ -187,4 +287,7 @@ export default function decorate(block) {
 
   // Restructure quote attribution in testimonial sections
   restructureQuoteAttribution(block);
+
+  // Detect and apply benefits variant
+  detectAndApplyBenefitsVariant(block);
 }
