@@ -297,10 +297,32 @@ main .section.muted-blue {
   padding: 0;
 }
 
-/* Muted-blue quote section: contained layout matching source (1320px centered) */
+/* Muted-blue sections: full-width layout by default */
 main .section.muted-blue > div {
-  max-width: 1320px;
+  max-width: none;
   padding: 0;
+}
+
+/* Muted-blue testimonial (with image column): contained layout matching source */
+main .section.muted-blue:has(.columns-img-col) > div {
+  max-width: 1320px;
+}
+
+/* Collapse gaps around muted-blue testimonial to match source (0px spacing) */
+main > .section:has(+ .section.muted-blue:has(.columns-img-col)) {
+  margin-bottom: 0;
+}
+
+main > .section.muted-blue:has(.columns-img-col)::before {
+  display: none;
+}
+
+main > .section.muted-blue:has(.columns-img-col) + .section {
+  margin-top: 0;
+}
+
+main > .section.muted-blue:has(.columns-img-col) + .section::before {
+  display: none;
 }
 
 main .section.white-bg {
