@@ -302,6 +302,7 @@ main .section.muted-blue .columns > div > .columns-img-col {
   position: relative;
   padding: 1px;
   border: 1px solid rgb(211 213 225);
+  box-sizing: border-box;
 }
 
 main .section.white-bg {
@@ -346,11 +347,12 @@ main .section.white-bg a.button:any-link {
     z-index: 0;
   }
 
-  /* Center keyline after hero: extends up through margin to meet horizontal keyline */
+  /* Center keyline after hero: extends up through margin to meet horizontal keyline
+     Shortened so it doesn't touch the carousel card thumbnails below */
   main > .section.hero-container + .section::after {
     top: -40px;
     bottom: auto;
-    height: 240px;
+    height: 160px;
   }
 
   /* Hide center line on quote section (muted-blue with image column) */

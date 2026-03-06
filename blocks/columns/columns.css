@@ -242,17 +242,19 @@
     flex: 1;
   }
 
-  /* Quote section: image takes more space, aligned to top */
+  /* Quote section: image right edge aligns with center piping line (50% of section) */
   .section.muted-blue .columns:has(.columns-img-col) > div {
     align-items: flex-start;
+    gap: 0;
   }
 
   .section.muted-blue .columns:has(.columns-img-col) > div > .columns-img-col {
-    flex: 1.2;
+    flex: none;
+    width: 50%;
   }
 
   .section.muted-blue .columns:has(.columns-img-col) > div > div:not(.columns-img-col) {
-    flex: 0.8;
+    flex: 1;
     padding: 40px;
     display: flex;
     flex-direction: column;
