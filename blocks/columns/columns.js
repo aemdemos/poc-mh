@@ -78,6 +78,10 @@ function embedYouTube(link) {
   }
 }
 
+function stripQuotationMarks(text) {
+  return text.replace(/^[\s\u201C\u201D\u201E\u201F"]+|[\s\u201C\u201D\u201E\u201F"]+$/g, '');
+}
+
 function restructureQuoteAttribution(block) {
   // In the quote/testimonial section (muted-blue), the quote text and attribution
   // are in a single <p> with <br> separators. Restructure into separate elements
@@ -87,6 +91,13 @@ function restructureQuoteAttribution(block) {
 
   const textCol = block.querySelector(':scope > div > div:not(.columns-img-col)');
   if (!textCol) return;
+
+  // Remove stray bare text nodes (e.g. lone quotation marks) outside <p>/<div>
+  [...textCol.childNodes].forEach((node) => {
+    if (node.nodeType === 3 && !node.textContent.trim().replace(/["\u201C\u201D]/g, '')) {
+      node.remove();
+    }
+  });
 
   const p = textCol.querySelector('p');
   if (!p || !p.querySelector('strong')) return;
@@ -109,12 +120,24 @@ function restructureQuoteAttribution(block) {
     // Skip <br> tags right before the attribution
     if (!reachedAttribution) {
       if (node.nodeName !== 'BR') {
-        quoteP.appendChild(node.cloneNode(true));
+        const clone = node.cloneNode(true);
+        // Strip literal quotation marks from text nodes in the quote
+        if (clone.nodeType === 3) {
+          clone.textContent = stripQuotationMarks(clone.textContent);
+          if (clone.textContent) quoteP.appendChild(clone);
+        } else {
+          quoteP.appendChild(clone);
+        }
       }
     } else if (node.nodeName !== 'BR') {
       attrDiv.appendChild(node.cloneNode(true));
     }
   });
+
+  // Also strip quotation marks from the assembled quote text
+  if (quoteP.textContent) {
+    quoteP.textContent = stripQuotationMarks(quoteP.textContent);
+  }
 
   p.replaceWith(quoteP, attrDiv);
 }
