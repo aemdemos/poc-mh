@@ -317,14 +317,6 @@ main > .section.muted-blue:has(.columns-img-col)::before {
   display: none;
 }
 
-main > .section.muted-blue:has(.columns-img-col) + .section {
-  margin-top: 0;
-}
-
-main > .section.muted-blue:has(.columns-img-col) + .section::before {
-  display: none;
-}
-
 main .section.white-bg {
   background-color: white;
   color: rgb(0 22 59);
@@ -378,6 +370,11 @@ main .section.white-bg a.button:any-link {
   /* Hide center line on quote section (muted-blue with image column) */
   main > .section.muted-blue:has(.columns-img-col)::after {
     display: none;
+  }
+
+  /* Vertical line after testimonial: border (not intersect) the horizontal keyline */
+  main > .section.muted-blue:has(.columns-img-col) + .section::after {
+    top: calc(-40px + 1px);
   }
 
   /* Discover & Choose section heading: constrain text width, keep wrapper aligned with columns */
