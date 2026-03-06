@@ -294,7 +294,7 @@ main .section.highlight {
 main .section.muted-blue {
   background-color: rgb(101 117 149);
   margin: 0;
-  padding: 40px 0;
+  padding: 0;
 }
 
 /* Muted-blue quote section: full-width layout (image edge-to-edge) */
