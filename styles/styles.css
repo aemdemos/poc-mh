@@ -297,12 +297,10 @@ main .section.muted-blue {
   padding: 40px 0;
 }
 
-/* White keylines around images in the quote/muted-blue columns section */
-main .section.muted-blue .columns > div > .columns-img-col {
-  position: relative;
-  padding: 1px;
-  border: 1px solid rgb(211 213 225);
-  box-sizing: border-box;
+/* Muted-blue quote section: full-width layout (image edge-to-edge) */
+main .section.muted-blue > div {
+  max-width: none;
+  padding: 0;
 }
 
 main .section.white-bg {
