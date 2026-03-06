@@ -242,7 +242,7 @@ main > .section {
 }
 
 main > .section > div {
-  max-width: 1200px;
+  max-width: 1320px;
   margin: auto;
   padding: 0 24px;
 }
@@ -254,7 +254,7 @@ main > .section:first-of-type {
 
 @media (width >= 900px) {
   main > .section > div {
-    padding: 0 32px;
+    padding: 0;
   }
 }
 
@@ -294,14 +294,27 @@ main .section.highlight {
 main .section.muted-blue {
   background-color: rgb(101 117 149);
   margin: 0;
-  padding: 40px 0;
+  padding: 0;
 }
 
-/* White keylines around images in the quote/muted-blue columns section */
-main .section.muted-blue .columns > div > .columns-img-col {
-  position: relative;
-  padding: 1px;
-  border: 1px solid rgb(211 213 225);
+/* Muted-blue sections: full-width layout by default */
+main .section.muted-blue > div {
+  max-width: none;
+  padding: 0;
+}
+
+/* Muted-blue testimonial (with image column): contained layout matching source */
+main .section.muted-blue:has(.columns-img-col) > div {
+  max-width: 1320px;
+}
+
+/* Collapse gaps around muted-blue testimonial to match source (0px spacing) */
+main > .section:has(+ .section.muted-blue:has(.columns-img-col)) {
+  margin-bottom: 0;
+}
+
+main > .section.muted-blue:has(.columns-img-col)::before {
+  display: none;
 }
 
 main .section.white-bg {
@@ -338,7 +351,7 @@ main .section.white-bg a.button:any-link {
     content: '';
     position: absolute;
     left: 50%;
-    top: 0;
+    top: -40px;
     bottom: 0;
     width: 1px;
     background: rgb(211 213 225);
@@ -346,10 +359,12 @@ main .section.white-bg a.button:any-link {
     z-index: 0;
   }
 
-  /* Center keyline after hero: extends from top, stops just above video cards */
+  /* Center keyline after hero: extends up through margin to meet horizontal keyline
+     Shortened so it doesn't touch the carousel card thumbnails below */
   main > .section.hero-container + .section::after {
+    top: -40px;
     bottom: auto;
-    height: 200px;
+    height: 160px;
   }
 
   /* Hide center line on quote section (muted-blue with image column) */
@@ -357,21 +372,24 @@ main .section.white-bg a.button:any-link {
     display: none;
   }
 
-  /* Constrain section headings to left half where carousel/3-col cards follow */
-  main > .section:has(.columns-3-cols) > .default-content-wrapper,
-  main > .section:has(.carousel) > .default-content-wrapper {
-    max-width: 50%;
-    margin-left: 0;
-    margin-right: auto;
+  /* Vertical line after testimonial: border (not intersect) the horizontal keyline */
+  main > .section.muted-blue:has(.columns-img-col) + .section::after {
+    top: calc(-40px + 1px);
   }
 
-  /* Discover & Choose section heading: match source sizing */
+  /* Discover & Choose section heading: constrain text width, keep wrapper aligned with columns */
   main > .section:has(.columns-3-cols) > .default-content-wrapper h2,
   main > .section:has(.carousel) > .default-content-wrapper h2 {
+    max-width: 580px;
     font-size: 64px;
     font-weight: 400;
     line-height: 1;
     margin: 0 0 20px;
+  }
+
+  main > .section:has(.columns-3-cols) > .default-content-wrapper p,
+  main > .section:has(.carousel) > .default-content-wrapper p {
+    max-width: 580px;
   }
 }
 
