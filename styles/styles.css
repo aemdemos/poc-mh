@@ -361,20 +361,18 @@ main .section.white-bg a.button:any-link {
     z-index: 0;
   }
 
-  /* Center keyline after hero: short top segment only (doesn't touch video thumbnails) */
+  /* Hide center vertical line in discover section (no line through heading/content) */
   main > .section.hero-container + .section::after {
-    top: -40px;
-    bottom: auto;
-    height: 160px;
+    display: none;
   }
 
-  /* Extra space below discover video cards */
+  /* Small gap below discover video cards before the horizontal keyline */
   main > .section:has(.columns.discover) {
-    padding-bottom: 80px;
+    padding-bottom: 24px;
   }
 
-  /* Short vertical intersect at the bottom of discover section —
-     connects up from the horizontal keyline without running through content */
+  /* Short vertical stub below horizontal keyline — extends down into the
+     margin toward the testimonial section, does not go up into content */
   main > .section:has(.columns.discover)::before {
     display: block;
     position: absolute;
@@ -383,7 +381,7 @@ main .section.white-bg a.button:any-link {
     bottom: -40px;
     top: auto;
     width: 1px;
-    height: 120px;
+    height: 40px;
     max-width: 1px;
     background: rgb(211 213 225);
     pointer-events: none;
