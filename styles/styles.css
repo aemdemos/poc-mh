@@ -313,8 +313,8 @@ main > .section:has(+ .section.muted-blue:has(.columns-img-col)) {
   margin-bottom: 0;
 }
 
-/* Hide horizontal keylines before styled background sections */
-main > .section.muted-blue::before,
+/* Hide horizontal keylines before styled background sections (keep testimonial) */
+main > .section.muted-blue:not(:has(.columns-img-col))::before,
 main > .section.white-bg::before {
   display: none;
 }
@@ -361,12 +361,34 @@ main .section.white-bg a.button:any-link {
     z-index: 0;
   }
 
-  /* Center keyline after hero: extends up through margin to meet horizontal keyline
-     Shortened so it doesn't touch the carousel card thumbnails below */
+  /* Center keyline after hero: short top segment only (doesn't touch video thumbnails) */
   main > .section.hero-container + .section::after {
     top: -40px;
     bottom: auto;
     height: 160px;
+  }
+
+  /* Extra space below discover video cards */
+  main > .section:has(.columns.discover) {
+    padding-bottom: 80px;
+  }
+
+  /* Short vertical intersect at the bottom of discover section —
+     connects up from the horizontal keyline without running through content */
+  main > .section:has(.columns.discover)::before {
+    display: block;
+    position: absolute;
+    content: '';
+    left: 50%;
+    bottom: -40px;
+    top: auto;
+    width: 1px;
+    height: 120px;
+    max-width: 1px;
+    background: rgb(211 213 225);
+    pointer-events: none;
+    z-index: 0;
+    margin: 0;
   }
 
   /* Hide center line on styled background sections and benefits */
