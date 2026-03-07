@@ -361,14 +361,12 @@ main .section.white-bg a.button:any-link {
     z-index: 0;
   }
 
-  /* Center keyline after hero: extends through the full discover section */
+  /* Center keyline after hero: extends up through margin to meet horizontal keyline
+     Shortened so it doesn't touch the carousel card thumbnails below */
   main > .section.hero-container + .section::after {
     top: -40px;
-  }
-
-  /* Extra space below discover video cards so the piping line extends downward */
-  main > .section:has(.columns.discover) {
-    padding-bottom: 80px;
+    bottom: auto;
+    height: 160px;
   }
 
   /* Hide center line on styled background sections and benefits */
