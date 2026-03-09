@@ -276,6 +276,10 @@ main > .section.hero-container + .section::before {
 }
 
 /* Collapse gap between hero and discover to match carousel spacing */
+main > .section.hero-container {
+  margin-bottom: 0;
+}
+
 main > .section.hero-container + .section {
   margin-top: 0;
 }
