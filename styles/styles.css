@@ -313,6 +313,11 @@ main > .section:has(+ .section.muted-blue:has(.columns-img-col)) {
   margin-bottom: 0;
 }
 
+/* Collapse gap between testimonial and carousel to match source */
+main > .section.muted-blue:has(.columns-img-col) + .section {
+  margin-top: 0;
+}
+
 /* Hide horizontal keylines before styled background sections (keep testimonial) */
 main > .section.muted-blue:not(:has(.columns-img-col))::before,
 main > .section.white-bg::before {
@@ -380,7 +385,7 @@ main .section.white-bg a.button:any-link {
   /* Spacing above and below discover section content */
   main > .section:has(.columns.discover) {
     padding-top: 120px;
-    padding-bottom: 91px;
+    padding-bottom: 120px;
   }
 
   /* Spacing above carousel section heading to match source */
@@ -414,10 +419,10 @@ main .section.white-bg a.button:any-link {
     display: none;
   }
 
-  /* Full vertical line through testimonial, extending 10px into discover above */
+  /* Full vertical line through testimonial, reaching discover section boundary */
   main > .section.muted-blue:has(.columns-img-col)::after {
     display: block;
-    top: -50px;
+    top: -40px;
     bottom: 0;
     height: auto;
     z-index: 1;
@@ -427,7 +432,7 @@ main .section.white-bg a.button:any-link {
   /* stylelint-disable-next-line no-descending-specificity */
   main > .section.muted-blue:has(.columns-img-col) + .section::before {
     position: absolute;
-    top: -40px;
+    top: 0;
     left: 30px;
     right: 30px;
     max-width: none;
@@ -437,9 +442,9 @@ main .section.white-bg a.button:any-link {
 
   /* Vertical line after testimonial: only 175px into carousel, not full section */
   main > .section.muted-blue:has(.columns-img-col) + .section::after {
-    top: -40px;
+    top: 0;
     bottom: auto;
-    height: 215px;
+    height: 175px;
     z-index: 1;
   }
 
