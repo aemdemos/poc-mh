@@ -219,6 +219,14 @@
 
   .columns.benefits > div > .columns-img-col {
     flex: 0 0 50%;
+    overflow: visible;
+  }
+
+  /* Image bleeds 40px past container to the left, matching source layout */
+  .columns.benefits > div > .columns-img-col img {
+    margin-left: -40px;
+    width: calc(100% + 40px);
+    max-width: none;
   }
 
   .columns.benefits > div > div:not(.columns-img-col) {
@@ -229,14 +237,17 @@
 
 /* Desktop: section heading area + typography */
 @media (width >= 900px) {
-  /* Heading area: inset from left, wider than 50% so text flows naturally above piping */
+  /* Heading area: inset from left, wider than 50% so text flows naturally above piping.
+     Background masks the vertical center line so it doesn't cut through the heading text. */
   .section:has(.columns.benefits) > .default-content-wrapper {
     max-width: 65%;
     margin-left: 0;
     margin-right: auto;
-    padding-left: 15%;
+    padding: 24px 0 5px 15%;
+    margin-bottom: 19px;
     position: relative;
-    z-index: 1;
+    z-index: 2;
+    background-color: var(--background-color);
   }
 
   /* "Pay and Benefits" label */
