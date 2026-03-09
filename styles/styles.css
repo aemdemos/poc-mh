@@ -424,11 +424,26 @@ main .section.white-bg a.button:any-link {
   /* Vertical stub below discover section into gap before testimonial
      (testimonial ::after with top: -40px bridges this gap from below) */
 
-  /* Hide center line on styled background sections and benefits */
+  /* Hide center line on styled background sections */
   main > .section.muted-blue::after,
-  main > .section.white-bg::after,
-  main > .section:has(.columns.benefits)::after {
+  main > .section.white-bg::after {
     display: none;
+  }
+
+  /* Benefits section: show vertical piping through the content area */
+  /* stylelint-disable-next-line no-descending-specificity */
+  main > .section:has(.columns.benefits)::after {
+    display: block;
+    top: 0;
+    bottom: 0;
+    height: auto;
+    z-index: 1;
+  }
+
+  /* Benefits section: spacing above heading and below content */
+  main > .section:has(.columns.benefits) {
+    padding-top: 80px;
+    padding-bottom: 80px;
   }
 
   /* Full vertical line through testimonial, reaching discover section boundary */

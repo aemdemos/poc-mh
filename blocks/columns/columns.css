@@ -219,6 +219,14 @@
 
   .columns.benefits > div > .columns-img-col {
     flex: 0 0 50%;
+    overflow: visible;
+  }
+
+  /* Image bleeds 40px past container to the left, matching source layout */
+  .columns.benefits > div > .columns-img-col img {
+    margin-left: -40px;
+    width: calc(100% + 40px);
+    max-width: none;
   }
 
   .columns.benefits > div > div:not(.columns-img-col) {
