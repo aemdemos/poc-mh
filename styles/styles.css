@@ -448,7 +448,7 @@ main .section.white-bg a.button:any-link {
 
   /* Ways-to-join section: show center vertical piping */
   /* stylelint-disable-next-line no-descending-specificity */
-  main > .section.white-bg:has(.columns)::after {
+  main > .section.white-bg:has(.columns.ways-to-join)::after {
     display: block;
     top: 0;
     bottom: 0;
@@ -457,7 +457,7 @@ main .section.white-bg a.button:any-link {
   }
 
   /* Ways-to-join section: spacing */
-  main > .section.white-bg:has(.columns) {
+  main > .section.white-bg:has(.columns.ways-to-join) {
     padding-top: 80px;
     padding-bottom: 80px;
   }

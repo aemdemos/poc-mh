@@ -182,6 +182,20 @@ function detectAndApplyBenefitsVariant(block) {
   p.replaceWith(fragment);
 }
 
+function detectAndApplyWaysToJoinVariant(block) {
+  // The "ways-to-join" variant class is lost during html-to-plain conversion.
+  // Detect the section by checking for "Other ways to join" heading text
+  // in the section's default-content-wrapper, then re-apply the variant class.
+  const section = block.closest('.section');
+  if (!section) return;
+  const dcw = section.querySelector('.default-content-wrapper');
+  if (!dcw) return;
+  const h2 = dcw.querySelector('h2');
+  if (!h2 || !h2.textContent.trim().toLowerCase().includes('other ways to join')) return;
+
+  block.classList.add('ways-to-join');
+}
+
 function restructureQuoteAttribution(block) {
   // In the quote/testimonial section (muted-blue), the quote text and attribution
   // are in a single <p> with <br> separators. Restructure into separate elements
@@ -290,4 +304,7 @@ export default function decorate(block) {
 
   // Detect and apply benefits variant
   detectAndApplyBenefitsVariant(block);
+
+  // Detect and apply ways-to-join variant
+  detectAndApplyWaysToJoinVariant(block);
 }
