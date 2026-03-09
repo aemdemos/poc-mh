@@ -243,7 +243,8 @@
     max-width: 65%;
     margin-left: 0;
     margin-right: auto;
-    padding: 24px 0 24px 15%;
+    padding: 24px 0 0 15%;
+    margin-bottom: 24px;
     position: relative;
     z-index: 2;
     background-color: var(--background-color);

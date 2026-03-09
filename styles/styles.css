@@ -435,7 +435,7 @@ main .section.white-bg a.button:any-link {
   main > .section:has(.columns.benefits)::after {
     display: block;
     top: 0;
-    bottom: -20px;
+    bottom: -60px;
     height: auto;
     z-index: 1;
   }
