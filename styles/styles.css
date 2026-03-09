@@ -270,9 +270,25 @@ main > .section + .section::before {
   top: -40px;
 }
 
-/* Remove duplicate keyline after hero (hero-container has its own ::after keyline) */
+/* Horizontal keyline at hero-discover boundary (absolute positioned at top of section) */
+/* stylelint-disable-next-line no-descending-specificity */
 main > .section.hero-container + .section::before {
-  display: none;
+  position: absolute;
+  top: 0;
+  left: 30px;
+  right: 30px;
+  max-width: none;
+  margin: 0;
+  z-index: 1;
+}
+
+/* Collapse gap between hero and discover to match carousel spacing */
+main > .section.hero-container {
+  margin-bottom: 0;
+}
+
+main > .section.hero-container + .section {
+  margin-top: 0;
 }
 
 /* Center keyline on section after hero — re-enabled on desktop with limited height
@@ -313,10 +329,26 @@ main > .section:has(+ .section.muted-blue:has(.columns-img-col)) {
   margin-bottom: 0;
 }
 
-/* Hide horizontal keylines before styled background sections */
-main > .section.muted-blue::before,
+/* Collapse gap between testimonial and carousel to match source */
+main > .section.muted-blue:has(.columns-img-col) + .section {
+  margin-top: 0;
+}
+
+/* Hide horizontal keylines before styled background sections (keep testimonial) */
+main > .section.muted-blue:not(:has(.columns-img-col))::before,
 main > .section.white-bg::before {
   display: none;
+}
+
+/* Move testimonial horizontal keyline flush with boat image top */
+main > .section.muted-blue:has(.columns-img-col)::before {
+  position: absolute;
+  top: 0;
+  left: 30px;
+  right: 30px;
+  max-width: none;
+  margin: 0;
+  z-index: 1;
 }
 
 main .section.white-bg {
@@ -361,13 +393,36 @@ main .section.white-bg a.button:any-link {
     z-index: 0;
   }
 
-  /* Center keyline after hero: extends up through margin to meet horizontal keyline
-     Shortened so it doesn't touch the carousel card thumbnails below */
+  /* Vertical line from hero boundary down into discover section padding area */
+  /* stylelint-disable-next-line no-descending-specificity */
   main > .section.hero-container + .section::after {
-    top: -40px;
+    display: block;
+    top: 0;
     bottom: auto;
-    height: 160px;
+    height: 120px;
+    z-index: 1;
   }
+
+  /* Spacing above and below discover section content */
+  main > .section:has(.columns-3-cols) {
+    padding-top: 120px;
+    padding-bottom: 120px;
+  }
+
+  /* Spacing above carousel section heading to match source */
+  /* stylelint-disable-next-line no-descending-specificity */
+  main > .section:has(.carousel) {
+    padding-top: 120px;
+    padding-bottom: 80px;
+  }
+
+  /* Gap between description text and carousel cards */
+  main > .section:has(.carousel) > .default-content-wrapper {
+    margin-bottom: 40px;
+  }
+
+  /* Vertical stub below discover section into gap before testimonial
+     (testimonial ::after with top: -40px bridges this gap from below) */
 
   /* Hide center line on styled background sections and benefits */
   main > .section.muted-blue::after,
@@ -376,9 +431,33 @@ main .section.white-bg a.button:any-link {
     display: none;
   }
 
-  /* Vertical line after testimonial: border (not intersect) the horizontal keyline */
+  /* Full vertical line through testimonial, reaching discover section boundary */
+  main > .section.muted-blue:has(.columns-img-col)::after {
+    display: block;
+    top: -40px;
+    bottom: 0;
+    height: auto;
+    z-index: 1;
+  }
+
+  /* Horizontal keyline after testimonial: flush with boat image bottom */
+  /* stylelint-disable-next-line no-descending-specificity */
+  main > .section.muted-blue:has(.columns-img-col) + .section::before {
+    position: absolute;
+    top: 0;
+    left: 30px;
+    right: 30px;
+    max-width: none;
+    margin: 0;
+    z-index: 1;
+  }
+
+  /* Vertical line after testimonial: only 175px into carousel, not full section */
   main > .section.muted-blue:has(.columns-img-col) + .section::after {
-    top: calc(-40px + 1px);
+    top: 0;
+    bottom: auto;
+    height: 175px;
+    z-index: 1;
   }
 
   /* Discover & Choose section heading: constrain text width, keep wrapper aligned with columns */
