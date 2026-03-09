@@ -396,9 +396,19 @@ main .section.white-bg a.button:any-link {
     display: none;
   }
 
-  /* Vertical line after testimonial: border (not intersect) the horizontal keyline */
+  /* Show 20px vertical stub at TOP of muted-blue testimonial (piping enters from above) */
+  main > .section.muted-blue:has(.columns-img-col)::after {
+    display: block;
+    top: 0;
+    bottom: auto;
+    height: 20px;
+    z-index: 1;
+  }
+
+  /* Vertical line after testimonial: extend 20px into the muted-blue section from below */
   main > .section.muted-blue:has(.columns-img-col) + .section::after {
-    top: calc(-40px + 1px);
+    top: -60px;
+    z-index: 1;
   }
 
   /* Discover & Choose section heading: constrain text width, keep wrapper aligned with columns */
