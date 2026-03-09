@@ -413,6 +413,12 @@ main .section.white-bg a.button:any-link {
   /* stylelint-disable-next-line no-descending-specificity */
   main > .section:has(.carousel) {
     padding-top: 120px;
+    padding-bottom: 80px;
+  }
+
+  /* Gap between description text and carousel cards */
+  main > .section:has(.carousel) > .default-content-wrapper {
+    margin-bottom: 40px;
   }
 
   /* Vertical stub below discover section into gap before testimonial
