@@ -423,6 +423,18 @@ main .section.white-bg a.button:any-link {
     z-index: 1;
   }
 
+  /* Horizontal keyline after testimonial: flush with boat image bottom */
+  /* stylelint-disable-next-line no-descending-specificity */
+  main > .section.muted-blue:has(.columns-img-col) + .section::before {
+    position: absolute;
+    top: -40px;
+    left: 30px;
+    right: 30px;
+    max-width: none;
+    margin: 0;
+    z-index: 1;
+  }
+
   /* Vertical line after testimonial: only 175px into carousel, not full section */
   main > .section.muted-blue:has(.columns-img-col) + .section::after {
     top: -40px;
