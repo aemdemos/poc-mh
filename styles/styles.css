@@ -377,9 +377,9 @@ main .section.white-bg a.button:any-link {
     display: none;
   }
 
-  /* Small gap below discover video cards before the horizontal keyline */
+  /* Gap below discover video cards before the horizontal keyline */
   main > .section:has(.columns.discover) {
-    padding-bottom: 24px;
+    padding-bottom: 48px;
   }
 
   /* Short vertical stub below horizontal keyline — extends down into the
