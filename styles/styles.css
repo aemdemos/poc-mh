@@ -275,6 +275,11 @@ main > .section.hero-container + .section::before {
   display: none;
 }
 
+/* Collapse gap between hero and discover to match carousel spacing */
+main > .section.hero-container + .section {
+  margin-top: 0;
+}
+
 /* Center keyline on section after hero — re-enabled on desktop with limited height
    (see media query below for desktop override) */
 
