@@ -319,6 +319,17 @@ main > .section.white-bg::before {
   display: none;
 }
 
+/* Move testimonial horizontal keyline flush with boat image top */
+main > .section.muted-blue:has(.columns-img-col)::before {
+  position: absolute;
+  top: 0;
+  left: 30px;
+  right: 30px;
+  max-width: none;
+  margin: 0;
+  z-index: 1;
+}
+
 main .section.white-bg {
   background-color: white;
   color: rgb(0 22 59);
@@ -396,20 +407,20 @@ main .section.white-bg a.button:any-link {
     display: none;
   }
 
-  /* Full vertical line through testimonial, extending 40px into discover above */
+  /* Full vertical line through testimonial, extending 20px into discover above */
   main > .section.muted-blue:has(.columns-img-col)::after {
     display: block;
-    top: -80px;
+    top: -60px;
     bottom: 0;
     height: auto;
     z-index: 1;
   }
 
-  /* Vertical line after testimonial: only 200px into carousel, not full section */
+  /* Vertical line after testimonial: only 175px into carousel, not full section */
   main > .section.muted-blue:has(.columns-img-col) + .section::after {
     top: -40px;
     bottom: auto;
-    height: 240px;
+    height: 215px;
     z-index: 1;
   }
 
