@@ -399,3 +399,70 @@
     justify-content: center;
   }
 }
+
+/* ── Ways-to-join variant (Other ways to join section) ── */
+
+/* Two columns flush at center, no gap, each 50% */
+@media (width >= 900px) {
+  .columns.ways-to-join > div {
+    gap: 0;
+    align-items: stretch;
+    border-top: 1px solid rgb(211 213 225);
+  }
+
+  .columns.ways-to-join > div > .columns-img-col {
+    flex: 0 0 50%;
+  }
+
+  /* Text inside each card: padding creates inset for text below image */
+  .columns.ways-to-join > div > .columns-img-col p {
+    padding: 0 120px 40px;
+    margin: 0;
+  }
+
+  /* Picture element breaks out of padding so image fills full column width */
+  .columns.ways-to-join > div > .columns-img-col p picture {
+    display: block;
+    margin: 0 -120px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid rgb(211 213 225);
+  }
+
+  /* Image fills the picture container */
+  /* stylelint-disable-next-line no-descending-specificity */
+  .columns.ways-to-join > div > .columns-img-col img {
+    width: 100%;
+    display: block;
+  }
+
+  /* Heading text: centered at 1080px to match source (180px from viewport edges) */
+  .section.white-bg:has(.columns.ways-to-join) > .default-content-wrapper {
+    max-width: 1080px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0;
+  }
+
+  /* Hide <br> between image and text inside card paragraphs */
+  .columns.ways-to-join > div > .columns-img-col p br {
+    display: none;
+  }
+
+  /* CTA link on its own line (needs high specificity to override global .white-bg CTA styles) */
+  .section.white-bg .columns.ways-to-join > div > .columns-img-col p a:last-of-type {
+    display: block;
+    margin-top: 24px;
+  }
+
+  /* Strong headings in cards */
+  .columns.ways-to-join > div > .columns-img-col p strong {
+    margin-top: 40px;
+  }
+
+  .section.white-bg:has(.columns.ways-to-join) > .default-content-wrapper h2 {
+    font-size: 64px;
+    font-weight: 400;
+    line-height: 1;
+    margin: 0 0 20px;
+  }
+}
