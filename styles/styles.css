@@ -270,9 +270,16 @@ main > .section + .section::before {
   top: -40px;
 }
 
-/* Remove duplicate keyline after hero (hero-container has its own ::after keyline) */
+/* Horizontal keyline at hero-discover boundary (absolute positioned at top of section) */
+/* stylelint-disable-next-line no-descending-specificity */
 main > .section.hero-container + .section::before {
-  display: none;
+  position: absolute;
+  top: 0;
+  left: 30px;
+  right: 30px;
+  max-width: none;
+  margin: 0;
+  z-index: 1;
 }
 
 /* Collapse gap between hero and discover to match carousel spacing */
@@ -386,13 +393,18 @@ main .section.white-bg a.button:any-link {
     z-index: 0;
   }
 
-  /* Hide center vertical line in discover section (no line through heading/content) */
+  /* Vertical line from hero boundary down into discover section padding area */
+  /* stylelint-disable-next-line no-descending-specificity */
   main > .section.hero-container + .section::after {
-    display: none;
+    display: block;
+    top: 0;
+    bottom: auto;
+    height: 120px;
+    z-index: 1;
   }
 
   /* Spacing above and below discover section content */
-  main > .section:has(.columns.discover) {
+  main > .section:has(.columns-3-cols) {
     padding-top: 120px;
     padding-bottom: 120px;
   }
@@ -403,23 +415,8 @@ main .section.white-bg a.button:any-link {
     padding-top: 120px;
   }
 
-  /* Short vertical stub below horizontal keyline — extends down into the
-     margin toward the testimonial section, does not go up into content */
-  main > .section:has(.columns.discover)::before {
-    display: block;
-    position: absolute;
-    content: '';
-    left: 50%;
-    bottom: -40px;
-    top: auto;
-    width: 1px;
-    height: 40px;
-    max-width: 1px;
-    background: rgb(211 213 225);
-    pointer-events: none;
-    z-index: 0;
-    margin: 0;
-  }
+  /* Vertical stub below discover section into gap before testimonial
+     (testimonial ::after with top: -40px bridges this gap from below) */
 
   /* Hide center line on styled background sections and benefits */
   main > .section.muted-blue::after,
