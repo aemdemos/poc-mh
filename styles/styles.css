@@ -430,12 +430,12 @@ main .section.white-bg a.button:any-link {
     display: none;
   }
 
-  /* Benefits section: show vertical piping through the content area */
+  /* Benefits section: show vertical piping, extending 20px into next section */
   /* stylelint-disable-next-line no-descending-specificity */
   main > .section:has(.columns.benefits)::after {
     display: block;
     top: 0;
-    bottom: 0;
+    bottom: -20px;
     height: auto;
     z-index: 1;
   }
