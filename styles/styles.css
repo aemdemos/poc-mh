@@ -377,9 +377,16 @@ main .section.white-bg a.button:any-link {
     display: none;
   }
 
-  /* Gap below discover video cards before the horizontal keyline */
+  /* Spacing above and below discover section content */
   main > .section:has(.columns.discover) {
-    padding-bottom: 48px;
+    padding-top: 120px;
+    padding-bottom: 91px;
+  }
+
+  /* Spacing above carousel section heading to match source */
+  /* stylelint-disable-next-line no-descending-specificity */
+  main > .section:has(.carousel) {
+    padding-top: 120px;
   }
 
   /* Short vertical stub below horizontal keyline — extends down into the
@@ -407,10 +414,10 @@ main .section.white-bg a.button:any-link {
     display: none;
   }
 
-  /* Full vertical line through testimonial, extending 20px into discover above */
+  /* Full vertical line through testimonial, extending 10px into discover above */
   main > .section.muted-blue:has(.columns-img-col)::after {
     display: block;
-    top: -60px;
+    top: -50px;
     bottom: 0;
     height: auto;
     z-index: 1;
