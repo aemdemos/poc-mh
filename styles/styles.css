@@ -396,18 +396,20 @@ main .section.white-bg a.button:any-link {
     display: none;
   }
 
-  /* Show 20px vertical stub at TOP of muted-blue testimonial (piping enters from above) */
+  /* Full vertical line through testimonial, extending 40px into discover above */
   main > .section.muted-blue:has(.columns-img-col)::after {
     display: block;
-    top: 0;
-    bottom: auto;
-    height: 20px;
+    top: -80px;
+    bottom: 0;
+    height: auto;
     z-index: 1;
   }
 
-  /* Vertical line after testimonial: extend 20px into the muted-blue section from below */
+  /* Vertical line after testimonial: only 200px into carousel, not full section */
   main > .section.muted-blue:has(.columns-img-col) + .section::after {
-    top: -60px;
+    top: -40px;
+    bottom: auto;
+    height: 240px;
     z-index: 1;
   }
 
