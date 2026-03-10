@@ -1,3 +1,26 @@
+function decorateFindARole(block) {
+  const section = block.closest('.section');
+  if (!section) return;
+
+  // Create the circled down-arrow at the bottom of the hero
+  const arrow = document.createElement('div');
+  arrow.className = 'hero-far-arrow';
+  arrow.innerHTML = `<button aria-label="Next section" type="button">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
+      <path d="M7.5 12.08L13.29 6.29l.71.71-6.29 6.29-.01.01-.7.7-.01-.01L0 6.99l.71-.71L6.5 12.08V0h1v12.08z"/>
+    </svg>
+  </button>`;
+
+  // Click scrolls to the next section
+  arrow.querySelector('button').addEventListener('click', () => {
+    const nextSection = section.nextElementSibling;
+    if (nextSection) nextSection.scrollIntoView({ behavior: 'smooth' });
+  });
+
+  // Append to the section (not the block) so it isn't clipped by hero overflow
+  section.appendChild(arrow);
+}
+
 function buildIntroSection(block) {
   // Find the content row — contains an <h1> (AEM-rendered) or '#' text (raw markdown)
   const contentDiv = Array.from(block.querySelectorAll(':scope > div'))
@@ -195,6 +218,12 @@ function buildIntroSection(block) {
 }
 
 export default function decorate(block) {
+  // Handle find-a-role variant (banner hero with arrow + keylines)
+  if (block.classList.contains('find-a-role')) {
+    decorateFindARole(block);
+    return;
+  }
+
   // Check for a video link (mp4) in the block.
   // EDS rewrites external URLs so .mp4 may only appear in the link text, not the href.
   const allLinks = block.querySelectorAll('a');
