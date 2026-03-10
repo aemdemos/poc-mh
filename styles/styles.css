@@ -446,6 +446,22 @@ main .section.white-bg a.button:any-link {
     padding-bottom: 80px;
   }
 
+  /* Ways-to-join section: show center vertical piping */
+  /* stylelint-disable-next-line no-descending-specificity */
+  main > .section.white-bg:has(.columns.ways-to-join)::after {
+    display: block;
+    top: 0;
+    bottom: 0;
+    height: auto;
+    z-index: 1;
+  }
+
+  /* Ways-to-join section: spacing */
+  main > .section.white-bg:has(.columns.ways-to-join) {
+    padding-top: 80px;
+    padding-bottom: 80px;
+  }
+
   /* Full vertical line through testimonial, reaching discover section boundary */
   main > .section.muted-blue:has(.columns-img-col)::after {
     display: block;
