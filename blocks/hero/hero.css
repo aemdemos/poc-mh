@@ -374,7 +374,7 @@ body:has(.hero.find-a-role) .breadcrumbs {
 /* Re-enable section piping/keylines on find-a-role pages (matching source design) */
 
 .hero.find-a-role {
-  min-height: 500px;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -493,7 +493,7 @@ body:has(.hero.find-a-role) .breadcrumbs {
 
 @media (width >= 900px) {
   .hero.find-a-role {
-    min-height: max(500px, 70vh);
+    min-height: 100vh;
     padding: 0 max(60px, calc(50vw - 660px)) 60px;
   }
 
