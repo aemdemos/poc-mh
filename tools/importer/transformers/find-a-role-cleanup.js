@@ -1,0 +1,52 @@
+/* eslint-disable */
+/* global WebImporter */
+
+/**
+ * Transformer for find-a-role page cleanup
+ * Purpose: Remove decorative elements specific to find-a-role pages
+ * Applies to: www.royalnavy.mod.uk/careers/find-a-role/*
+ * Generated: 2026-03-10
+ */
+
+const TransformHook = {
+  beforeTransform: 'beforeTransform',
+  afterTransform: 'afterTransform',
+};
+
+export default function transform(hookName, element, payload) {
+  if (hookName === TransformHook.beforeTransform) {
+    // Remove decorative IntroMedia section (masks, keylines, arrows - no content)
+    const introMediaElements = element.querySelectorAll('[class*="IntroMedia_leftMask"], [class*="IntroMedia_rightMask"], [class*="IntroMedia_bannerContent"]');
+    introMediaElements.forEach((el) => el.remove());
+
+    // Remove section arrows (decorative scroll buttons)
+    const sectionArrows = element.querySelectorAll('[class*="SectionArrow_arrow"], [class*="arrowWrapper"]');
+    sectionArrows.forEach((el) => el.remove());
+
+    // Remove keyline decorations (they are CSS-only visual elements)
+    const keylines = element.querySelectorAll('[class*="Keylines_keyline"], [class*="SectionWrapper_border"]');
+    keylines.forEach((el) => el.remove());
+
+    // Remove carousel navigation buttons (these are rebuilt by the EDS carousel block)
+    const carouselNav = element.querySelectorAll('[class*="Carousel_nav"]');
+    carouselNav.forEach((el) => el.remove());
+
+    // Remove carousel filter tabs (complex JS-driven behavior not migrated)
+    const filterTabs = element.querySelectorAll('[class*="CarouselSection"] > ul');
+    filterTabs.forEach((el) => el.remove());
+
+    // Remove role card decorative elements (dividers, tooltips, label buttons wrapping)
+    const roleCardDecorative = element.querySelectorAll('[class*="RoleCard_divider"], [class*="RoleCard_tooltips"]');
+    roleCardDecorative.forEach((el) => el.remove());
+  }
+
+  if (hookName === TransformHook.afterTransform) {
+    // Remove any remaining empty section wrappers
+    const emptyWrappers = element.querySelectorAll('[class*="SectionWrapper_sectionWrapper"]');
+    emptyWrappers.forEach((wrapper) => {
+      if (wrapper.textContent.trim() === '' && !wrapper.querySelector('img')) {
+        wrapper.remove();
+      }
+    });
+  }
+}
