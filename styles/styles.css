@@ -340,6 +340,11 @@ main > .section.white-bg::before {
   display: none;
 }
 
+/* Apply section (Search roles + Speak to advisor): dark navy background, no keylines */
+main .section.muted-blue:has(.columns.apply) {
+  background-color: var(--background-color);
+}
+
 /* Move testimonial horizontal keyline flush with boat image top */
 main > .section.muted-blue:has(.columns-img-col)::before {
   position: absolute;

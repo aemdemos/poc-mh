@@ -1,0 +1,8 @@
+{
+  "status": "failed",
+  "url": "https://www.royalnavy.mod.uk/careers/find-a-role/logistics-and-personnel",
+  "path": "careers/find-a-role/logistics-and-personnel",
+  "timestamp": "2026-03-10T21:28:04.692Z",
+  "error": "page.evaluate: Error: Failed to import page: Invalid regular expression: /\\(https://uip\\.semasio.net/govmt/1/info\\?sType=track&nTrackingPointId=57373&_sdv&gdpr=[1|0]&gdpr_consent=[consent-string]\\)/gm: Range out of order in character class\n    at eval (eval at evaluate (:290:30), <anonymous>:24:15)\n    at async <anonymous>:316:30",
+  "errorStack": "page.evaluate: Error: Failed to import page: Invalid regular expression: /\\(https://uip\\.semasio.net/govmt/1/info\\?sType=track&nTrackingPointId=57373&_sdv&gdpr=[1|0]&gdpr_consent=[consent-string]\\)/gm: Range out of order in character class\n    at eval (eval at evaluate (:290:30), <anonymous>:24:15)\n    at async <anonymous>:316:30\n    at processUrl (/home/node/.claude/plugins/cache/excat-marketplace/excat/2.1.1/skills/excat-content-import/scripts/run-bulk-import.js:296:31)\n    at async main (/home/node/.claude/plugins/cache/excat-marketplace/excat/2.1.1/skills/excat-content-import/scripts/run-bulk-import.js:457:22)"
+}

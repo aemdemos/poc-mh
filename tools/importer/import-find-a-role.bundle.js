@@ -42,12 +42,18 @@ var CustomImportScript = (() => {
 
   // tools/importer/parsers/intro-find-a-role.js
   function parse(element, { document }) {
+    const heroImage = document.querySelector('[class*="IntroMedia_bgImage"] img') || document.querySelector('[class*="IntroMedia"] img');
     const heading = element.querySelector("h1") || element.querySelector("h2");
     const breadcrumbNav = element.querySelector('nav[aria-label="Breadcrumb"]');
-    const breadcrumbItems = breadcrumbNav ? Array.from(breadcrumbNav.querySelectorAll("a")) : [];
-    const introTextEl = element.querySelector('[class*="IntroTextSection_introText"]');
-    const introParagraph = introTextEl ? introTextEl.querySelector("p") : null;
+    const breadcrumbOl = breadcrumbNav ? breadcrumbNav.querySelector("ol") : element.querySelector("ol");
+    const breadcrumbItems = breadcrumbOl ? Array.from(breadcrumbOl.querySelectorAll("a")) : [];
     const cells = [];
+    if (heroImage) {
+      const img = document.createElement("img");
+      img.src = heroImage.src;
+      img.alt = heroImage.alt || "";
+      cells.push([img]);
+    }
     const contentCell = [];
     if (breadcrumbItems.length > 0) {
       const breadcrumbP = document.createElement("p");
@@ -63,9 +69,8 @@ var CustomImportScript = (() => {
       contentCell.push(breadcrumbP);
     }
     if (heading) contentCell.push(heading);
-    if (introParagraph) contentCell.push(introParagraph);
     cells.push(contentCell);
-    const block = WebImporter.Blocks.createBlock(document, { name: "Hero", cells });
+    const block = WebImporter.Blocks.createBlock(document, { name: "Hero (find-a-role)", cells });
     element.replaceWith(block);
   }
 
@@ -255,6 +260,16 @@ var CustomImportScript = (() => {
           wrapper.remove();
         }
       });
+      const metadataTable = element.querySelector("table");
+      if (metadataTable) {
+        const rows = metadataTable.querySelectorAll("tr");
+        rows.forEach((row) => {
+          const firstCell = row.querySelector("td");
+          if (firstCell && firstCell.textContent.trim().toLowerCase() === "breadcrumbs") {
+            row.remove();
+          }
+        });
+      }
     }
   }
 
@@ -330,6 +345,9 @@ var CustomImportScript = (() => {
      * Preprocess: runs before the helix-importer's internal processing.
      * Removes tracking pixels and elements with regex-breaking URL patterns
      * (e.g., [consent-string], [1|0]) that cause Invalid RegExp errors.
+     *
+     * CRITICAL: These removals prevent helix-importer crashes from Semasio
+     * tracking URLs. Do not reduce the scope of removals without testing.
      */
     preprocess: ({ document }) => {
       document.querySelectorAll("script").forEach((el) => el.remove());
