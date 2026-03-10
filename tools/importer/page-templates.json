@@ -18,6 +18,30 @@
           "instances": ["section#testimonial", "section#pay-benefits", "section#other-ways", "section#cta"]
         }
       ]
+    },
+    {
+      "name": "find-a-role",
+      "urls": [
+        "https://www.royalnavy.mod.uk/careers/find-a-role/warfare",
+        "https://www.royalnavy.mod.uk/careers/find-a-role/engineering",
+        "https://www.royalnavy.mod.uk/careers/find-a-role/healthcare-and-medical",
+        "https://www.royalnavy.mod.uk/careers/find-a-role/logistics-and-personnel"
+      ],
+      "description": "Royal Navy Find a Role category pages with hero media, intro text, three carousels (levels of entry, RN roles, RFA roles), and grid CTAs",
+      "blocks": [
+        {
+          "name": "intro-find-a-role",
+          "instances": ["[class*='IntroTextSection_introTextSection']"]
+        },
+        {
+          "name": "carousel-roles",
+          "instances": ["[class*='CarouselSection_carouselSection']"]
+        },
+        {
+          "name": "grid-cta",
+          "instances": ["[class*='GridContainerDouble_gridMiddleBottom']"]
+        }
+      ]
     }
   ]
 }
