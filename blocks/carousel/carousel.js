@@ -46,7 +46,21 @@ function createSlide(row, slideIndex, carouselId) {
   const imageDiv = document.createElement('div');
   imageDiv.className = 'carousel-slide-image';
   const picture = imageCol?.querySelector('picture');
-  if (picture) imageDiv.append(picture);
+  if (picture) {
+    imageDiv.append(picture);
+  } else {
+    // External images: AEM strips <picture> for external URLs, so we author
+    // them as plain <a> links (same pattern EDS uses for external videos).
+    // Use textContent for the src — the AEM pipeline may rewrite the href.
+    const link = imageCol?.querySelector('a');
+    if (link && /\.(jpe?g|png|gif|webp|svg)/i.test(link.textContent || link.href)) {
+      const img = document.createElement('img');
+      img.src = link.textContent.trim() || link.href;
+      img.alt = link.getAttribute('title') || '';
+      img.loading = 'lazy';
+      imageDiv.append(img);
+    }
+  }
   slide.append(imageDiv);
 
   // Content section — extract heading link and description
