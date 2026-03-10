@@ -33,6 +33,17 @@ export default function transform(hookName, element, payload) {
       'style',
       'noscript',
     ]);
+
+    // Remove cookie consent, chat widgets, and tracking elements
+    // These contain URLs with regex-breaking patterns like [consent-string]
+    WebImporter.DOMUtils.remove(element, [
+      '#onetrust-consent-sdk',
+      '[class*="chatbot"]',
+      '[class*="Chatbot"]',
+      '[id*="chatbot"]',
+      '[class*="CookieBanner"]',
+      '[class*="cookie"]',
+    ]);
   }
 
   if (hookName === TransformHook.afterTransform) {

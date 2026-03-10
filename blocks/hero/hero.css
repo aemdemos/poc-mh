@@ -348,6 +348,172 @@
   margin: 0 30px;
 }
 
+/* ── Find-a-Role hero variant ──
+   Shorter banner with full-bleed image, breadcrumb + H1 overlaid at bottom. */
+
+/* Position hero container for arrow and keyline overlay on find-a-role pages */
+.hero-container:has(.hero.find-a-role) {
+  position: relative;
+}
+
+/* Horizontal keyline at bottom of find-a-role hero — repositioned absolutely */
+.hero-container:has(.hero.find-a-role)::after {
+  position: absolute;
+  bottom: 0;
+  left: 30px;
+  right: 30px;
+  margin: 0;
+  z-index: 5;
+}
+
+/* Hide header breadcrumbs on find-a-role pages (hero has its own) */
+body:has(.hero.find-a-role) .breadcrumbs {
+  display: none;
+}
+
+/* Re-enable section piping/keylines on find-a-role pages (matching source design) */
+
+.hero.find-a-role {
+  min-height: 100vh;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 24px 40px;
+}
+
+/* Image row: remove positioning so picture escapes to .hero container */
+.hero.find-a-role > div:first-child {
+  position: static;
+}
+
+/* Lighter overlay for the banner-style hero */
+.hero.find-a-role::before {
+  background: linear-gradient(to top, rgb(0 22 59 / 80%) 0%, rgb(0 22 59 / 20%) 60%, transparent 100%);
+}
+
+/* No side piping on find-a-role */
+/* stylelint-disable-next-line no-descending-specificity */
+.hero.find-a-role::after {
+  display: none;
+}
+
+/* Reset the full-viewport first-paragraph behaviour */
+/* stylelint-disable-next-line no-descending-specificity */
+.hero.find-a-role p,
+.hero.find-a-role p:first-child {
+  min-height: unset;
+  display: block;
+  flex-direction: unset;
+  justify-content: unset;
+  padding: 0;
+  margin: 0 0 8px;
+  box-sizing: border-box;
+  font-size: 16px;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  line-height: 1.4;
+}
+
+/* Breadcrumb links */
+/* stylelint-disable-next-line no-descending-specificity */
+.hero.find-a-role p a {
+  color: white;
+  text-decoration: none;
+  font-weight: 400;
+}
+
+.hero.find-a-role p a:hover {
+  text-decoration: underline;
+}
+
+/* H1 — large uppercase heading */
+/* stylelint-disable-next-line no-descending-specificity */
+.hero.find-a-role h1 {
+  font-size: 2.5rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 1;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Circled down-arrow at bottom of find-a-role hero ── */
+
+/* Arrow container: sits just above the horizontal keyline at hero bottom.
+   The arrow circle is 44px; bottom: 16px puts 16px between circle bottom
+   and the keyline so the vertical pipe bridges the gap. */
+.hero-far-arrow {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+.hero-far-arrow button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgb(211 213 225);
+  background: transparent;
+  color: white;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  transition: background-color 0.2s;
+}
+
+.hero-far-arrow button:hover {
+  background-color: rgb(255 255 255 / 15%);
+}
+
+.hero-far-arrow svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Vertical pipe: starts at bottom of the 44px circle, passes through the
+   horizontal keyline (16px below), and extends ~80px into the next section. */
+.hero-far-arrow::after {
+  content: '';
+  position: absolute;
+  top: 44px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  height: 96px;
+  background: rgb(211 213 225);
+  pointer-events: none;
+}
+
+@media (width >= 900px) {
+  .hero.find-a-role {
+    min-height: 100vh;
+    padding: 0 max(60px, calc(50vw - 660px)) 60px;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  .hero.find-a-role p,
+  .hero.find-a-role p:first-child {
+    font-size: 20px;
+    letter-spacing: 3px;
+    padding: 0;
+    min-height: unset;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  .hero.find-a-role h1 {
+    font-size: 5rem;
+    padding: 0;
+  }
+}
+
 @media (width >= 900px) {
   /* Desktop: center content within a 1320px max-width piping box.
      At 1920px → 300px inset; at 1440px → 60px inset; never less than 60px. */
