@@ -1,6 +1,39 @@
 /* eslint-disable */
 /* global WebImporter */
 
+/**
+ * Import script for Royal Navy "Find a Role" category pages.
+ *
+ * MIGRATION NOTES (warfare page — 2026-03-10):
+ *
+ * HELIX-IMPORTER CRASH:
+ * Royal Navy pages include Semasio tracking scripts with URLs containing
+ * [consent-string] and [1|0] bracket patterns. These cause Invalid RegExp
+ * errors in helix-importer's internal URL processing. The preprocess step
+ * MUST remove all script, noscript, and iframe tags before helix-importer
+ * touches the DOM. Each WebImporter.rules.* call is wrapped in try-catch
+ * as an additional safety net.
+ *
+ * CONTENT MANAGEMENT:
+ * Content files (.plain.html) are managed through DA (Document Authoring)
+ * at content.da.live — NOT through git. The /content directory is excluded
+ * from git via .git/info/exclude. After generating content locally, upload
+ * to DA at: https://da.live/#/aemdemos/poc-mh/careers/find-a-role/
+ *
+ * HERO BLOCK VARIANT:
+ * The hero uses variant "Hero (find-a-role)" which generates CSS class
+ * "hero find-a-role block". This activates variant CSS in hero.css for:
+ * - Full-width background image with breadcrumb/H1 overlay
+ * - position:static fix on image row (prevents 0-height collapse)
+ * - :has() rules hiding header breadcrumbs, section piping, keylines
+ *
+ * METADATA:
+ * Do NOT include breadcrumbs:true in page metadata. The hero block has its
+ * own breadcrumb content. The header auto-breadcrumbs would show "Home >
+ * [page title]" next to the logo. The find-a-role-cleanup transformer
+ * strips this metadata field as a safety measure.
+ */
+
 // PARSER IMPORTS - Import all parsers needed for this template
 import introFindARoleParser from './parsers/intro-find-a-role.js';
 import carouselRolesParser from './parsers/carousel-roles.js';
@@ -100,6 +133,9 @@ export default {
    * Preprocess: runs before the helix-importer's internal processing.
    * Removes tracking pixels and elements with regex-breaking URL patterns
    * (e.g., [consent-string], [1|0]) that cause Invalid RegExp errors.
+   *
+   * CRITICAL: These removals prevent helix-importer crashes from Semasio
+   * tracking URLs. Do not reduce the scope of removals without testing.
    */
   preprocess: ({ document }) => {
     // Remove all script tags (tracking scripts contain regex-breaking URLs)
@@ -115,6 +151,8 @@ export default {
     // Remove cookie/consent overlays
     document.querySelectorAll('#onetrust-consent-sdk, [class*="chatbot"], [class*="Chatbot"]').forEach((el) => el.remove());
     // Remove header, footer, nav (not part of content)
+    // NOTE: This also removes breadcrumb <nav> inside IntroTextSection.
+    // The intro-find-a-role parser handles this by falling back to <ol> selector.
     document.querySelectorAll('header, footer, nav').forEach((el) => el.remove());
   },
 
