@@ -466,3 +466,186 @@
     margin: 0 0 20px;
   }
 }
+
+/* ── Apply variant (Search roles + Speak to advisor CTA section) ── */
+
+/* Contained width */
+.columns.apply {
+  max-width: 1320px;
+  margin: 0 auto;
+}
+
+/* Hide decorative <br> between heading and CTA */
+/* stylelint-disable-next-line no-descending-specificity */
+.columns.apply > div > div br {
+  display: none;
+}
+
+/* Column padding (mobile: stacked) */
+/* stylelint-disable-next-line no-descending-specificity */
+.columns.apply > div > div {
+  padding: 40px 24px;
+}
+
+/* Heading override: large, non-uppercase, weight 400 */
+/* stylelint-disable-next-line no-descending-specificity */
+.section.muted-blue .columns.apply > div > div strong:first-of-type {
+  font-size: 48px;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: normal;
+  margin-bottom: 24px;
+}
+
+/* Description text in advisor column */
+/* stylelint-disable-next-line no-descending-specificity */
+.columns.apply > div > div:last-child {
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+/* ── First-column CTA: generic teal pill button ── */
+/* stylelint-disable-next-line no-descending-specificity */
+.section.muted-blue .columns.apply > div > div:first-child a:any-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 46px;
+  border-radius: 23px;
+  background-color: rgb(22 208 197);
+  color: rgb(0 22 59);
+  padding: 0 24px;
+  margin: 24px 0 0;
+  font-size: 18px;
+  font-family: var(--heading-font-family);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.8px;
+  text-decoration: none;
+  border: none;
+  width: auto;
+  overflow: visible;
+}
+
+/* Hide default teal-circle ::after on first-column links */
+.section.muted-blue .columns.apply > div > div:first-child a::after {
+  display: none;
+}
+
+/* ── Search bar variant: fake input + button combo ── */
+
+/* Applied via JS when link text is "Search" */
+/* stylelint-disable-next-line no-descending-specificity */
+.section.muted-blue .columns.apply > div > div.apply-search a:any-link {
+  display: flex;
+  width: 100%;
+  background: transparent;
+  padding: 0;
+  overflow: hidden;
+  font-size: 0;
+  border: 1px solid rgb(255 255 255 / 40%);
+}
+
+/* Placeholder text area on the left */
+.section.muted-blue .columns.apply > div > div.apply-search a::before {
+  content: 'Search keywords';
+  flex: 1;
+  padding: 0 16px;
+  font-family: var(--body-font-family);
+  font-size: 18px;
+  color: rgb(255 255 255 / 60%);
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 400;
+}
+
+/* Teal search button on the right */
+.section.muted-blue .columns.apply > div > div.apply-search a::after {
+  content: 'Search';
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 24px 0 40px;
+  background-color: rgb(22 208 197);
+  color: rgb(0 22 59);
+  font-size: 18px;
+  font-family: var(--heading-font-family);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.8px;
+  border-radius: 0 22px 22px 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300163B' stroke-width='2'%3E%3Ccircle cx='10' cy='10' r='6'/%3E%3Cline x1='14.5' y1='14.5' x2='20' y2='20'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 16px center;
+  background-size: 16px;
+  border: none;
+  transform: none;
+  width: auto;
+  min-width: auto;
+  margin: 0;
+}
+
+/* ── Chat now link: uppercase text + circular chat icon ── */
+/* stylelint-disable-next-line no-descending-specificity */
+.section.muted-blue .columns.apply > div > div:last-child a:any-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
+  margin: 24px 0 0;
+  font-size: 18px;
+  font-family: var(--heading-font-family);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.8px;
+  color: white;
+  border: none;
+  text-decoration: none;
+}
+
+/* Chat bubble icon circle */
+.section.muted-blue .columns.apply > div > div:last-child a::after {
+  content: '';
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  border-radius: 50%;
+  border: 1px solid rgb(255 255 255 / 60%);
+  background-color: transparent;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M3.5 4.5H20.5V16.5H12.5V21.2071L7.79289 16.5H3.5V4.5ZM4.5 5.5V15.5H8.20711L11.5 18.7929V15.5H19.5V5.5H4.5Z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 20px;
+  transform: none;
+  margin: 0;
+}
+
+/* Desktop: side-by-side layout with vertical divider */
+@media (width >= 600px) {
+  .columns.apply > div {
+    flex-direction: row;
+    gap: 0;
+  }
+
+  .columns.apply > div > div {
+    flex: 1;
+    padding: 80px 40px;
+  }
+
+  /* Vertical divider between columns */
+  .columns.apply > div > div:first-child {
+    border-right: 1px solid rgb(211 213 225);
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  .section.muted-blue .columns.apply > div > div strong:first-of-type {
+    font-size: 64px;
+  }
+}

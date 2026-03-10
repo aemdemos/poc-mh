@@ -200,6 +200,8 @@ function restructureQuoteAttribution(block) {
   // In the quote/testimonial section (muted-blue), the quote text and attribution
   // are in a single <p> with <br> separators. Restructure into separate elements
   // so CSS can target them independently.
+  // Skip the apply variant (Search roles / Speak to advisor) which is not a quote.
+  if (block.classList.contains('apply')) return;
   const section = block.closest('.section.muted-blue');
   if (!section) return;
 
@@ -307,4 +309,13 @@ export default function decorate(block) {
 
   // Detect and apply ways-to-join variant
   detectAndApplyWaysToJoinVariant(block);
+
+  // Apply variant: mark columns with search-bar CTA for targeted CSS
+  if (block.classList.contains('apply')) {
+    const firstCol = block.querySelector(':scope > div > div:first-child');
+    const link = firstCol?.querySelector('a');
+    if (link && link.textContent.trim().toLowerCase() === 'search') {
+      firstCol.classList.add('apply-search');
+    }
+  }
 }
