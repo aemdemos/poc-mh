@@ -350,6 +350,26 @@
 
 /* ── Find-a-Role hero variant ──
    Shorter banner with full-bleed image, breadcrumb + H1 overlaid at bottom. */
+
+/* Hide horizontal keyline below hero on find-a-role pages */
+.hero-container:has(.hero.find-a-role)::after {
+  display: none;
+}
+
+/* Hide header breadcrumbs on find-a-role pages (hero has its own) */
+body:has(.hero.find-a-role) .breadcrumbs {
+  display: none;
+}
+
+/* Hide section piping/keylines on find-a-role pages */
+body:has(.hero.find-a-role) main > .section + .section::before {
+  display: none;
+}
+
+body:has(.hero.find-a-role) main > .section:not(.hero-container)::after {
+  display: none;
+}
+
 .hero.find-a-role {
   min-height: 400px;
   display: flex;
