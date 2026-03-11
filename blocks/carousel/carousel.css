@@ -17,11 +17,20 @@
   }
 }
 
+/* ── Layout: place filter bar + nav buttons on the same row ── */
+.carousel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
 /* ── Filter bar (tag pills above carousel) ── */
 .carousel .carousel-filter-bar {
   display: flex;
+  flex: 1 1 0;
+  min-width: 0;
   gap: 20px;
-  margin: 10px 0 30px;
+  margin: 10px 0 24px;
   overflow-x: auto;
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -103,6 +112,7 @@
 /* ── Navigation buttons (above cards, right-aligned) ── */
 .carousel .carousel-navigation-buttons {
   display: flex;
+  flex: 0 0 auto;
   align-items: center;
   justify-content: flex-end;
   gap: 12px;
@@ -156,6 +166,7 @@
 
 /* ── Slides container ── */
 .carousel .carousel-slides-container {
+  flex-basis: 100%;
   position: relative;
   z-index: 1;
   padding-bottom: 24px;
