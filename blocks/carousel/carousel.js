@@ -70,16 +70,22 @@ function createSlide(row, slideIndex, carouselId) {
   if (picture) {
     imageDiv.append(picture);
   } else {
-    // External images: AEM strips <picture> for external URLs, so we author
-    // them as plain <a> links (same pattern EDS uses for external videos).
-    // Use textContent for the src — the AEM pipeline may rewrite the href.
-    const link = imageCol?.querySelector('a');
-    if (link && /\.(jpe?g|png|gif|webp|svg)/i.test(link.textContent || link.href)) {
-      const img = document.createElement('img');
-      img.src = link.textContent.trim() || link.href;
-      img.alt = link.getAttribute('title') || '';
-      img.loading = 'lazy';
-      imageDiv.append(img);
+    // Bare <img> tags: external images (e.g. cd.royalnavy.mod.uk) are not
+    // wrapped in <picture> by AEM's pipeline. Handle them directly.
+    const bareImg = imageCol?.querySelector('img');
+    if (bareImg) {
+      bareImg.loading = 'lazy';
+      imageDiv.append(bareImg);
+    } else {
+      // Fallback: external images authored as <a> links
+      const link = imageCol?.querySelector('a');
+      if (link && /\.(jpe?g|png|gif|webp|svg)/i.test(link.textContent || link.href)) {
+        const img = document.createElement('img');
+        img.src = link.textContent.trim() || link.href;
+        img.alt = link.getAttribute('title') || '';
+        img.loading = 'lazy';
+        imageDiv.append(img);
+      }
     }
   }
   slide.append(imageDiv);
