@@ -268,6 +268,9 @@ var CustomImportScript = (() => {
         }
       });
       const h2Elements = [...element.querySelectorAll("h2")];
+      if (h2Elements[0]) {
+        h2Elements[0].before(document.createElement("hr"));
+      }
       if (h2Elements[1]) {
         h2Elements[1].before(document.createElement("hr"));
       }

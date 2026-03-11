@@ -101,19 +101,25 @@ export default function transform(hookName, element, payload) {
     });
 
     // --- Section structure ---
-    // Find-a-role pages have 4 sections with alternating backgrounds:
-    //   Section 1 (default navy): Hero + "Levels of entry" carousel
-    //   Section 2 (white-bg): "Royal Navy [category] roles" carousel
-    //   Section 3 (muted-blue): "RFA [category] roles" carousel
-    //   Section 4 (default): Grid CTA (Columns apply)
+    // Find-a-role pages have 5 sections with alternating backgrounds:
+    //   Section 1 (default navy): Hero only
+    //   Section 2 (default navy): "Levels of entry" carousel
+    //   Section 3 (white-bg): "Royal Navy [category] roles" carousel
+    //   Section 4 (muted-blue): "RFA [category] roles" carousel
+    //   Section 5 (default): Grid CTA (Columns apply)
     // Insert <hr> section dividers and section-metadata blocks.
     const h2Elements = [...element.querySelectorAll('h2')];
 
-    // h2[0] = "Levels of entry" (stays in section 1 with hero)
-    // h2[1] = "Royal Navy * roles" (starts section 2)
-    // h2[2] = "RFA * roles" (starts section 3)
+    // h2[0] = "Levels of entry" (starts section 2, hero gets its own section)
+    // h2[1] = "Royal Navy * roles" (starts section 3)
+    // h2[2] = "RFA * roles" (starts section 4)
 
-    // Section break before section 2
+    // Section break after hero, before "Levels of entry"
+    if (h2Elements[0]) {
+      h2Elements[0].before(document.createElement('hr'));
+    }
+
+    // Section break before "Royal Navy * roles"
     if (h2Elements[1]) {
       h2Elements[1].before(document.createElement('hr'));
     }
