@@ -190,14 +190,15 @@ function createSlide(row, slideIndex, carouselId) {
     const hasService = detailItems.some((item) => /^service:/i.test(item));
     if (hasService) {
       const tags = [];
-      const isOfficer = /\bofficer\b/i.test(title);
-      const isTrainee = /\bcadet\b/i.test(title) || /\btrainee\b/i.test(title);
+      // "Petty Officer" is an enlisted rank, not an officer
+      const hasPettyOfficer = /\bpetty\s+officer\b/i.test(title);
+      // "Cadet" = officer-track in the Royal Navy
+      const isOfficer = (!hasPettyOfficer && /\bofficer\b/i.test(title))
+        || /\bcadet\b/i.test(title);
       const isApprentice = /\bapprentice\b/i.test(title) || /apprentice/i.test(badgeText);
-      // "Rating" = any enlisted (non-officer, non-cadet) role
-      if (!isOfficer && !isTrainee) tags.push('Rating');
+      if (!isOfficer) tags.push('Rating');
       if (isApprentice) tags.push('Apprenticeship');
       if (isOfficer) tags.push('Officer');
-      if (isTrainee) tags.push('Trainee');
       detailItems.forEach((item) => {
         if (/^service:/i.test(item)) {
           const svc = item.substring(item.indexOf(':') + 1).trim();
@@ -234,11 +235,14 @@ function buildFilterBar(block) {
 
   if (tagSet.size < 1) return;
 
-  // Sort tags: entry-level categories first, then services alphabetical
-  const categoryOrder = ['Rating', 'Apprenticeship', 'Trainee', 'Officer'];
-  const categories = categoryOrder.filter((c) => tagSet.has(c));
-  const services = [...tagSet].filter((t) => !categoryOrder.includes(t)).sort();
-  const sortedTags = [...categories, ...services];
+  // Sort tags: Rating/Apprenticeship first, then services alphabetical, then Officer/Trainee
+  const frontCategories = ['Rating', 'Apprenticeship'];
+  const backCategories = ['Officer', 'Trainee'];
+  const front = frontCategories.filter((c) => tagSet.has(c));
+  const services = [...tagSet]
+    .filter((t) => !frontCategories.includes(t) && !backCategories.includes(t)).sort();
+  const back = backCategories.filter((c) => tagSet.has(c));
+  const sortedTags = [...front, ...services, ...back];
 
   const filterBar = document.createElement('div');
   filterBar.className = 'carousel-filter-bar';
