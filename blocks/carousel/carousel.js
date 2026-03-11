@@ -190,12 +190,14 @@ function createSlide(row, slideIndex, carouselId) {
     const hasService = detailItems.some((item) => /^service:/i.test(item));
     if (hasService) {
       const tags = [];
-      const reqItem = detailItems.find((item) => /^required:/i.test(item));
-      const reqValue = reqItem ? reqItem.substring(reqItem.indexOf(':') + 1).trim() : '';
-      if (/no qualifications/i.test(reqValue) || /\brating\b/i.test(title)) tags.push('Rating');
-      if (/\bapprentice\b/i.test(title) || /apprentice/i.test(badgeText)) tags.push('Apprenticeship');
-      if (/\bofficer\b/i.test(title)) tags.push('Officer');
-      if (/\bcadet\b/i.test(title) || /\btrainee\b/i.test(title)) tags.push('Trainee');
+      const isOfficer = /\bofficer\b/i.test(title);
+      const isTrainee = /\bcadet\b/i.test(title) || /\btrainee\b/i.test(title);
+      const isApprentice = /\bapprentice\b/i.test(title) || /apprentice/i.test(badgeText);
+      // "Rating" = any enlisted (non-officer, non-cadet) role
+      if (!isOfficer && !isTrainee) tags.push('Rating');
+      if (isApprentice) tags.push('Apprenticeship');
+      if (isOfficer) tags.push('Officer');
+      if (isTrainee) tags.push('Trainee');
       detailItems.forEach((item) => {
         if (/^service:/i.test(item)) {
           const svc = item.substring(item.indexOf(':') + 1).trim();
