@@ -21,7 +21,9 @@ const INFO_SVG = `<svg viewBox="0 0 20 20" fill="currentColor" width="20" height
   <text x="10" y="14.5" text-anchor="middle" font-size="12" font-weight="700" font-family="sans-serif">i</text>
 </svg>`;
 
-const BADGE_TOOLTIPS = {
+// Fallback tooltip text for legacy content that doesn't include pipe-delimited tooltips.
+// New content embeds tooltips directly: "Fast track | Recruits are in high demand..."
+const BADGE_TOOLTIPS_FALLBACK = {
   'fast-track': 'Recruits are in high demand \u2013 applying for one of these roles will mean your application is fast tracked and you\u2019ll start training sooner.',
   apprentice: 'As an apprentice you\u2019ll be learning on the job, making a vital contribution and earning a competitive wage from day one.',
   'high-interest': 'This is a highly competitive role with potential long lead time to join.',
@@ -92,7 +94,7 @@ function createSlide(row, slideIndex, carouselId) {
   // Collect paragraphs from content column
   const paragraphs = contentCol ? [...contentCol.querySelectorAll('p')] : [];
   const detailItems = [];
-  let badgeText = '';
+  const badges = []; // { label, tooltip }
 
   paragraphs.forEach((p) => {
     const em = p.querySelector('em');
@@ -107,8 +109,19 @@ function createSlide(row, slideIndex, carouselId) {
       href = link.href;
       title = link.textContent.trim();
     } else if (strong && !link && detailItems.length > 0) {
-      // Badge row (comes after details): "<strong>Fast track, Apprentice</strong>"
-      badgeText = strong.textContent.trim();
+      // Badge row (comes after details)
+      const text = strong.textContent.trim();
+      if (text.includes('|')) {
+        // Content-driven format: "Label | Tooltip text"
+        const [label, ...rest] = text.split('|');
+        badges.push({ label: label.trim(), tooltip: rest.join('|').trim() });
+      } else {
+        // Legacy format: "Fast track, Apprentice" (comma-separated, no tooltips)
+        text.split(',').forEach((b) => {
+          const label = b.trim();
+          if (label) badges.push({ label, tooltip: '' });
+        });
+      }
     } else if (!href && link) {
       // Fallback: bare link as title
       href = link.href;
@@ -178,36 +191,33 @@ function createSlide(row, slideIndex, carouselId) {
     });
     detailsDiv.append(table);
 
-    // Badges
-    if (badgeText) {
+    // Badges — tooltip text from authored content (pipe-delimited) or fallback map
+    if (badges.length > 0) {
       const badgesDiv = document.createElement('div');
       badgesDiv.className = 'carousel-slide-badges';
-      badgeText.split(',').forEach((badge) => {
-        const text = badge.trim();
-        if (text) {
-          const key = text.toLowerCase().replace(/\s+/g, '-');
-          const span = document.createElement('span');
-          span.className = `carousel-badge carousel-badge-${key}`;
-          span.textContent = text;
+      badges.forEach(({ label, tooltip: tip }) => {
+        const key = label.toLowerCase().replace(/\s+/g, '-');
+        const span = document.createElement('span');
+        span.className = `carousel-badge carousel-badge-${key}`;
+        span.textContent = label;
 
-          const tip = BADGE_TOOLTIPS[key];
-          if (tip) {
-            const info = document.createElement('span');
-            info.className = 'carousel-badge-info';
-            info.setAttribute('aria-label', `Info about ${text}`);
-            info.innerHTML = INFO_SVG;
-            const tooltip = document.createElement('span');
-            tooltip.className = 'carousel-badge-tooltip';
-            tooltip.setAttribute('role', 'tooltip');
-            tooltip.textContent = tip;
-            slide.append(tooltip);
-            info.addEventListener('mouseenter', () => tooltip.classList.add('carousel-badge-tooltip-visible'));
-            info.addEventListener('mouseleave', () => tooltip.classList.remove('carousel-badge-tooltip-visible'));
-            span.append(info);
-          }
-
-          badgesDiv.append(span);
+        const resolvedTip = tip || BADGE_TOOLTIPS_FALLBACK[key] || '';
+        if (resolvedTip) {
+          const info = document.createElement('span');
+          info.className = 'carousel-badge-info';
+          info.setAttribute('aria-label', `Info about ${label}`);
+          info.innerHTML = INFO_SVG;
+          const tooltipEl = document.createElement('span');
+          tooltipEl.className = 'carousel-badge-tooltip';
+          tooltipEl.setAttribute('role', 'tooltip');
+          tooltipEl.textContent = resolvedTip;
+          slide.append(tooltipEl);
+          info.addEventListener('mouseenter', () => tooltipEl.classList.add('carousel-badge-tooltip-visible'));
+          info.addEventListener('mouseleave', () => tooltipEl.classList.remove('carousel-badge-tooltip-visible'));
+          span.append(info);
         }
+
+        badgesDiv.append(span);
       });
       detailsDiv.append(badgesDiv);
     }
@@ -224,7 +234,7 @@ function createSlide(row, slideIndex, carouselId) {
       // "Cadet" = officer-track in the Royal Navy
       const isOfficer = (!hasPettyOfficer && /\bofficer\b/i.test(title))
         || /\bcadet\b/i.test(title);
-      const isApprentice = /\bapprentice\b/i.test(title) || /apprentice/i.test(badgeText);
+      const isApprentice = /\bapprentice\b/i.test(title) || badges.some(({ label }) => /apprentice/i.test(label));
       if (!isOfficer) tags.push('Rating');
       if (isApprentice) tags.push('Apprenticeship');
       if (isOfficer) tags.push('Officer');
@@ -253,8 +263,8 @@ function createSlide(row, slideIndex, carouselId) {
   return slide;
 }
 
-function buildFilterBar(block) {
-  // Collect unique tags from slide data attributes
+function buildFilterBar(block, contentLabels) {
+  // Collect unique tags from slide data attributes (needed for filter logic)
   const slides = block.querySelectorAll('.carousel-slide');
   const tagSet = new Set();
   slides.forEach((slide) => {
@@ -264,14 +274,22 @@ function buildFilterBar(block) {
 
   if (tagSet.size < 1) return;
 
-  // Sort tags: Rating/Apprenticeship first, then services alphabetical, then Officer/Trainee
-  const frontCategories = ['Rating', 'Apprenticeship'];
-  const backCategories = ['Officer', 'Trainee'];
-  const front = frontCategories.filter((c) => tagSet.has(c));
-  const services = [...tagSet]
-    .filter((t) => !frontCategories.includes(t) && !backCategories.includes(t)).sort();
-  const back = backCategories.filter((c) => tagSet.has(c));
-  const sortedTags = [...front, ...services, ...back];
+  // Use content-driven labels if provided, otherwise infer order from tag data
+  let sortedTags;
+  if (contentLabels && contentLabels.length > 0) {
+    // Content-driven: use exact labels and order from authored content
+    // Skip "All" if present (it's always added as the first pill)
+    sortedTags = contentLabels.filter((l) => l.toLowerCase() !== 'all');
+  } else {
+    // Legacy: sort tags — Rating/Apprenticeship first, services alphabetical, Officer/Trainee last
+    const frontCategories = ['Rating', 'Apprenticeship'];
+    const backCategories = ['Officer', 'Trainee'];
+    const front = frontCategories.filter((c) => tagSet.has(c));
+    const services = [...tagSet]
+      .filter((t) => !frontCategories.includes(t) && !backCategories.includes(t)).sort();
+    const back = backCategories.filter((c) => tagSet.has(c));
+    sortedTags = [...front, ...services, ...back];
+  }
 
   const filterBar = document.createElement('div');
   filterBar.className = 'carousel-filter-bar';
@@ -324,7 +342,22 @@ let carouselId = 0;
 export default async function decorate(block) {
   carouselId += 1;
   block.setAttribute('id', `carousel-${carouselId}`);
-  const rows = [...block.querySelectorAll(':scope > div')];
+  const allRows = [...block.querySelectorAll(':scope > div')];
+
+  // Detect content-driven filter metadata row: single-cell row starting with "Filters:"
+  let filterLabels = null;
+  const rows = [];
+  allRows.forEach((row) => {
+    const cols = row.querySelectorAll(':scope > div');
+    if (cols.length === 1 && cols[0].textContent.trim().startsWith('Filters:')) {
+      const text = cols[0].textContent.trim().substring('Filters:'.length);
+      filterLabels = text.split(',').map((l) => l.trim()).filter(Boolean);
+      row.remove();
+    } else {
+      rows.push(row);
+    }
+  });
+
   const isSingleSlide = rows.length < 2;
 
   block.setAttribute('role', 'region');
@@ -362,8 +395,8 @@ export default async function decorate(block) {
   container.append(slidesWrapper);
   block.append(container);
 
-  // Build filter bar from badge data (only if badges exist)
-  buildFilterBar(block);
+  // Build filter bar — use content-driven labels if available, otherwise infer
+  buildFilterBar(block, filterLabels);
 
   // Bind scroll events
   if (!isSingleSlide) {
