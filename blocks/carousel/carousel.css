@@ -95,8 +95,8 @@
   height: 18px;
 }
 
-/* Hidden slides (filtered out) */
-.carousel .carousel-slide-hidden {
+/* Hidden slides (filtered out) — extra specificity to override .carousel-slide display:flex */
+.carousel .carousel-slide.carousel-slide-hidden {
   display: none;
 }
 
