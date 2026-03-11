@@ -4,6 +4,10 @@ const ARROW_SVG = `<svg viewBox="0 0 24 24" fill="currentColor">
   <path d="M12 19L11.29 18.29L17.08 12.5H5V11.5H17.08L11.29 5.71L12 5L18.29 11.29L19 12L18.29 12.71L12 19Z"/>
 </svg>`;
 
+const TAG_SVG = `<svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
+  <path d="M16.9985 0.99895L16.9985 7.36291L8.09897 16.2624L1.73501 9.89845L10.6345 0.99895L16.9985 0.99895ZM17.9985 7.77712V-0.00104949H10.2203L0.320793 9.89845L8.09897 17.6766L17.9985 7.77712ZM14.8166 4.59523C14.426 4.98576 13.7929 4.98576 13.4024 4.59523C13.0118 4.20471 13.0118 3.57154 13.4024 3.18102C13.7929 2.79049 14.426 2.79049 14.8166 3.18102C15.2071 3.57154 15.2071 4.20471 14.8166 4.59523Z"/>
+</svg>`;
+
 const PREV_SVG = `<svg viewBox="0 0 25 24" fill="currentColor">
   <path d="M12.76 5L13.47 5.71L7.67 11.5H19.75V12.5H7.67L13.47 18.29L12.76 19L6.47 12.71L5.76 12L6.47 11.29L12.76 5Z"/>
 </svg>`;
@@ -180,6 +184,26 @@ function createSlide(row, slideIndex, carouselId) {
     }
 
     slide.append(detailsDiv);
+
+    // Extract filter tags from card data for carousel filtering.
+    // Only tag cards that have a Service field (role carousels, not "Levels of entry").
+    const hasService = detailItems.some((item) => /^service:/i.test(item));
+    if (hasService) {
+      const tags = [];
+      const reqItem = detailItems.find((item) => /^required:/i.test(item));
+      const reqValue = reqItem ? reqItem.substring(reqItem.indexOf(':') + 1).trim() : '';
+      if (/no qualifications/i.test(reqValue) || /\brating\b/i.test(title)) tags.push('Rating');
+      if (/\bapprentice\b/i.test(title) || /apprentice/i.test(badgeText)) tags.push('Apprenticeship');
+      if (/\bofficer\b/i.test(title)) tags.push('Officer');
+      if (/\bcadet\b/i.test(title) || /\btrainee\b/i.test(title)) tags.push('Trainee');
+      detailItems.forEach((item) => {
+        if (/^service:/i.test(item)) {
+          const svc = item.substring(item.indexOf(':') + 1).trim();
+          if (svc && !tags.includes(svc)) tags.push(svc);
+        }
+      });
+      if (tags.length) slide.dataset.tags = tags.join(',');
+    }
   }
 
   // CTA arrow
@@ -198,62 +222,65 @@ function createSlide(row, slideIndex, carouselId) {
 }
 
 function buildFilterBar(block) {
-  const badges = block.querySelectorAll('.carousel-badge');
-  const uniqueTags = new Map();
-  badges.forEach((badge) => {
-    const text = badge.textContent.trim();
-    if (text && !uniqueTags.has(text)) {
-      const cls = [...badge.classList].find((c) => c !== 'carousel-badge');
-      uniqueTags.set(text, cls || '');
-    }
+  // Collect unique tags from slide data attributes
+  const slides = block.querySelectorAll('.carousel-slide');
+  const tagSet = new Set();
+  slides.forEach((slide) => {
+    const { tags } = slide.dataset;
+    if (tags) tags.split(',').forEach((t) => tagSet.add(t));
   });
 
-  if (uniqueTags.size < 1) return;
+  if (tagSet.size < 1) return;
+
+  // Sort tags: entry-level categories first, then services alphabetical
+  const categoryOrder = ['Rating', 'Apprenticeship', 'Trainee', 'Officer'];
+  const categories = categoryOrder.filter((c) => tagSet.has(c));
+  const services = [...tagSet].filter((t) => !categoryOrder.includes(t)).sort();
+  const sortedTags = [...categories, ...services];
 
   const filterBar = document.createElement('div');
   filterBar.className = 'carousel-filter-bar';
 
-  // "All" pill
-  const allBtn = document.createElement('button');
-  allBtn.type = 'button';
-  allBtn.className = 'carousel-filter-pill carousel-filter-pill-active';
-  allBtn.textContent = 'All';
-  allBtn.dataset.filter = '';
-  filterBar.append(allBtn);
-
-  uniqueTags.forEach((cls, text) => {
+  const createPill = (text, isAll) => {
     const btn = document.createElement('button');
     btn.type = 'button';
-    btn.className = `carousel-filter-pill${cls ? ` ${cls}` : ''}`;
-    btn.textContent = text;
-    btn.dataset.filter = text;
-    filterBar.append(btn);
-  });
+    btn.className = `carousel-filter-pill${isAll ? ' carousel-filter-pill-all carousel-filter-pill-active' : ''}`;
+    btn.dataset.filter = isAll ? '' : text;
+    btn.innerHTML = `<span class="carousel-filter-icon">${TAG_SVG}</span><span>${text}</span>`;
+    return btn;
+  };
+
+  filterBar.append(createPill('All', true));
+  sortedTags.forEach((tag) => filterBar.append(createPill(tag, false)));
 
   filterBar.addEventListener('click', (e) => {
     const pill = e.target.closest('.carousel-filter-pill');
-    if (!pill) return;
+    if (!pill || pill.disabled) return;
 
-    // Update active state
-    filterBar.querySelectorAll('.carousel-filter-pill').forEach((p) => p.classList.remove('carousel-filter-pill-active'));
+    filterBar.querySelectorAll('.carousel-filter-pill').forEach((p) => {
+      p.classList.remove('carousel-filter-pill-active');
+      p.disabled = false;
+    });
     pill.classList.add('carousel-filter-pill-active');
+    pill.disabled = true;
 
     const filterText = pill.dataset.filter;
-    const slides = block.querySelectorAll('.carousel-slide');
     slides.forEach((slide) => {
       if (!filterText) {
         slide.classList.remove('carousel-slide-hidden');
       } else {
-        const slideBadges = [...slide.querySelectorAll('.carousel-badge')].map((b) => b.textContent.trim());
-        slide.classList.toggle('carousel-slide-hidden', !slideBadges.includes(filterText));
+        const slideTags = (slide.dataset.tags || '').split(',');
+        slide.classList.toggle('carousel-slide-hidden', !slideTags.includes(filterText));
       }
     });
 
-    // Reset scroll and update nav
     const slidesContainer = block.querySelector('.carousel-slides');
     if (slidesContainer) slidesContainer.scrollTo({ left: 0, behavior: 'smooth' });
     requestAnimationFrame(() => updateNavState(block));
   });
+
+  // Disable the default active "All" button
+  filterBar.querySelector('.carousel-filter-pill-active').disabled = true;
 
   block.prepend(filterBar);
 }
