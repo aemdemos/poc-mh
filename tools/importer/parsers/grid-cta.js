@@ -77,6 +77,6 @@ export default function parse(element, { document }) {
   }
 
   const cells = [[col1, col2]];
-  const block = WebImporter.Blocks.createBlock(document, { name: 'Columns', cells });
+  const block = WebImporter.Blocks.createBlock(document, { name: 'Columns (apply)', cells });
   element.replaceWith(block);
 }

@@ -392,7 +392,7 @@ body:has(.hero.find-a-role) .breadcrumbs {
   background: linear-gradient(to top, rgb(0 22 59 / 80%) 0%, rgb(0 22 59 / 20%) 60%, transparent 100%);
 }
 
-/* No side piping on find-a-role */
+/* Side piping on find-a-role: hidden on mobile, shown on desktop via media query */
 /* stylelint-disable-next-line no-descending-specificity */
 .hero.find-a-role::after {
   display: none;
@@ -420,7 +420,8 @@ body:has(.hero.find-a-role) .breadcrumbs {
 /* stylelint-disable-next-line no-descending-specificity */
 .hero.find-a-role p a {
   color: white;
-  text-decoration: none;
+  text-decoration: underline;
+  text-underline-offset: 4px;
   font-weight: 400;
 }
 
@@ -495,22 +496,24 @@ body:has(.hero.find-a-role) .breadcrumbs {
 @media (width >= 900px) {
   .hero.find-a-role {
     min-height: 100vh;
-    padding: 0 max(60px, calc(50vw - 660px)) 60px;
+    padding: 0 max(60px, calc(50vw - 660px)) 120px;
   }
 
   /* stylelint-disable-next-line no-descending-specificity */
   .hero.find-a-role p,
   .hero.find-a-role p:first-child {
-    font-size: 20px;
-    letter-spacing: 3px;
-    padding: 0;
+    font-size: 40px;
+    letter-spacing: 4px;
+    padding: 0 0 0 120px;
     min-height: unset;
+    margin: 0 0 20px;
   }
 
   /* stylelint-disable-next-line no-descending-specificity */
   .hero.find-a-role h1 {
     font-size: 5rem;
-    padding: 0;
+    padding: 0 0 0 120px;
+    margin: 0 0 20px;
   }
 }
 
@@ -527,6 +530,13 @@ body:has(.hero.find-a-role) .breadcrumbs {
     display: block;
     left: max(60px, calc(50vw - 660px));
     right: max(60px, calc(50vw - 660px));
+  }
+
+  /* Re-enable side piping on find-a-role hero (desktop only) */
+  .hero.find-a-role::after {
+    display: block;
+    top: 64px;
+    height: calc(100% - 64px);
   }
 
   /* Tagline — matches original 120px */
