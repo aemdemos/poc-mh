@@ -12,12 +12,16 @@ const NEXT_SVG = `<svg viewBox="0 0 24 24" fill="currentColor">
   <path d="M12 19L11.29 18.29L17.08 12.5H5V11.5H17.08L11.29 5.71L12 5L18.29 11.29L19 12L18.29 12.71L12 19Z"/>
 </svg>`;
 
+function getVisibleSlides(block) {
+  return [...block.querySelectorAll('.carousel-slide:not(.carousel-slide-hidden)')];
+}
+
 function scrollByCard(block, direction) {
   const slides = block.querySelector('.carousel-slides');
-  const card = slides.querySelector('.carousel-slide');
-  if (!card) return;
+  const visible = getVisibleSlides(block);
+  if (!visible.length) return;
   const gap = parseInt(window.getComputedStyle(slides).columnGap, 10) || 40;
-  const cardWidth = card.offsetWidth + gap;
+  const cardWidth = visible[0].offsetWidth + gap;
   slides.scrollBy({ left: direction * cardWidth, behavior: 'smooth' });
 }
 
@@ -193,6 +197,67 @@ function createSlide(row, slideIndex, carouselId) {
   return slide;
 }
 
+function buildFilterBar(block) {
+  const badges = block.querySelectorAll('.carousel-badge');
+  const uniqueTags = new Map();
+  badges.forEach((badge) => {
+    const text = badge.textContent.trim();
+    if (text && !uniqueTags.has(text)) {
+      const cls = [...badge.classList].find((c) => c !== 'carousel-badge');
+      uniqueTags.set(text, cls || '');
+    }
+  });
+
+  if (uniqueTags.size < 1) return;
+
+  const filterBar = document.createElement('div');
+  filterBar.className = 'carousel-filter-bar';
+
+  // "All" pill
+  const allBtn = document.createElement('button');
+  allBtn.type = 'button';
+  allBtn.className = 'carousel-filter-pill carousel-filter-pill-active';
+  allBtn.textContent = 'All';
+  allBtn.dataset.filter = '';
+  filterBar.append(allBtn);
+
+  uniqueTags.forEach((cls, text) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = `carousel-filter-pill${cls ? ` ${cls}` : ''}`;
+    btn.textContent = text;
+    btn.dataset.filter = text;
+    filterBar.append(btn);
+  });
+
+  filterBar.addEventListener('click', (e) => {
+    const pill = e.target.closest('.carousel-filter-pill');
+    if (!pill) return;
+
+    // Update active state
+    filterBar.querySelectorAll('.carousel-filter-pill').forEach((p) => p.classList.remove('carousel-filter-pill-active'));
+    pill.classList.add('carousel-filter-pill-active');
+
+    const filterText = pill.dataset.filter;
+    const slides = block.querySelectorAll('.carousel-slide');
+    slides.forEach((slide) => {
+      if (!filterText) {
+        slide.classList.remove('carousel-slide-hidden');
+      } else {
+        const slideBadges = [...slide.querySelectorAll('.carousel-badge')].map((b) => b.textContent.trim());
+        slide.classList.toggle('carousel-slide-hidden', !slideBadges.includes(filterText));
+      }
+    });
+
+    // Reset scroll and update nav
+    const slidesContainer = block.querySelector('.carousel-slides');
+    if (slidesContainer) slidesContainer.scrollTo({ left: 0, behavior: 'smooth' });
+    requestAnimationFrame(() => updateNavState(block));
+  });
+
+  block.prepend(filterBar);
+}
+
 let carouselId = 0;
 export default async function decorate(block) {
   carouselId += 1;
@@ -234,6 +299,9 @@ export default async function decorate(block) {
 
   container.append(slidesWrapper);
   block.append(container);
+
+  // Build filter bar from badge data (only if badges exist)
+  buildFilterBar(block);
 
   // Bind scroll events
   if (!isSingleSlide) {
