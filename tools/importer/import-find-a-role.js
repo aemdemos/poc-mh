@@ -150,10 +150,26 @@ export default {
     document.querySelectorAll('iframe').forEach((el) => el.remove());
     // Remove cookie/consent overlays
     document.querySelectorAll('#onetrust-consent-sdk, [class*="chatbot"], [class*="Chatbot"]').forEach((el) => el.remove());
-    // Remove header, footer, nav (not part of content)
-    // NOTE: This also removes breadcrumb <nav> inside IntroTextSection.
-    // The intro-find-a-role parser handles this by falling back to <ol> selector.
-    document.querySelectorAll('header, footer, nav').forEach((el) => el.remove());
+    // Remove header and footer (not part of content)
+    document.querySelectorAll('header, footer').forEach((el) => el.remove());
+    // Remove nav elements EXCEPT breadcrumb nav (needed by intro-find-a-role parser)
+    document.querySelectorAll('nav').forEach((el) => {
+      if (el.getAttribute('aria-label') !== 'Breadcrumb') el.remove();
+    });
+    // Remove HTML comments containing tracking URLs with regex-breaking patterns
+    const walker = document.createTreeWalker(document, NodeFilter.SHOW_COMMENT);
+    const comments = [];
+    while (walker.nextNode()) comments.push(walker.currentNode);
+    comments.forEach((c) => c.remove());
+    // Sanitize any remaining attributes containing regex-breaking URL patterns
+    // (e.g., semasio [1|0], [consent-string] in data-* or src attributes)
+    document.querySelectorAll('*').forEach((el) => {
+      [...el.attributes].forEach((attr) => {
+        if (/semasio|consent-string|\[1\|0\]/.test(attr.value)) {
+          el.removeAttribute(attr.name);
+        }
+      });
+    });
   },
 
   /**

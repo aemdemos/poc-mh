@@ -1,25 +1,8 @@
 var CustomImportScript = (() => {
   var __defProp = Object.defineProperty;
-  var __defProps = Object.defineProperties;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-  var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
   var __getOwnPropNames = Object.getOwnPropertyNames;
-  var __getOwnPropSymbols = Object.getOwnPropertySymbols;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
-  var __propIsEnum = Object.prototype.propertyIsEnumerable;
-  var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-  var __spreadValues = (a, b) => {
-    for (var prop in b || (b = {}))
-      if (__hasOwnProp.call(b, prop))
-        __defNormalProp(a, prop, b[prop]);
-    if (__getOwnPropSymbols)
-      for (var prop of __getOwnPropSymbols(b)) {
-        if (__propIsEnum.call(b, prop))
-          __defNormalProp(a, prop, b[prop]);
-      }
-    return a;
-  };
-  var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
   var __export = (target, all) => {
     for (var name in all)
       __defProp(target, name, { get: all[name], enumerable: true });
@@ -194,7 +177,7 @@ var CustomImportScript = (() => {
       }
     }
     const cells = [[col1, col2]];
-    const block = WebImporter.Blocks.createBlock(document, { name: "Columns", cells });
+    const block = WebImporter.Blocks.createBlock(document, { name: "Columns (apply)", cells });
     element.replaceWith(block);
   }
 
@@ -207,9 +190,11 @@ var CustomImportScript = (() => {
     if (hookName === TransformHook.beforeTransform) {
       WebImporter.DOMUtils.remove(element, [
         "header",
-        "nav",
         "footer"
       ]);
+      element.querySelectorAll("nav").forEach((nav) => {
+        if (nav.getAttribute("aria-label") !== "Breadcrumb") nav.remove();
+      });
       WebImporter.DOMUtils.remove(element, [
         "script",
         "style",
@@ -242,6 +227,11 @@ var CustomImportScript = (() => {
     if (hookName === TransformHook2.beforeTransform) {
       const introMediaElements = element.querySelectorAll('[class*="IntroMedia_leftMask"], [class*="IntroMedia_rightMask"], [class*="IntroMedia_bannerContent"]');
       introMediaElements.forEach((el) => el.remove());
+      element.querySelectorAll('img[src*="orb"]').forEach((img) => {
+        const p = img.closest("p, div:not([class])");
+        if (p && !p.querySelector("[class]")) p.remove();
+        else img.remove();
+      });
       const sectionArrows = element.querySelectorAll('[class*="SectionArrow_arrow"], [class*="arrowWrapper"]');
       sectionArrows.forEach((el) => el.remove());
       const keylines = element.querySelectorAll('[class*="Keylines_keyline"], [class*="SectionWrapper_border"]');
@@ -254,22 +244,63 @@ var CustomImportScript = (() => {
       roleCardDecorative.forEach((el) => el.remove());
     }
     if (hookName === TransformHook2.afterTransform) {
+      const { document } = payload;
       const emptyWrappers = element.querySelectorAll('[class*="SectionWrapper_sectionWrapper"]');
       emptyWrappers.forEach((wrapper) => {
         if (wrapper.textContent.trim() === "" && !wrapper.querySelector("img")) {
           wrapper.remove();
         }
       });
-      const metadataTable = element.querySelector("table");
-      if (metadataTable) {
-        const rows = metadataTable.querySelectorAll("tr");
+      element.querySelectorAll('[class*="IntroMedia"]').forEach((el) => el.remove());
+      element.querySelectorAll('a[href="#main"]').forEach((a) => {
+        const p = a.closest("p");
+        if (p) p.remove();
+        else a.remove();
+      });
+      element.querySelectorAll('img[src^="blob:"]').forEach((img) => {
+        const p = img.closest("p");
+        if (p) p.remove();
+        else img.remove();
+      });
+      element.querySelectorAll("p, span, div").forEach((el) => {
+        if (el.children.length === 0 && el.textContent.trim() === "Chat Now") {
+          el.remove();
+        }
+      });
+      const h2Elements = [...element.querySelectorAll("h2")];
+      if (h2Elements[1]) {
+        h2Elements[1].before(document.createElement("hr"));
+      }
+      if (h2Elements[2]) {
+        const whiteBgMeta = WebImporter.Blocks.createBlock(document, {
+          name: "Section metadata",
+          cells: [["style", "white-bg"]]
+        });
+        h2Elements[2].before(whiteBgMeta);
+        h2Elements[2].before(document.createElement("hr"));
+      }
+      const allTables = [...element.querySelectorAll("table")];
+      const columnsTable = allTables.find((table) => {
+        const cell = table.querySelector("th, td");
+        return cell && /columns/i.test(cell.textContent);
+      });
+      if (columnsTable) {
+        const mutedBlueMeta = WebImporter.Blocks.createBlock(document, {
+          name: "Section metadata",
+          cells: [["style", "muted-blue"]]
+        });
+        columnsTable.before(mutedBlueMeta);
+        columnsTable.before(document.createElement("hr"));
+      }
+      allTables.forEach((table) => {
+        const rows = table.querySelectorAll("tr");
         rows.forEach((row) => {
           const firstCell = row.querySelector("td");
           if (firstCell && firstCell.textContent.trim().toLowerCase() === "breadcrumbs") {
             row.remove();
           }
         });
-      }
+      });
     }
   }
 
@@ -308,9 +339,10 @@ var CustomImportScript = (() => {
     ]
   };
   function executeTransformers(hookName, element, payload) {
-    const enhancedPayload = __spreadProps(__spreadValues({}, payload), {
+    const enhancedPayload = {
+      ...payload,
       template: PAGE_TEMPLATE
-    });
+    };
     transformers.forEach((transformerFn) => {
       try {
         transformerFn.call(null, hookName, element, enhancedPayload);
@@ -356,7 +388,21 @@ var CustomImportScript = (() => {
       document.querySelectorAll("link").forEach((el) => el.remove());
       document.querySelectorAll("iframe").forEach((el) => el.remove());
       document.querySelectorAll('#onetrust-consent-sdk, [class*="chatbot"], [class*="Chatbot"]').forEach((el) => el.remove());
-      document.querySelectorAll("header, footer, nav").forEach((el) => el.remove());
+      document.querySelectorAll("header, footer").forEach((el) => el.remove());
+      document.querySelectorAll("nav").forEach((el) => {
+        if (el.getAttribute("aria-label") !== "Breadcrumb") el.remove();
+      });
+      const walker = document.createTreeWalker(document, NodeFilter.SHOW_COMMENT);
+      const comments = [];
+      while (walker.nextNode()) comments.push(walker.currentNode);
+      comments.forEach((c) => c.remove());
+      document.querySelectorAll("*").forEach((el) => {
+        [...el.attributes].forEach((attr) => {
+          if (/semasio|consent-string|\[1\|0\]/.test(attr.value)) {
+            el.removeAttribute(attr.name);
+          }
+        });
+      });
     },
     /**
      * Main transformation function using one input / multiple outputs pattern

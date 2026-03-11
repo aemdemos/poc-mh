@@ -156,6 +156,77 @@
   margin: 0;
 }
 
+/* ── Details section (salary, profession, requirements) ── */
+.carousel .carousel-slide-details {
+  padding: 0 20px;
+  background-color: white;
+  border-top: 1px solid rgb(200 203 218);
+  margin-top: auto;
+}
+
+.carousel .carousel-slide-details table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+}
+
+.carousel .carousel-slide-details th,
+.carousel .carousel-slide-details td {
+  font-size: 12px;
+  line-height: 1.4;
+  padding: 3px 0;
+  text-align: left;
+  vertical-align: top;
+  border: none;
+  background: none;
+}
+
+.carousel .carousel-slide-details th {
+  color: rgb(100 103 119);
+  font-weight: 400;
+  width: 45%;
+  white-space: nowrap;
+  padding-right: 8px;
+}
+
+.carousel .carousel-slide-details td {
+  color: rgb(64 68 94);
+  font-weight: 700;
+}
+
+/* ── Badges (Fast track, Apprentice, High interest) ── */
+.carousel .carousel-slide-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px 0 12px;
+}
+
+.carousel .carousel-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 24px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.carousel .carousel-badge-fast-track {
+  background-color: rgb(205 238 199);
+  color: rgb(0 48 12);
+}
+
+.carousel .carousel-badge-apprentice {
+  background-color: rgb(229 234 255);
+  color: rgb(18 46 177);
+}
+
+.carousel .carousel-badge-high-interest {
+  background-color: rgb(246 218 215);
+  color: rgb(186 11 0);
+}
+
 /* ── CTA teal arrow button ── */
 .carousel .carousel-slide-cta {
   padding: 0 20px 20px;
@@ -203,6 +274,19 @@
 
 .section.white-bg .carousel .carousel-slide-cta {
   background-color: rgb(0 22 59);
+}
+
+.section.white-bg .carousel .carousel-slide-details {
+  background-color: rgb(0 22 59);
+  border-top-color: rgb(50 65 100);
+}
+
+.section.white-bg .carousel .carousel-slide-details th {
+  color: rgb(177 180 200);
+}
+
+.section.white-bg .carousel .carousel-slide-details td {
+  color: white;
 }
 
 /* ── Responsive: wider cards on desktop ── */

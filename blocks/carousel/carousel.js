@@ -63,33 +63,67 @@ function createSlide(row, slideIndex, carouselId) {
   }
   slide.append(imageDiv);
 
-  // Content section — extract heading link and description
+  // Content section — extract heading, description, details, and badges
   const contentDiv = document.createElement('div');
   contentDiv.className = 'carousel-slide-content';
 
   let href = '';
   let title = '';
-  let description = '';
 
-  if (contentCol) {
-    const link = contentCol.querySelector('a');
+  // Collect paragraphs from content column
+  const paragraphs = contentCol ? [...contentCol.querySelectorAll('p')] : [];
+  const detailItems = [];
+  let badgeText = '';
+
+  paragraphs.forEach((p) => {
+    const em = p.querySelector('em');
+    const strong = p.querySelector('strong');
+    const link = p.querySelector('a');
+
+    if (em) {
+      // Detail row: "<em>Starting salary: over £25,200</em>"
+      detailItems.push(em.textContent.trim());
+    } else if (strong && link && !href) {
+      // Title row: "<strong><a>Title</a></strong>"
+      href = link.href;
+      title = link.textContent.trim();
+    } else if (strong && !link && detailItems.length > 0) {
+      // Badge row (comes after details): "<strong>Fast track, Apprentice</strong>"
+      badgeText = strong.textContent.trim();
+    } else if (!href && link) {
+      // Fallback: bare link as title
+      href = link.href;
+      title = link.textContent.trim();
+    } else if (title && !em && !strong) {
+      // Description paragraph (plain text after title, before details)
+      const desc = document.createElement('p');
+      desc.textContent = p.textContent.trim();
+      if (desc.textContent) contentDiv.append(desc);
+    }
+  });
+
+  // Legacy format: single <p> with <strong><a>Title</a></strong><br>Description
+  if (!title && paragraphs.length > 0) {
+    const firstP = paragraphs[0];
+    const link = firstP.querySelector('a');
     if (link) {
       href = link.href;
       title = link.textContent.trim();
     }
-
-    // Get description: text after the link's container
-    const paragraph = contentCol.querySelector('p');
-    if (paragraph) {
-      const clone = paragraph.cloneNode(true);
-      const strong = clone.querySelector('strong');
-      if (strong) strong.remove();
-      const br = clone.querySelector('br');
-      if (br) br.remove();
-      description = clone.textContent.trim();
+    const clone = firstP.cloneNode(true);
+    const s = clone.querySelector('strong');
+    if (s) s.remove();
+    const br = clone.querySelector('br');
+    if (br) br.remove();
+    const descText = clone.textContent.trim();
+    if (descText) {
+      const desc = document.createElement('p');
+      desc.textContent = descText;
+      contentDiv.append(desc);
     }
   }
 
+  // Insert heading at the top
   const heading = document.createElement('strong');
   if (href) {
     const headingLink = document.createElement('a');
@@ -99,15 +133,50 @@ function createSlide(row, slideIndex, carouselId) {
   } else {
     heading.textContent = title;
   }
-  contentDiv.append(heading);
-
-  if (description) {
-    const desc = document.createElement('p');
-    desc.textContent = description;
-    contentDiv.append(desc);
-  }
+  contentDiv.prepend(heading);
 
   slide.append(contentDiv);
+
+  // Details section (salary, profession, requirements)
+  if (detailItems.length > 0) {
+    const detailsDiv = document.createElement('div');
+    detailsDiv.className = 'carousel-slide-details';
+
+    const table = document.createElement('table');
+    detailItems.forEach((item) => {
+      const colonIdx = item.indexOf(':');
+      if (colonIdx > -1) {
+        const label = item.substring(0, colonIdx + 1).trim();
+        const value = item.substring(colonIdx + 1).trim();
+        const tr = document.createElement('tr');
+        const th = document.createElement('th');
+        th.textContent = label;
+        const td = document.createElement('td');
+        td.textContent = value;
+        tr.append(th, td);
+        table.append(tr);
+      }
+    });
+    detailsDiv.append(table);
+
+    // Badges
+    if (badgeText) {
+      const badgesDiv = document.createElement('div');
+      badgesDiv.className = 'carousel-slide-badges';
+      badgeText.split(',').forEach((badge) => {
+        const text = badge.trim();
+        if (text) {
+          const span = document.createElement('span');
+          span.className = `carousel-badge carousel-badge-${text.toLowerCase().replace(/\s+/g, '-')}`;
+          span.textContent = text;
+          badgesDiv.append(span);
+        }
+      });
+      detailsDiv.append(badgesDiv);
+    }
+
+    slide.append(detailsDiv);
+  }
 
   // CTA arrow
   if (href) {

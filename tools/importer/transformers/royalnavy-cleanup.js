@@ -19,13 +19,15 @@ const TransformHook = {
 
 export default function transform(hookName, element, payload) {
   if (hookName === TransformHook.beforeTransform) {
-    // Remove header, navigation, and footer (not part of main content)
-    // These are standard page structure elements present on all Royal Navy pages
+    // Remove header and footer (not part of main content)
     WebImporter.DOMUtils.remove(element, [
       'header',
-      'nav',
       'footer',
     ]);
+    // Remove nav elements except breadcrumb nav (needed by find-a-role hero parser)
+    element.querySelectorAll('nav').forEach((nav) => {
+      if (nav.getAttribute('aria-label') !== 'Breadcrumb') nav.remove();
+    });
 
     // Remove script and style elements (standard cleanup)
     WebImporter.DOMUtils.remove(element, [
