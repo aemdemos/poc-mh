@@ -16,6 +16,17 @@ const NEXT_SVG = `<svg viewBox="0 0 24 24" fill="currentColor">
   <path d="M12 19L11.29 18.29L17.08 12.5H5V11.5H17.08L11.29 5.71L12 5L18.29 11.29L19 12L18.29 12.71L12 19Z"/>
 </svg>`;
 
+const INFO_SVG = `<svg viewBox="0 0 20 20" fill="currentColor" width="20" height="20">
+  <circle cx="10" cy="10" r="9.5" fill="none" stroke="currentColor" stroke-width="1"/>
+  <text x="10" y="14.5" text-anchor="middle" font-size="12" font-weight="700" font-family="sans-serif">i</text>
+</svg>`;
+
+const BADGE_TOOLTIPS = {
+  'fast-track': 'Recruits are in high demand \u2013 applying for one of these roles will mean your application is fast tracked and you\u2019ll start training sooner.',
+  apprentice: 'As an apprentice you\u2019ll be learning on the job, making a vital contribution and earning a competitive wage from day one.',
+  'high-interest': 'This is a highly competitive role with potential long lead time to join.',
+};
+
 function getVisibleSlides(block) {
   return [...block.querySelectorAll('.carousel-slide:not(.carousel-slide-hidden)')];
 }
@@ -174,9 +185,27 @@ function createSlide(row, slideIndex, carouselId) {
       badgeText.split(',').forEach((badge) => {
         const text = badge.trim();
         if (text) {
+          const key = text.toLowerCase().replace(/\s+/g, '-');
           const span = document.createElement('span');
-          span.className = `carousel-badge carousel-badge-${text.toLowerCase().replace(/\s+/g, '-')}`;
+          span.className = `carousel-badge carousel-badge-${key}`;
           span.textContent = text;
+
+          const tip = BADGE_TOOLTIPS[key];
+          if (tip) {
+            const info = document.createElement('span');
+            info.className = 'carousel-badge-info';
+            info.setAttribute('aria-label', `Info about ${text}`);
+            info.innerHTML = INFO_SVG;
+            const tooltip = document.createElement('span');
+            tooltip.className = 'carousel-badge-tooltip';
+            tooltip.setAttribute('role', 'tooltip');
+            tooltip.textContent = tip;
+            slide.append(tooltip);
+            info.addEventListener('mouseenter', () => tooltip.classList.add('carousel-badge-tooltip-visible'));
+            info.addEventListener('mouseleave', () => tooltip.classList.remove('carousel-badge-tooltip-visible'));
+            span.append(info);
+          }
+
           badgesDiv.append(span);
         }
       });
