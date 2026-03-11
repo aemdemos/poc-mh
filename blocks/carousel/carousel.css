@@ -174,7 +174,7 @@
 
 .carousel .carousel-slides {
   display: flex;
-  gap: 40px;
+  gap: 30px;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -441,10 +441,10 @@
 /* ── Responsive: wider cards on desktop ── */
 @media (width >= 900px) {
   .carousel .carousel-slide {
-    flex: 0 0 320px;
+    flex: 0 0 291px;
   }
 
   .carousel .carousel-slide-image {
-    aspect-ratio: 320 / 220;
+    aspect-ratio: 291 / 200;
   }
 }
