@@ -83,9 +83,10 @@ function enableDragScroll(slidesEl) {
 }
 
 function updateNavState(block) {
+  const section = block.closest('.section');
   const slides = block.querySelector('.carousel-slides');
-  const prevBtn = block.querySelector('.slide-prev');
-  const nextBtn = block.querySelector('.slide-next');
+  const prevBtn = (section || block).querySelector('.slide-prev');
+  const nextBtn = (section || block).querySelector('.slide-next');
   if (!slides || !prevBtn || !nextBtn) return;
 
   const { scrollLeft, scrollWidth, clientWidth } = slides;
@@ -409,7 +410,7 @@ export default async function decorate(block) {
   block.setAttribute('role', 'region');
   block.setAttribute('aria-roledescription', 'Carousel');
 
-  // Navigation buttons — positioned above the cards
+  // Navigation buttons — placed beside the section heading
   if (!isSingleSlide) {
     const slideNavButtons = document.createElement('div');
     slideNavButtons.classList.add('carousel-navigation-buttons');
@@ -421,7 +422,14 @@ export default async function decorate(block) {
         <span class="carousel-nav-icon">${NEXT_SVG}</span>
       </button>
     `;
-    block.prepend(slideNavButtons);
+    // Move buttons into the section heading wrapper so they sit on the same row as the h2
+    const section = block.closest('.section');
+    const headingWrapper = section?.querySelector('.default-content-wrapper');
+    if (headingWrapper) {
+      headingWrapper.append(slideNavButtons);
+    } else {
+      block.prepend(slideNavButtons);
+    }
   }
 
   // Slides container
@@ -446,8 +454,9 @@ export default async function decorate(block) {
 
   // Bind scroll events
   if (!isSingleSlide) {
-    block.querySelector('.slide-prev').addEventListener('click', () => scrollByCard(block, -1));
-    block.querySelector('.slide-next').addEventListener('click', () => scrollByCard(block, 1));
+    const navScope = block.closest('.section') || block;
+    navScope.querySelector('.slide-prev').addEventListener('click', () => scrollByCard(block, -1));
+    navScope.querySelector('.slide-next').addEventListener('click', () => scrollByCard(block, 1));
     slidesWrapper.addEventListener('scroll', () => updateNavState(block), { passive: true });
     enableDragScroll(slidesWrapper);
     // Use ResizeObserver so nav state updates once grid layout resolves
