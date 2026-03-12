@@ -494,6 +494,7 @@
   font-weight: 400;
   text-transform: none;
   letter-spacing: normal;
+  line-height: 1;
   margin: 0 0 20px;
 }
 
@@ -506,7 +507,12 @@
 /* stylelint-disable-next-line no-descending-specificity */
 .columns.apply > div > div:last-child {
   font-size: 18px;
-  line-height: 1.5;
+  line-height: 1.4;
+}
+
+/* Description paragraph spacing */
+.section.muted-blue .columns.apply > div > div:last-child > p:not(.button-container) {
+  margin: 0 0 20px;
 }
 
 /* ── First-column CTA: generic teal pill button ── */
@@ -548,7 +554,9 @@
   padding: 0;
   overflow: hidden;
   font-size: 0;
-  border: 1px solid rgb(255 255 255 / 40%);
+  border: 1px solid white;
+  border-right: none;
+  border-radius: 22px 0 0 22px;
   margin: 0;
 }
 
@@ -556,7 +564,7 @@
 .section.muted-blue .columns.apply > div > div.apply-search a::before {
   content: 'Search keywords';
   flex: 1;
-  padding: 0 16px;
+  padding: 10px 10px 10px 24px;
   font-family: var(--body-font-family);
   font-size: 18px;
   color: rgb(255 255 255 / 60%);
@@ -602,7 +610,7 @@
   border-radius: 0;
   background: transparent;
   padding: 0;
-  margin: 24px 0 0;
+  margin: 0;
   font-size: 18px;
   font-family: var(--heading-font-family);
   font-weight: 700;
@@ -623,9 +631,9 @@
   height: 44px;
   min-width: 44px;
   border-radius: 50%;
-  border: 1px solid rgb(255 255 255 / 60%);
-  background-color: transparent;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M3.5 4.5H20.5V16.5H12.5V21.2071L7.79289 16.5H3.5V4.5ZM4.5 5.5V15.5H8.20711L11.5 18.7929V15.5H19.5V5.5H4.5Z'/%3E%3C/svg%3E");
+  border: 2px solid rgb(22 208 197);
+  background-color: rgb(22 208 197);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300163B'%3E%3Cpath d='M3.5 4.5H20.5V16.5H12.5V21.2071L7.79289 16.5H3.5V4.5ZM4.5 5.5V15.5H8.20711L11.5 18.7929V15.5H19.5V5.5H4.5Z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: center;
   background-size: 20px;
@@ -638,16 +646,23 @@
   .columns.apply > div {
     flex-direction: row;
     gap: 0;
+    position: relative;
   }
 
   .columns.apply > div > div {
-    flex: 1;
-    padding: 80px 40px;
+    flex: 1 1 50%;
+    padding: 120px;
   }
 
-  /* Vertical divider between columns */
-  .columns.apply > div > div:first-child {
-    border-right: 1px solid rgb(211 213 225);
+  /* Vertical divider between columns (absolute for full height) */
+  .columns.apply > div::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 1px;
+    height: 100%;
+    background-color: rgb(211 213 225);
   }
 
   /* stylelint-disable-next-line no-descending-specificity */
