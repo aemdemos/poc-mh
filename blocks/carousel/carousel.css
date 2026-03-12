@@ -17,6 +17,16 @@
   }
 }
 
+/* ── Section heading row: heading + nav buttons side by side ── */
+.carousel-container .default-content-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.carousel-container .default-content-wrapper h2 {
+  flex: 1;
+}
+
 /* ── Layout: place filter bar + nav buttons on the same row ── */
 .carousel {
   display: flex;
@@ -109,16 +119,15 @@
   display: none;
 }
 
-/* ── Navigation buttons (above cards, right-aligned) ── */
+/* ── Navigation buttons (aligned with section heading, top-right) ── */
 .carousel .carousel-navigation-buttons {
   display: flex;
-  flex: 0 0 auto;
   align-items: center;
-  justify-content: flex-end;
   gap: 12px;
-  margin-bottom: 24px;
-  position: relative;
-  z-index: 1;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
 }
 
 /* stylelint-disable-next-line no-descending-specificity */
