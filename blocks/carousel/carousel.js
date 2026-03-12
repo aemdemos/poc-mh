@@ -410,9 +410,10 @@ export default async function decorate(block) {
   block.setAttribute('role', 'region');
   block.setAttribute('aria-roledescription', 'Carousel');
 
-  // Navigation buttons — placed on the heading row (right-aligned)
+  // Navigation buttons — created now, placed after filter bar decision below
+  let slideNavButtons;
   if (!isSingleSlide) {
-    const slideNavButtons = document.createElement('div');
+    slideNavButtons = document.createElement('div');
     slideNavButtons.classList.add('carousel-navigation-buttons');
     slideNavButtons.innerHTML = `
       <button type="button" class="slide-prev" aria-label="Previous Slide" disabled>
@@ -422,13 +423,6 @@ export default async function decorate(block) {
         <span class="carousel-nav-icon">${NEXT_SVG}</span>
       </button>
     `;
-    const section = block.closest('.carousel-container');
-    const headingWrapper = section?.querySelector('.default-content-wrapper');
-    if (headingWrapper) {
-      headingWrapper.append(slideNavButtons);
-    } else {
-      block.prepend(slideNavButtons);
-    }
   }
 
   // Slides container
@@ -450,6 +444,24 @@ export default async function decorate(block) {
 
   // Build filter bar — use content-driven labels if available, otherwise infer
   buildFilterBar(block, filterLabels);
+
+  // Place nav buttons: alongside filter pills when present, otherwise on heading row
+  if (slideNavButtons) {
+    const filterBar = block.querySelector('.carousel-filter-bar');
+    if (filterBar) {
+      // Insert nav buttons inside the carousel block, right after the filter bar.
+      // The carousel's flex-wrap layout puts them on the same row as the pills.
+      filterBar.after(slideNavButtons);
+    } else {
+      const section = block.closest('.carousel-container');
+      const headingWrapper = section?.querySelector('.default-content-wrapper');
+      if (headingWrapper) {
+        headingWrapper.append(slideNavButtons);
+      } else {
+        block.prepend(slideNavButtons);
+      }
+    }
+  }
 
   // Bind scroll events
   if (!isSingleSlide) {

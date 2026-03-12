@@ -35,7 +35,8 @@
 /* ── Filter bar (tag pills above carousel) ── */
 .carousel .carousel-filter-bar {
   display: flex;
-  width: 100%;
+  flex: 1;
+  min-width: 0;
   gap: 12px;
   margin: 10px 0 24px;
   overflow-x: auto;
@@ -117,12 +118,18 @@
   display: none;
 }
 
-/* ── Navigation buttons (right-aligned on heading row) ── */
+/* ── Navigation buttons (right-aligned on heading row or filter row) ── */
 .carousel-container .carousel-navigation-buttons {
   display: flex;
   align-items: center;
   gap: 12px;
   margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* When nav buttons sit alongside filter pills inside the carousel block */
+.carousel > .carousel-navigation-buttons {
+  margin: 10px 0 24px;
 }
 
 .carousel-container .carousel-navigation-buttons button {
