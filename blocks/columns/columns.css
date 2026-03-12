@@ -489,12 +489,17 @@
 
 /* Heading override: large, non-uppercase, weight 400 */
 /* stylelint-disable-next-line no-descending-specificity */
-.section.muted-blue .columns.apply > div > div strong:first-of-type {
+.section.muted-blue .columns.apply > div > div h2 {
   font-size: 48px;
   font-weight: 400;
   text-transform: none;
   letter-spacing: normal;
-  margin-bottom: 24px;
+  margin: 0 0 20px;
+}
+
+/* Hide the "Search keywords" label paragraph (placeholder is shown via ::before) */
+.section.muted-blue .columns.apply > div > div.apply-search > p:not(.button-container) {
+  display: none;
 }
 
 /* Description text in advisor column */
@@ -544,6 +549,7 @@
   overflow: hidden;
   font-size: 0;
   border: 1px solid rgb(255 255 255 / 40%);
+  margin: 0;
 }
 
 /* Placeholder text area on the left */
@@ -645,7 +651,7 @@
   }
 
   /* stylelint-disable-next-line no-descending-specificity */
-  .section.muted-blue .columns.apply > div > div strong:first-of-type {
+  .section.muted-blue .columns.apply > div > div h2 {
     font-size: 64px;
   }
 }
