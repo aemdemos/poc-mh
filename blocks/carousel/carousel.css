@@ -185,10 +185,18 @@
   scroll-snap-type: x mandatory;
   -ms-overflow-style: none;
   scrollbar-width: none;
+  cursor: grab;
 }
 
 .carousel .carousel-slides::-webkit-scrollbar {
   display: none;
+}
+
+.carousel .carousel-slides.carousel-slides-dragging {
+  cursor: grabbing;
+  scroll-behavior: auto;
+  scroll-snap-type: none;
+  user-select: none;
 }
 
 /* ── Individual card ── */

@@ -42,6 +42,46 @@ function scrollByCard(block, direction) {
   slides.scrollBy({ left: direction * cardWidth, behavior: 'smooth' });
 }
 
+function enableDragScroll(slidesEl) {
+  let isDown = false;
+  let startX;
+  let scrollStart;
+  let hasDragged = false;
+
+  slidesEl.addEventListener('mousedown', (e) => {
+    // Ignore clicks on interactive elements
+    if (e.target.closest('a, button')) return;
+    isDown = true;
+    hasDragged = false;
+    startX = e.pageX;
+    scrollStart = slidesEl.scrollLeft;
+    slidesEl.classList.add('carousel-slides-dragging');
+    e.preventDefault();
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    if (!isDown) return;
+    const dx = e.pageX - startX;
+    if (Math.abs(dx) > 5) hasDragged = true;
+    slidesEl.scrollLeft = scrollStart - dx;
+  });
+
+  window.addEventListener('mouseup', () => {
+    if (!isDown) return;
+    isDown = false;
+    slidesEl.classList.remove('carousel-slides-dragging');
+  });
+
+  // Prevent link navigation when the user was dragging, not clicking
+  slidesEl.addEventListener('click', (e) => {
+    if (hasDragged) {
+      e.preventDefault();
+      e.stopPropagation();
+      hasDragged = false;
+    }
+  }, true);
+}
+
 function updateNavState(block) {
   const slides = block.querySelector('.carousel-slides');
   const prevBtn = block.querySelector('.slide-prev');
@@ -409,6 +449,7 @@ export default async function decorate(block) {
     block.querySelector('.slide-prev').addEventListener('click', () => scrollByCard(block, -1));
     block.querySelector('.slide-next').addEventListener('click', () => scrollByCard(block, 1));
     slidesWrapper.addEventListener('scroll', () => updateNavState(block), { passive: true });
+    enableDragScroll(slidesWrapper);
     // Use ResizeObserver so nav state updates once grid layout resolves
     // (single rAF can fire before scrollWidth is computed for the first carousel)
     new ResizeObserver(() => updateNavState(block)).observe(slidesWrapper);
