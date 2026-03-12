@@ -17,17 +17,6 @@
   }
 }
 
-/* ── Section heading row: h2 left, nav buttons right ── */
-.carousel-container .default-content-wrapper {
-  display: flex;
-  align-items: center;
-}
-
-.carousel-container .default-content-wrapper h2 {
-  flex: 1;
-  min-width: 0;
-}
-
 /* ── Layout: place filter bar + nav buttons on the same row ── */
 .carousel {
   display: flex;
@@ -38,8 +27,9 @@
 /* ── Filter bar (tag pills above carousel) ── */
 .carousel .carousel-filter-bar {
   display: flex;
-  width: 100%;
-  gap: 20px;
+  flex: 1 1 0;
+  min-width: 0;
+  gap: 12px;
   margin: 10px 0 24px;
   overflow-x: auto;
   -ms-overflow-style: none;
@@ -53,6 +43,7 @@
 .carousel .carousel-filter-pill {
   display: flex;
   align-items: center;
+  flex-shrink: 0;
   gap: 8px;
   padding: 6px 10px 6px 6px;
   border-radius: 8px;
@@ -119,16 +110,19 @@
   display: none;
 }
 
-/* ── Navigation buttons (inside heading wrapper, right-aligned) ── */
-.carousel-container .carousel-navigation-buttons {
+/* ── Navigation buttons (right-aligned, same row as filter pills) ── */
+.carousel .carousel-navigation-buttons {
   display: flex;
+  flex: 0 0 auto;
   align-items: center;
+  justify-content: flex-end;
   gap: 12px;
-  flex-shrink: 0;
-  margin-left: auto;
+  margin-bottom: 24px;
+  position: relative;
+  z-index: 1;
 }
 
-.carousel-container .carousel-navigation-buttons button {
+.carousel .carousel-navigation-buttons button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -144,20 +138,20 @@
   transition: background-color 0.2s, border-color 0.2s;
 }
 
-.carousel-container .carousel-navigation-buttons button:hover {
+.carousel .carousel-navigation-buttons button:hover {
   background-color: rgb(255 255 255 / 15%);
 }
 
-.carousel-container .carousel-navigation-buttons button:disabled {
+.carousel .carousel-navigation-buttons button:disabled {
   opacity: 0.4;
   cursor: default;
 }
 
-.carousel-container .carousel-navigation-buttons button:disabled:hover {
+.carousel .carousel-navigation-buttons button:disabled:hover {
   background: transparent;
 }
 
-.carousel-container .carousel-nav-icon {
+.carousel .carousel-nav-icon {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -165,7 +159,7 @@
   height: 20px;
 }
 
-.carousel-container .carousel-nav-icon svg {
+.carousel .carousel-nav-icon svg {
   width: 20px;
   height: 20px;
 }
