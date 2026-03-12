@@ -426,14 +426,13 @@ main .section.white-bg a.button:any-link {
     margin-bottom: 0;
   }
 
-  /* Carousel sections: hide vertical and horizontal keylines
-     (role finder pages have no keylines through carousel card areas) */
+  /* Carousel sections: short vertical keyline stub at section boundary only
+     (reference uses 40px up + 40px down = 80px total, not full section height) */
   /* stylelint-disable no-descending-specificity */
-  main > .section:has(.carousel)::before,
   main > .section:has(.carousel)::after,
-  main > .section.hero-container + .section:has(.carousel)::before,
   main > .section.hero-container + .section:has(.carousel)::after {
-    display: none;
+    bottom: auto;
+    height: 80px;
   }
   /* stylelint-enable no-descending-specificity */
 
