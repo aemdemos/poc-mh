@@ -426,21 +426,19 @@ main .section.white-bg a.button:any-link {
     margin-bottom: 0;
   }
 
- /* Carousel sections: short vertical keyline stub at section boundary only
-     (reference uses 40px up + 40px down = 80px total, not full section height) */
+  /* Carousel sections: 80px vertical stub centered on the horizontal keyline.
+     Non-first carousels: horizontal is at -40px, so vertical runs -80px to 0px
+     (40px above + 40px below the horizontal = cross/intersection pattern).
+     First carousel after hero: horizontal is at 0px, so vertical runs -40px to +40px. */
   /* stylelint-disable no-descending-specificity */
-  main > .section:has(.carousel)::after,
-  main > .section.hero-container + .section:has(.carousel)::after {
+  main > .section:has(.carousel)::after {
+    top: -80px;
     bottom: auto;
     height: 80px;
   }
-  /* stylelint-enable no-descending-specificity */
-  
-  /* Carousel sections: short vertical keyline stub at section boundary only
-     (reference uses 40px up + 40px down = 80px total, not full section height) */
-  /* stylelint-disable no-descending-specificity */
-  main > .section:has(.carousel)::after,
+
   main > .section.hero-container + .section:has(.carousel)::after {
+    top: -40px;
     bottom: auto;
     height: 80px;
   }
