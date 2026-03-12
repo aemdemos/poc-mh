@@ -409,7 +409,8 @@ export default async function decorate(block) {
     block.querySelector('.slide-prev').addEventListener('click', () => scrollByCard(block, -1));
     block.querySelector('.slide-next').addEventListener('click', () => scrollByCard(block, 1));
     slidesWrapper.addEventListener('scroll', () => updateNavState(block), { passive: true });
-    // Delay initial state check until after layout
-    requestAnimationFrame(() => updateNavState(block));
+    // Use ResizeObserver so nav state updates once grid layout resolves
+    // (single rAF can fire before scrollWidth is computed for the first carousel)
+    new ResizeObserver(() => updateNavState(block)).observe(slidesWrapper);
   }
 }

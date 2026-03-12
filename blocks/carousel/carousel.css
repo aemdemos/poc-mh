@@ -446,11 +446,11 @@
   }
 }
 
-/* ── Responsive: 4 cards on desktop ── */
+/* ── Responsive: ~3.5 cards on desktop (ensures all carousels are swipeable) ── */
 @media (width >= 900px) {
   .carousel .carousel-slides {
-    /* 4 cards with 3 gaps of 30px = 90px total gap */
-    grid-auto-columns: calc((100% - 90px) / 4);
+    /* 3.5 visible cards + 3 gaps of 30px = 90px total gap */
+    grid-auto-columns: calc((100% - 90px) / 3.5);
   }
 
   .carousel .carousel-slide-image {
