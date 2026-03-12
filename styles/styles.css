@@ -444,6 +444,25 @@ main .section.white-bg a.button:any-link {
     bottom: auto;
     height: 80px;
   }
+
+  /* Carousel sections: absolute-position the horizontal keyline at the section
+     boundary so it intersects with the vertical ::after (both at top: -40px).
+     Without this, the relative-positioned ::before lands 80px below the section
+     top due to padding, and the lines never cross. */
+  main > .section + .section:has(.carousel)::before {
+    position: absolute;
+    top: -40px;
+    left: 30px;
+    right: 30px;
+    max-width: none;
+    margin: 0;
+  }
+
+  /* First carousel after hero: keep horizontal flush at section boundary (top: 0)
+     since the hero section has no keyline stubs extending below */
+  main > .section.hero-container + .section:has(.carousel)::before {
+    top: 0;
+  }
   /* stylelint-enable no-descending-specificity */
 
   /* Vertical stub below discover section into gap before testimonial
@@ -515,6 +534,29 @@ main .section.white-bg a.button:any-link {
     top: 0;
     bottom: auto;
     height: 175px;
+    z-index: 1;
+  }
+
+  /* Search/Advisor section: re-enable horizontal keyline at top boundary */
+  /* stylelint-disable-next-line no-descending-specificity */
+  main > .section.muted-blue:has(.columns.apply)::before {
+    display: block;
+    position: absolute;
+    top: -40px;
+    left: 30px;
+    right: 30px;
+    max-width: none;
+    margin: 0;
+    z-index: 1;
+  }
+
+  /* Search/Advisor section: re-enable center vertical keyline, extend into footer */
+  /* stylelint-disable-next-line no-descending-specificity */
+  main > .section.muted-blue:has(.columns.apply)::after {
+    display: block;
+    top: -40px;
+    bottom: -40px;
+    height: auto;
     z-index: 1;
   }
 
