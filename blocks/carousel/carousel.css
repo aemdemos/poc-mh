@@ -3,13 +3,14 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  margin-bottom: 0;
 }
 
 .carousel-container h2 {
   font-size: 40px;
   font-weight: 400;
   line-height: 1;
-  margin-bottom: 20px;
+  margin: 0;
 }
 
 .carousel-container .default-content-wrapper p {
@@ -122,7 +123,6 @@
   align-items: center;
   gap: 12px;
   margin-left: auto;
-  margin-bottom: 20px;
 }
 
 .carousel-container .carousel-navigation-buttons button {
