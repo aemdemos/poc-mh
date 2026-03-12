@@ -19,11 +19,48 @@
  *
  * This parser extends the content to include salary details and badges as additional paragraphs.
  *
+ * Badge format: Each badge is a separate <p><strong>Label | Tooltip text</strong></p>.
+ * The pipe delimiter separates the visible label from the tooltip description.
+ * This keeps tooltip text in the authored content so it can be edited without code changes.
+ *
+ * Filter tabs: If the source carousel has filter tabs, they are preserved as a single-cell
+ * first row with format "Filters: All, Rating, Apprenticeship, ...". The block JS reads this
+ * to build filter buttons with the exact labels and order from the original site.
+ *
  * Generated: 2026-03-10
+ * Updated: 2026-03-11 — badge tooltips and filter tabs now content-driven
  */
+
+// Badge tooltip descriptions keyed by badge class name fragment.
+// These are consistent across all Royal Navy find-a-role pages.
+// Sourced from: https://www.royalnavy.mod.uk/careers/find-a-role/* (React tooltip state)
+const BADGE_TOOLTIPS = {
+  fastTrack: 'Recruits are in high demand \u2013 applying for one of these roles will mean your application is fast tracked and you\u2019ll start training sooner.',
+  apprentice: 'As an apprentice you\u2019ll be learning on the job, making a vital contribution and earning a competitive wage from day one.',
+  highInterest: 'This is a highly competitive role with potential long lead time to join.',
+};
+
+/**
+ * Match a badge button element to its tooltip text by checking its CSS class.
+ */
+function getBadgeTooltip(badgeEl) {
+  const cls = badgeEl.className || '';
+  if (/fastTrack/i.test(cls)) return BADGE_TOOLTIPS.fastTrack;
+  if (/apprentice/i.test(cls)) return BADGE_TOOLTIPS.apprentice;
+  if (/highInterest/i.test(cls)) return BADGE_TOOLTIPS.highInterest;
+  return '';
+}
+
 export default function parse(element, { document }) {
   // Extract section heading (carousel title like "Levels of entry")
   const sectionTitle = element.querySelector('h2');
+
+  // --- Filter tabs ---
+  // Extract filter tab labels and order before they are removed by the cleanup transformer.
+  // Source DOM: CarouselSection > CarouselSection_main > ul.filterList > li > button
+  // Note: element IS the CarouselSection, so query within it for the filter list.
+  const filterTabEls = element.querySelectorAll('ul[class*="filter"] li button, ul[class*="Filter"] li button');
+  const filterLabels = Array.from(filterTabEls).map((btn) => btn.textContent.trim()).filter(Boolean);
 
   // Find all RoleCard elements within this carousel section
   const roleCards = Array.from(element.querySelectorAll('[class*="RoleCard_roleCard"]'));
@@ -37,6 +74,15 @@ export default function parse(element, { document }) {
 
   // Build cells array - each row is [image, textContent]
   const cells = [];
+
+  // If filter tabs exist, add them as a single-cell metadata row at the top.
+  // Format: "Filters: All, Rating, Apprenticeship, Surface Fleet, ..."
+  // The block JS recognizes rows with a single cell starting with "Filters:" as metadata.
+  if (filterLabels.length > 0) {
+    const p = document.createElement('p');
+    p.textContent = `Filters: ${filterLabels.join(', ')}`;
+    cells.push([[p]]);
+  }
 
   validCards.forEach((card) => {
     // Extract image
@@ -99,14 +145,17 @@ export default function parse(element, { document }) {
       }
     });
 
-    // Badges
-    if (badges.length > 0) {
+    // Badges — each badge gets its own <p><strong>Label | Tooltip text</strong></p>
+    // The pipe delimiter lets the block JS split label from tooltip description.
+    badges.forEach((badge) => {
+      const label = badge.textContent.trim();
+      const tooltip = getBadgeTooltip(badge);
       const p = document.createElement('p');
       const strong = document.createElement('strong');
-      strong.textContent = badges.map((b) => b.textContent.trim()).join(', ');
+      strong.textContent = tooltip ? `${label} | ${tooltip}` : label;
       p.append(strong);
       contentCell.push(p);
-    }
+    });
 
     cells.push([imageCell, contentCell]);
   });
