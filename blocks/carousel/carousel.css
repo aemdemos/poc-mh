@@ -1,4 +1,10 @@
 /* ── Section heading & description (above the carousel) ── */
+.carousel-container .default-content-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
 .carousel-container h2 {
   font-size: 40px;
   font-weight: 400;
@@ -7,6 +13,7 @@
 }
 
 .carousel-container .default-content-wrapper p {
+  width: 100%;
   font-size: 18px;
   line-height: 1.4;
 }
@@ -27,8 +34,7 @@
 /* ── Filter bar (tag pills above carousel) ── */
 .carousel .carousel-filter-bar {
   display: flex;
-  flex: 1 1 0;
-  min-width: 0;
+  width: 100%;
   gap: 12px;
   margin: 10px 0 24px;
   overflow-x: auto;
@@ -110,19 +116,16 @@
   display: none;
 }
 
-/* ── Navigation buttons (right-aligned, same row as filter pills) ── */
-.carousel .carousel-navigation-buttons {
+/* ── Navigation buttons (right-aligned on heading row) ── */
+.carousel-container .carousel-navigation-buttons {
   display: flex;
-  flex: 0 0 auto;
   align-items: center;
-  justify-content: flex-end;
   gap: 12px;
-  margin-bottom: 24px;
-  position: relative;
-  z-index: 1;
+  margin-left: auto;
+  margin-bottom: 20px;
 }
 
-.carousel .carousel-navigation-buttons button {
+.carousel-container .carousel-navigation-buttons button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -138,20 +141,20 @@
   transition: background-color 0.2s, border-color 0.2s;
 }
 
-.carousel .carousel-navigation-buttons button:hover {
+.carousel-container .carousel-navigation-buttons button:hover {
   background-color: rgb(255 255 255 / 15%);
 }
 
-.carousel .carousel-navigation-buttons button:disabled {
+.carousel-container .carousel-navigation-buttons button:disabled {
   opacity: 0.4;
   cursor: default;
 }
 
-.carousel .carousel-navigation-buttons button:disabled:hover {
+.carousel-container .carousel-navigation-buttons button:disabled:hover {
   background: transparent;
 }
 
-.carousel .carousel-nav-icon {
+.carousel-container .carousel-nav-icon {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -159,7 +162,7 @@
   height: 20px;
 }
 
-.carousel .carousel-nav-icon svg {
+.carousel-container .carousel-nav-icon svg {
   width: 20px;
   height: 20px;
 }

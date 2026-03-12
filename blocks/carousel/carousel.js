@@ -84,8 +84,9 @@ function enableDragScroll(slidesEl) {
 
 function updateNavState(block) {
   const slides = block.querySelector('.carousel-slides');
-  const prevBtn = block.querySelector('.slide-prev');
-  const nextBtn = block.querySelector('.slide-next');
+  const section = block.closest('.carousel-container') || block;
+  const prevBtn = section.querySelector('.slide-prev');
+  const nextBtn = section.querySelector('.slide-next');
   if (!slides || !prevBtn || !nextBtn) return;
 
   const { scrollLeft, scrollWidth, clientWidth } = slides;
@@ -409,7 +410,7 @@ export default async function decorate(block) {
   block.setAttribute('role', 'region');
   block.setAttribute('aria-roledescription', 'Carousel');
 
-  // Navigation buttons — positioned on the same row as filter pills
+  // Navigation buttons — placed on the heading row (right-aligned)
   if (!isSingleSlide) {
     const slideNavButtons = document.createElement('div');
     slideNavButtons.classList.add('carousel-navigation-buttons');
@@ -421,7 +422,13 @@ export default async function decorate(block) {
         <span class="carousel-nav-icon">${NEXT_SVG}</span>
       </button>
     `;
-    block.prepend(slideNavButtons);
+    const section = block.closest('.carousel-container');
+    const headingWrapper = section?.querySelector('.default-content-wrapper');
+    if (headingWrapper) {
+      headingWrapper.append(slideNavButtons);
+    } else {
+      block.prepend(slideNavButtons);
+    }
   }
 
   // Slides container
@@ -446,8 +453,9 @@ export default async function decorate(block) {
 
   // Bind scroll events
   if (!isSingleSlide) {
-    block.querySelector('.slide-prev').addEventListener('click', () => scrollByCard(block, -1));
-    block.querySelector('.slide-next').addEventListener('click', () => scrollByCard(block, 1));
+    const section = block.closest('.carousel-container') || block;
+    section.querySelector('.slide-prev').addEventListener('click', () => scrollByCard(block, -1));
+    section.querySelector('.slide-next').addEventListener('click', () => scrollByCard(block, 1));
     slidesWrapper.addEventListener('scroll', () => updateNavState(block), { passive: true });
     enableDragScroll(slidesWrapper);
     // Use ResizeObserver so nav state updates once grid layout resolves
