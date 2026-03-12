@@ -426,6 +426,17 @@ main .section.white-bg a.button:any-link {
     margin-bottom: 0;
   }
 
+  /* Carousel sections: hide vertical and horizontal keylines
+     (role finder pages have no keylines through carousel card areas) */
+  /* stylelint-disable no-descending-specificity */
+  main > .section:has(.carousel)::before,
+  main > .section:has(.carousel)::after,
+  main > .section.hero-container + .section:has(.carousel)::before,
+  main > .section.hero-container + .section:has(.carousel)::after {
+    display: none;
+  }
+  /* stylelint-enable no-descending-specificity */
+
   /* Vertical stub below discover section into gap before testimonial
      (testimonial ::after with top: -40px bridges this gap from below) */
 
@@ -479,6 +490,7 @@ main .section.white-bg a.button:any-link {
   /* Horizontal keyline after testimonial: flush with boat image bottom */
   /* stylelint-disable-next-line no-descending-specificity */
   main > .section.muted-blue:has(.columns-img-col) + .section::before {
+    display: block;
     position: absolute;
     top: 0;
     left: 30px;
@@ -490,6 +502,7 @@ main .section.white-bg a.button:any-link {
 
   /* Vertical line after testimonial: only 175px into carousel, not full section */
   main > .section.muted-blue:has(.columns-img-col) + .section::after {
+    display: block;
     top: 0;
     bottom: auto;
     height: 175px;
