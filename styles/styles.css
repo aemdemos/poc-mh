@@ -421,9 +421,9 @@ main .section.white-bg a.button:any-link {
     padding-bottom: 80px;
   }
 
-  /* Gap between description text and carousel cards */
+  /* Reset default margin so carousel filter bar provides its own spacing */
   main > .section:has(.carousel) > .default-content-wrapper {
-    margin-bottom: 40px;
+    margin-bottom: 0;
   }
 
   /* Vertical stub below discover section into gap before testimonial
@@ -503,7 +503,7 @@ main .section.white-bg a.button:any-link {
     font-size: 64px;
     font-weight: 400;
     line-height: 1;
-    margin: 0 0 20px;
+    margin: 0;
   }
 
   main > .section:has(.columns-3-cols) > .default-content-wrapper p,

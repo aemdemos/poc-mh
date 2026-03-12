@@ -57,9 +57,9 @@ export default function transform(hookName, element, payload) {
     const carouselNav = element.querySelectorAll('[class*="Carousel_nav"]');
     carouselNav.forEach((el) => el.remove());
 
-    // Remove carousel filter tabs (complex JS-driven behavior not migrated)
-    const filterTabs = element.querySelectorAll('[class*="CarouselSection"] > ul');
-    filterTabs.forEach((el) => el.remove());
+    // NOTE: Carousel filter tabs are now PRESERVED — the carousel-roles parser
+    // extracts them as a "Filters:" metadata row, and the carousel block JS
+    // renders them as interactive filter pills. Do NOT remove them here.
 
     // Remove role card decorative elements (dividers, tooltips, label buttons wrapping)
     const roleCardDecorative = element.querySelectorAll('[class*="RoleCard_divider"], [class*="RoleCard_tooltips"]');
@@ -101,12 +101,12 @@ export default function transform(hookName, element, payload) {
     });
 
     // --- Section structure ---
-    // Find-a-role pages have 5 sections with alternating backgrounds:
+    // Find-a-role pages have 5 sections (matching warfare page):
     //   Section 1 (default navy): Hero only
     //   Section 2 (default navy): "Levels of entry" carousel
-    //   Section 3 (white-bg): "Royal Navy [category] roles" carousel
-    //   Section 4 (muted-blue): "RFA [category] roles" carousel
-    //   Section 5 (default): Grid CTA (Columns apply)
+    //   Section 3 (default navy): "Royal Navy [category] roles" carousel
+    //   Section 4 (default navy): "RFA [category] roles" carousel
+    //   Section 5 (muted-blue): Grid CTA (Columns apply)
     // Insert <hr> section dividers and section-metadata blocks.
     const h2Elements = [...element.querySelectorAll('h2')];
 
@@ -124,29 +124,24 @@ export default function transform(hookName, element, payload) {
       h2Elements[1].before(document.createElement('hr'));
     }
 
-    // Section break before section 3, with white-bg metadata ending section 2
+    // Section break before "RFA * roles"
     if (h2Elements[2]) {
-      const whiteBgMeta = WebImporter.Blocks.createBlock(document, {
-        name: 'Section metadata',
-        cells: [['style', 'white-bg']],
-      });
-      h2Elements[2].before(whiteBgMeta);
       h2Elements[2].before(document.createElement('hr'));
     }
 
-    // Section break before section 4 (Columns), with muted-blue metadata ending section 3
+    // Section break before Columns, with muted-blue metadata on the Columns section
     const allTables = [...element.querySelectorAll('table')];
     const columnsTable = allTables.find((table) => {
       const cell = table.querySelector('th, td');
       return cell && /columns/i.test(cell.textContent);
     });
     if (columnsTable) {
+      columnsTable.before(document.createElement('hr'));
       const mutedBlueMeta = WebImporter.Blocks.createBlock(document, {
         name: 'Section metadata',
         cells: [['style', 'muted-blue']],
       });
-      columnsTable.before(mutedBlueMeta);
-      columnsTable.before(document.createElement('hr'));
+      columnsTable.after(mutedBlueMeta);
     }
 
     // Remove breadcrumbs:true from metadata to prevent header auto-breadcrumbs.

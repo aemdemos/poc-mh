@@ -1,8 +1,25 @@
 var CustomImportScript = (() => {
   var __defProp = Object.defineProperty;
+  var __defProps = Object.defineProperties;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+  var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
   var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __getOwnPropSymbols = Object.getOwnPropertySymbols;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __propIsEnum = Object.prototype.propertyIsEnumerable;
+  var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+  var __spreadValues = (a, b) => {
+    for (var prop in b || (b = {}))
+      if (__hasOwnProp.call(b, prop))
+        __defNormalProp(a, prop, b[prop]);
+    if (__getOwnPropSymbols)
+      for (var prop of __getOwnPropSymbols(b)) {
+        if (__propIsEnum.call(b, prop))
+          __defNormalProp(a, prop, b[prop]);
+      }
+    return a;
+  };
+  var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
   var __export = (target, all) => {
     for (var name in all)
       __defProp(target, name, { get: all[name], enumerable: true });
@@ -58,8 +75,22 @@ var CustomImportScript = (() => {
   }
 
   // tools/importer/parsers/carousel-roles.js
+  var BADGE_TOOLTIPS = {
+    fastTrack: "Recruits are in high demand \u2013 applying for one of these roles will mean your application is fast tracked and you\u2019ll start training sooner.",
+    apprentice: "As an apprentice you\u2019ll be learning on the job, making a vital contribution and earning a competitive wage from day one.",
+    highInterest: "This is a highly competitive role with potential long lead time to join."
+  };
+  function getBadgeTooltip(badgeEl) {
+    const cls = badgeEl.className || "";
+    if (/fastTrack/i.test(cls)) return BADGE_TOOLTIPS.fastTrack;
+    if (/apprentice/i.test(cls)) return BADGE_TOOLTIPS.apprentice;
+    if (/highInterest/i.test(cls)) return BADGE_TOOLTIPS.highInterest;
+    return "";
+  }
   function parse2(element, { document }) {
     const sectionTitle = element.querySelector("h2");
+    const filterTabEls = element.querySelectorAll('ul[class*="filter"] li button, ul[class*="Filter"] li button');
+    const filterLabels = Array.from(filterTabEls).map((btn) => btn.textContent.trim()).filter(Boolean);
     const roleCards = Array.from(element.querySelectorAll('[class*="RoleCard_roleCard"]'));
     const validCards = roleCards.filter((card) => {
       const h3 = card.querySelector("h3");
@@ -67,6 +98,11 @@ var CustomImportScript = (() => {
       return link && link.textContent.trim().length > 0;
     });
     const cells = [];
+    if (filterLabels.length > 0) {
+      const p = document.createElement("p");
+      p.textContent = `Filters: ${filterLabels.join(", ")}`;
+      cells.push([[p]]);
+    }
     validCards.forEach((card) => {
       const img = card.querySelector("img");
       const h3 = card.querySelector("h3");
@@ -108,13 +144,15 @@ var CustomImportScript = (() => {
           contentCell.push(p);
         }
       });
-      if (badges.length > 0) {
+      badges.forEach((badge) => {
+        const label = badge.textContent.trim();
+        const tooltip = getBadgeTooltip(badge);
         const p = document.createElement("p");
         const strong = document.createElement("strong");
-        strong.textContent = badges.map((b) => b.textContent.trim()).join(", ");
+        strong.textContent = tooltip ? `${label} | ${tooltip}` : label;
         p.append(strong);
         contentCell.push(p);
-      }
+      });
       cells.push([imageCell, contentCell]);
     });
     const block = WebImporter.Blocks.createBlock(document, { name: "Carousel", cells });
@@ -128,53 +166,94 @@ var CustomImportScript = (() => {
 
   // tools/importer/parsers/grid-cta.js
   function parse3(element, { document }) {
-    const gridItems = element.querySelectorAll('[class*="GridContainerDouble_gridRowDoubleItem"]');
     const col1 = [];
     const col2 = [];
-    if (gridItems.length >= 1) {
-      const searchBox = gridItems[0];
-      const searchTitle = searchBox.querySelector("h2");
-      if (searchTitle) {
-        const h2 = document.createElement("h2");
-        h2.textContent = searchTitle.textContent.trim();
-        col1.push(h2);
+    const hasSearchInput = !!element.querySelector("input");
+    if (hasSearchInput) {
+      const gridItems = element.querySelectorAll('[class*="GridContainerDouble_gridRowDoubleItem"]');
+      if (gridItems.length >= 1) {
+        const searchBox = gridItems[0];
+        const searchTitle = searchBox.querySelector("h2");
+        if (searchTitle) {
+          const h2 = document.createElement("h2");
+          h2.textContent = searchTitle.textContent.trim();
+          col1.push(h2);
+        }
+        const searchInput = searchBox.querySelector("input");
+        if (searchInput) {
+          const p = document.createElement("p");
+          p.textContent = searchInput.placeholder || "Search keywords";
+          col1.push(p);
+        }
+        const sp = document.createElement("p");
+        const sa = document.createElement("a");
+        sa.href = "/careers/find-a-role";
+        sa.textContent = "Search";
+        sp.append(sa);
+        col1.push(sp);
       }
-      const searchInput = searchBox.querySelector("input");
-      if (searchInput) {
-        const p2 = document.createElement("p");
-        p2.textContent = searchInput.placeholder || "Search keywords";
-        col1.push(p2);
+      if (gridItems.length >= 2) {
+        const advisorBlock = gridItems[1];
+        const advisorTitle = advisorBlock.querySelector("h2");
+        if (advisorTitle) {
+          const h2 = document.createElement("h2");
+          h2.textContent = advisorTitle.textContent.trim();
+          col2.push(h2);
+        }
+        const paragraphs = advisorBlock.querySelectorAll('[class*="TextBlock_text"] p');
+        paragraphs.forEach((para) => {
+          const p = document.createElement("p");
+          p.textContent = para.textContent.trim();
+          col2.push(p);
+        });
+        const ctaBtn = advisorBlock.querySelector('[class*="Button_textCircleButton"]');
+        if (ctaBtn) {
+          const p = document.createElement("p");
+          const a = document.createElement("a");
+          a.href = "#chat";
+          a.textContent = ctaBtn.querySelector('[class*="Button_text"]') ? ctaBtn.querySelector('[class*="Button_text"]').textContent.trim() : "Chat now";
+          p.append(a);
+          col2.push(p);
+        }
       }
-      const p = document.createElement("p");
-      const a = document.createElement("a");
-      a.href = "/careers/find-a-role";
-      a.textContent = "Search";
-      p.append(a);
-      col1.push(p);
-    }
-    if (gridItems.length >= 2) {
-      const advisorBlock = gridItems[1];
-      const advisorTitle = advisorBlock.querySelector("h2");
-      if (advisorTitle) {
-        const h2 = document.createElement("h2");
-        h2.textContent = advisorTitle.textContent.trim();
-        col2.push(h2);
-      }
-      const paragraphs = advisorBlock.querySelectorAll('[class*="TextBlock_text"] p');
-      paragraphs.forEach((para) => {
-        const p = document.createElement("p");
-        p.textContent = para.textContent.trim();
-        col2.push(p);
-      });
-      const ctaBtn = advisorBlock.querySelector('[class*="Button_textCircleButton"]');
-      if (ctaBtn) {
-        const p = document.createElement("p");
-        const a = document.createElement("a");
-        a.href = "#chat";
-        a.textContent = ctaBtn.querySelector('[class*="Button_text"]') ? ctaBtn.querySelector('[class*="Button_text"]').textContent.trim() : "Chat now";
-        p.append(a);
-        col2.push(p);
-      }
+    } else {
+      const articles = element.querySelectorAll("article");
+      const extractArticle = (article, target) => {
+        const h2 = article.querySelector("h2");
+        if (h2) {
+          const heading = document.createElement("h2");
+          heading.textContent = h2.textContent.trim();
+          target.push(heading);
+        }
+        const p = article.querySelector("p");
+        if (p) {
+          const para = document.createElement("p");
+          para.textContent = p.textContent.trim();
+          target.push(para);
+        }
+        const link = article.querySelector("a[href]");
+        if (link) {
+          const lp = document.createElement("p");
+          const a = document.createElement("a");
+          a.href = link.href;
+          a.textContent = link.textContent.trim() || "Learn more";
+          lp.append(a);
+          target.push(lp);
+        }
+        if (!link) {
+          const btn = article.querySelector("button");
+          if (btn) {
+            const bp = document.createElement("p");
+            const a = document.createElement("a");
+            a.href = "#chat";
+            a.textContent = btn.textContent.trim() || "Chat now";
+            bp.append(a);
+            target.push(bp);
+          }
+        }
+      };
+      if (articles.length >= 1) extractArticle(articles[0], col1);
+      if (articles.length >= 2) extractArticle(articles[1], col2);
     }
     const cells = [[col1, col2]];
     const block = WebImporter.Blocks.createBlock(document, { name: "Columns (apply)", cells });
@@ -238,8 +317,6 @@ var CustomImportScript = (() => {
       keylines.forEach((el) => el.remove());
       const carouselNav = element.querySelectorAll('[class*="Carousel_nav"]');
       carouselNav.forEach((el) => el.remove());
-      const filterTabs = element.querySelectorAll('[class*="CarouselSection"] > ul');
-      filterTabs.forEach((el) => el.remove());
       const roleCardDecorative = element.querySelectorAll('[class*="RoleCard_divider"], [class*="RoleCard_tooltips"]');
       roleCardDecorative.forEach((el) => el.remove());
     }
@@ -275,11 +352,6 @@ var CustomImportScript = (() => {
         h2Elements[1].before(document.createElement("hr"));
       }
       if (h2Elements[2]) {
-        const whiteBgMeta = WebImporter.Blocks.createBlock(document, {
-          name: "Section metadata",
-          cells: [["style", "white-bg"]]
-        });
-        h2Elements[2].before(whiteBgMeta);
         h2Elements[2].before(document.createElement("hr"));
       }
       const allTables = [...element.querySelectorAll("table")];
@@ -288,12 +360,12 @@ var CustomImportScript = (() => {
         return cell && /columns/i.test(cell.textContent);
       });
       if (columnsTable) {
+        columnsTable.before(document.createElement("hr"));
         const mutedBlueMeta = WebImporter.Blocks.createBlock(document, {
           name: "Section metadata",
           cells: [["style", "muted-blue"]]
         });
-        columnsTable.before(mutedBlueMeta);
-        columnsTable.before(document.createElement("hr"));
+        columnsTable.after(mutedBlueMeta);
       }
       allTables.forEach((table) => {
         const rows = table.querySelectorAll("tr");
@@ -342,10 +414,9 @@ var CustomImportScript = (() => {
     ]
   };
   function executeTransformers(hookName, element, payload) {
-    const enhancedPayload = {
-      ...payload,
+    const enhancedPayload = __spreadProps(__spreadValues({}, payload), {
       template: PAGE_TEMPLATE
-    };
+    });
     transformers.forEach((transformerFn) => {
       try {
         transformerFn.call(null, hookName, element, enhancedPayload);

@@ -2,20 +2,46 @@
   "templates": [
     {
       "name": "careers-home",
-      "urls": ["https://www.royalnavy.mod.uk/careers"],
-      "description": "Royal Navy careers home page with hero, feature cards, testimonials, profession cards, benefits, and CTAs",
+      "urls": [
+        "https://www.royalnavy.mod.uk/careers"
+      ],
+      "description": "Royal Navy careers home page with video hero, discover carousel, testimonial quote, professions carousel, pay & benefits, ways to join, and CTA grid",
       "blocks": [
         {
-          "name": "hero",
-          "instances": ["section#hero"]
+          "name": "hero-careers",
+          "instances": [
+            "[class*='SectionWrapper_firstSection']"
+          ]
         },
         {
-          "name": "cards",
-          "instances": ["section#discover-potential", "section#choose-profession"]
+          "name": "carousel-home",
+          "instances": [
+            "[class*='CarouselSection_carouselSection']"
+          ]
         },
         {
-          "name": "columns",
-          "instances": ["section#testimonial", "section#pay-benefits", "section#other-ways", "section#cta"]
+          "name": "testimonial",
+          "instances": [
+            "[class*='QuoteBlock_quoteContainer']"
+          ]
+        },
+        {
+          "name": "offset-media",
+          "instances": [
+            "[class*='OffsetMediaSide_content']"
+          ]
+        },
+        {
+          "name": "grid-images",
+          "instances": [
+            "[class*='GridContainerDouble_gridTop']"
+          ]
+        },
+        {
+          "name": "grid-cta",
+          "instances": [
+            "[class*='GridContainerDouble_gridMiddleBottom']"
+          ]
         }
       ]
     },
@@ -31,15 +57,21 @@
       "blocks": [
         {
           "name": "intro-find-a-role",
-          "instances": ["[class*='IntroTextSection_introTextSection']"]
+          "instances": [
+            "[class*='IntroTextSection_introTextSection']"
+          ]
         },
         {
           "name": "carousel-roles",
-          "instances": ["[class*='CarouselSection_carouselSection']"]
+          "instances": [
+            "[class*='CarouselSection_carouselSection']"
+          ]
         },
         {
           "name": "grid-cta",
-          "instances": ["[class*='GridContainerDouble_gridMiddleBottom']"]
+          "instances": [
+            "[class*='GridContainerDouble_gridMiddleBottom']"
+          ]
         }
       ]
     }

@@ -42,10 +42,51 @@ function scrollByCard(block, direction) {
   slides.scrollBy({ left: direction * cardWidth, behavior: 'smooth' });
 }
 
+function enableDragScroll(slidesEl) {
+  let isDown = false;
+  let startX;
+  let scrollStart;
+  let hasDragged = false;
+
+  slidesEl.addEventListener('mousedown', (e) => {
+    // Ignore clicks on interactive elements
+    if (e.target.closest('a, button')) return;
+    isDown = true;
+    hasDragged = false;
+    startX = e.pageX;
+    scrollStart = slidesEl.scrollLeft;
+    slidesEl.classList.add('carousel-slides-dragging');
+    e.preventDefault();
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    if (!isDown) return;
+    const dx = e.pageX - startX;
+    if (Math.abs(dx) > 5) hasDragged = true;
+    slidesEl.scrollLeft = scrollStart - dx;
+  });
+
+  window.addEventListener('mouseup', () => {
+    if (!isDown) return;
+    isDown = false;
+    slidesEl.classList.remove('carousel-slides-dragging');
+  });
+
+  // Prevent link navigation when the user was dragging, not clicking
+  slidesEl.addEventListener('click', (e) => {
+    if (hasDragged) {
+      e.preventDefault();
+      e.stopPropagation();
+      hasDragged = false;
+    }
+  }, true);
+}
+
 function updateNavState(block) {
   const slides = block.querySelector('.carousel-slides');
-  const prevBtn = block.querySelector('.slide-prev');
-  const nextBtn = block.querySelector('.slide-next');
+  const section = block.closest('.carousel-container') || block;
+  const prevBtn = section.querySelector('.slide-prev');
+  const nextBtn = section.querySelector('.slide-next');
   if (!slides || !prevBtn || !nextBtn) return;
 
   const { scrollLeft, scrollWidth, clientWidth } = slides;
@@ -369,9 +410,10 @@ export default async function decorate(block) {
   block.setAttribute('role', 'region');
   block.setAttribute('aria-roledescription', 'Carousel');
 
-  // Navigation buttons — positioned above the cards
+  // Navigation buttons — created now, placed after filter bar decision below
+  let slideNavButtons;
   if (!isSingleSlide) {
-    const slideNavButtons = document.createElement('div');
+    slideNavButtons = document.createElement('div');
     slideNavButtons.classList.add('carousel-navigation-buttons');
     slideNavButtons.innerHTML = `
       <button type="button" class="slide-prev" aria-label="Previous Slide" disabled>
@@ -381,7 +423,6 @@ export default async function decorate(block) {
         <span class="carousel-nav-icon">${NEXT_SVG}</span>
       </button>
     `;
-    block.prepend(slideNavButtons);
   }
 
   // Slides container
@@ -404,12 +445,33 @@ export default async function decorate(block) {
   // Build filter bar — use content-driven labels if available, otherwise infer
   buildFilterBar(block, filterLabels);
 
+  // Place nav buttons: alongside filter pills when present, otherwise on heading row
+  if (slideNavButtons) {
+    const filterBar = block.querySelector('.carousel-filter-bar');
+    if (filterBar) {
+      // Insert nav buttons inside the carousel block, right after the filter bar.
+      // The carousel's flex-wrap layout puts them on the same row as the pills.
+      filterBar.after(slideNavButtons);
+    } else {
+      const section = block.closest('.carousel-container');
+      const headingWrapper = section?.querySelector('.default-content-wrapper');
+      if (headingWrapper) {
+        headingWrapper.append(slideNavButtons);
+      } else {
+        block.prepend(slideNavButtons);
+      }
+    }
+  }
+
   // Bind scroll events
   if (!isSingleSlide) {
-    block.querySelector('.slide-prev').addEventListener('click', () => scrollByCard(block, -1));
-    block.querySelector('.slide-next').addEventListener('click', () => scrollByCard(block, 1));
+    const section = block.closest('.carousel-container') || block;
+    section.querySelector('.slide-prev').addEventListener('click', () => scrollByCard(block, -1));
+    section.querySelector('.slide-next').addEventListener('click', () => scrollByCard(block, 1));
     slidesWrapper.addEventListener('scroll', () => updateNavState(block), { passive: true });
-    // Delay initial state check until after layout
-    requestAnimationFrame(() => updateNavState(block));
+    enableDragScroll(slidesWrapper);
+    // Use ResizeObserver so nav state updates once grid layout resolves
+    // (single rAF can fire before scrollWidth is computed for the first carousel)
+    new ResizeObserver(() => updateNavState(block)).observe(slidesWrapper);
   }
 }
